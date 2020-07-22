@@ -1,0 +1,11 @@
+{
+    "author": "Jing George",
+    "name": "ACM-W OSU Database Interface",
+    "description": "Interface for Exec Board members to perform CRUD operations on contact database.",
+    "version": "0.0.1",
+    "dependencies": {
+        "dotenv": "^8.2.0",
+        "express": "^4.17.1",
+        "pg": "^8.3.0"
+    }
+}
