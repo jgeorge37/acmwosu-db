@@ -16,3 +16,6 @@ Create a .env file with the following information - speak to Jing if you do not 
 * DB_PORT
 
 From the acmwosu-db directory, run the command ```node migrations/migrate.js```.
+
+## Database design
+![Schema](images/schema.jpg)
