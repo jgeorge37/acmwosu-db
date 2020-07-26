@@ -3,6 +3,8 @@ import pkg from "postgres-migrations";
 import pg from "pg";
 const  {createDb, migrate} = pkg;
 
+dotenv.config();
+
 async function runMigrations () {
     const dbConfig = {
         database: "acmw",
