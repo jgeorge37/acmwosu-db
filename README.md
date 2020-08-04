@@ -9,12 +9,7 @@ Using PostgreSQL v11.8
 3. Run ```npm install``` from the acmwosu-db directory
 
 ## Running database migrations
-Create a .env file with the following information - speak to Jing if you do not have this information
-* DB_HOST
-* DB_USER
-* DB_PASSWORD
-* DB_PORT
-
+You will need an .env file with the relevant DB connection info.
 From the acmwosu-db directory, run the command ```node migrations/migrate.js```.
 
 ## Database design
