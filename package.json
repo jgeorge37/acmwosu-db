@@ -11,6 +11,12 @@
         "react": "16.13.1",
         "react-dom": "16.13.1"
     },
+    "scripts": {
+        "dev": "npm run dev --prefix acmw-db-app",
+        "build": "npm run build --prefix acmw-db-app",
+        "start": "npm run start --prefix acmw-db-app",
+        "migrate": "node migrations/migrate.js"
+    },
     "type": "module",
     "repository": {
         "type": "git",

@@ -10,7 +10,7 @@ Using PostgreSQL v11.8
 
 ## Running database migrations
 You will need an .env file with the relevant DB connection info.
-From the acmwosu-db directory, run the command ```node migrations/migrate.js```.
+From the acmwosu-db directory, run the command ```npm run migrate```.
 
 ## Database design
 ![Schema](images/schema.jpg)
