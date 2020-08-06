@@ -8,10 +8,10 @@ dotenv.config();
 async function runMigrations () {
     const dbConfig = {
         database: "acmw",
-        user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        host: process.env.DB_HOST,
-        port: process.env.DB_PORT,
+        user: process.env.M_DB_USER,
+        password: process.env.M_DB_PASSWORD,
+        host: process.env.M_DB_HOST,
+        port: process.env.M_DB_PORT,
         }
         
         {

@@ -5,13 +5,15 @@
     "version": "0.0.1",
     "dependencies": {
         "dotenv": "^8.2.0",
-        "express": "^4.17.1",
         "pg": "^8.3.0",
-        "postgres-migrations": "^4.0.3"
+        "postgres-migrations": "^4.0.3",
+        "next": "9.5.1",
+        "react": "16.13.1",
+        "react-dom": "16.13.1"
     },
     "type": "module",
     "repository": {
         "type": "git",
         "url": "git://github.com/jgeorge37/acmwosu-db.git"
-      }
+    }
 }
