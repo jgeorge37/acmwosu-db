@@ -18,7 +18,7 @@ async function runMigrations () {
             rejectUnauthorized: false
           }
         }
-        
+        /*
         {
         const client = new pg.Client({
             ...dbConfig,
@@ -31,7 +31,7 @@ async function runMigrations () {
             await client.end()
         }
         }
-        
+        */
         {
         const client = new pg.Client(dbConfig) // or a Pool, or a PoolClient
         await client.connect()
