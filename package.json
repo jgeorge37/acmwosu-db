@@ -21,5 +21,8 @@
     "repository": {
         "type": "git",
         "url": "git://github.com/jgeorge37/acmwosu-db.git"
+    },
+    "engines": {
+        "node": "10.x"
     }
 }
