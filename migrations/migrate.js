@@ -9,6 +9,7 @@ const user = process.env.M_DB_USER
 const pw = process.env.M_DB_PASSWORD
 const port = process.env.M_DB_PORT
 const connectionString = process.env.NODE_ENV === 'production' ? process.env.DATABASE_URL : `postgresql://${user}:${pw}@localhost:${port}/acmw`
+console.log(connectionString)
 
 async function runMigrations () {
     const dbConfig = {
