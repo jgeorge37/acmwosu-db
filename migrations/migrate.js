@@ -12,7 +12,10 @@ const connectionString = process.env.ENV === 'prod' ? process.env.DATABASE_URL :
 
 async function runMigrations () {
     const dbConfig = {
-        connectionString: connectionString
+        connectionString: connectionString,
+        ssl: {
+            rejectUnauthorized: false
+          }
         }
         
         {
