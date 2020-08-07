@@ -1,8 +1,9 @@
+import dotenv from 'dotenv'
 import pkg from "postgres-migrations";
 import pg from "pg";
 const  {createDb, migrate} = pkg;
 
-require('dotenv').config({ silent: process.env.NODE_ENV === 'production' })
+dotenv.config({ silent: process.env.NODE_ENV === 'production' })
 
 const user = process.env.M_DB_USER
 const pw = process.env.M_DB_PASSWORD
