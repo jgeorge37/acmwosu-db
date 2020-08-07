@@ -5,13 +5,14 @@ const  {createDb, migrate} = pkg;
 
 dotenv.config();
 
+const user = process.env.M_DB_USER
+const pw = process.env.M_DB_PASSWORD
+const port = process.env.M_DB_PORT
+const connectionString = process.env.ENV === 'prod' ? process.env.DATABASE_URL : `postgresql://${user}:${pw}@localhost:${port}/acmw`
+
 async function runMigrations () {
     const dbConfig = {
-        database: "acmw",
-        user: process.env.M_DB_USER,
-        password: process.env.M_DB_PASSWORD,
-        host: process.env.M_DB_HOST,
-        port: process.env.M_DB_PORT,
+        connectionString: connectionString
         }
         
         {
