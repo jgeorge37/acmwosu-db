@@ -1,3 +1,3 @@
 
 release: npm run build
-web: npm run start
+web: npm run heroku-start

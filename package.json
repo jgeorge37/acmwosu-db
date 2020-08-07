@@ -15,6 +15,7 @@
         "dev": "npm run dev --prefix acmw-db-app",
         "build": "npm run build --prefix acmw-db-app",
         "start": "npm run start --prefix acmw-db-app",
+        "heroku-start": "npm run heroku-start --prefix acmw-db-app",
         "migrate": "node migrations/migrate.js"
     },
     "type": "module",
