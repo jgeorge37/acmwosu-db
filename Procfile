@@ -1,2 +1,2 @@
 web: npm run heroku-start
-release: npm run migrate
+release: npm install && npm run migrate
