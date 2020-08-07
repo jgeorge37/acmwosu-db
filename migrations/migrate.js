@@ -1,14 +1,13 @@
-import dotenv from 'dotenv';
 import pkg from "postgres-migrations";
 import pg from "pg";
 const  {createDb, migrate} = pkg;
 
-dotenv.config();
+require('dotenv').config({ silent: process.env.NODE_ENV === 'production' })
 
 const user = process.env.M_DB_USER
 const pw = process.env.M_DB_PASSWORD
 const port = process.env.M_DB_PORT
-const connectionString = process.env.ENV === 'prod' ? process.env.DATABASE_URL : `postgresql://${user}:${pw}@localhost:${port}/acmw`
+const connectionString = process.env.NODE_ENV === 'production' ? process.env.DATABASE_URL : `postgresql://${user}:${pw}@localhost:${port}/acmw`
 
 async function runMigrations () {
     const dbConfig = {
