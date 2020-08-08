@@ -1,14 +1,15 @@
 import dotenv from 'dotenv'
 import pkg from "postgres-migrations";
 import pg from "pg";
-const  {createDb, migrate} = pkg;
+const  {migrate} = pkg;
 
 dotenv.config({ silent: process.env.NODE_ENV === 'production' })
 
 const user = process.env.M_DB_USER
 const pw = process.env.M_DB_PASSWORD
 const port = process.env.M_DB_PORT
-const connectionString = process.env.NODE_ENV === 'production' ? process.env.DATABASE_URL : `postgresql://${user}:${pw}@localhost:${port}/acmw`
+const db = process.env.M_DB_DATABASE
+const connectionString = process.env.NODE_ENV === 'production' ? process.env.DATABASE_URL : `postgresql://${user}:${pw}@localhost:${port}/${db}`
 console.log(connectionString)
 
 async function runMigrations () {
@@ -18,20 +19,7 @@ async function runMigrations () {
             rejectUnauthorized: false
           }
         }
-        /*
-        {
-        const client = new pg.Client({
-            ...dbConfig,
-            database: "postgres",
-        })
-        await client.connect()
-        try {
-            await createDb("acmw", {client})
-        } finally {
-            await client.end()
-        }
-        }
-        */
+        
         {
         const client = new pg.Client(dbConfig) // or a Pool, or a PoolClient
         await client.connect()
