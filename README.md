@@ -21,7 +21,7 @@ To view the contents of the database, install pgAdmin. Once your account is set 
 
 ## Running database migrations
 1. Install PostgreSQL and create a database.
-2. Create an .env file in the acmwosu-db/migrations directory with the following:
+2. Create an .env file in the root directory with the following:
 ~~~~
 # Specifiy that you are working locally.
 NODE_ENV=local
