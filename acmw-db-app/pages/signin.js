@@ -1,8 +1,8 @@
 import Head from 'next/head'
 import styles from '../styles/SignIn.module.css'
-import React from 'react';
+import React, { useState } from 'react';
 
-function SignIn() {
+const SignIn = () => {
   // TODO link to page that sends password by email?
   return (
     <div className={styles.container}>
@@ -19,6 +19,7 @@ function SignIn() {
             id="username"
             label="Username"
             predicted="Brutus Buckeye"
+            type="text"
           />
           <div className={styles.passwordChunk}>
             <TextInput
@@ -38,33 +39,26 @@ function SignIn() {
 
 export default SignIn
 
-class TextInput extends React.Component {
+const TextInput = (props) => {
 
-  constructor(props) {
-    super(props);
+  const [id, setId] = useState(props.id);
+  const [active, setActive] = useState(false);
+  const [value, setValue] = useState("");
+  const [error, setError] = useState("");
+  const [label, setLabel] = useState(props.label);
+  const [type, setType] = useState(props.type);
+  const [predicted, setPredicted] = useState(props.predicted);
 
-    this.state = {
-      id: props.id,
-      active: false,
-      value: props.value || "",
-      error: props.error || "",
-      label: props.label || "",
-      type: props.type || "text",
-      predicted: props.predicted || "",
-    };
-  }
-
-  changeValue(event) {
-    const value = event.target.value;
-    this.setState({value});
+  const changeValue = (event) => {
+    setValue(event.target.value);
 
     // TODO: Set failed label on password when failed to login
     // this.setState({error: "Failed!"});
   }
 
-  handleKeyPress(event) {
-    if (!this.state.value && event.key === "Enter") {
-      this.setState({ value: this.props.predicted });
+  const handleKeyPress = (event) => {
+    if (!value && event.key === "Enter") {
+      setValue(predicted);
     }
   }
 
@@ -81,36 +75,32 @@ class TextInput extends React.Component {
      if error (incorrect password)
       then display error red; hide label
   */
-  render() {
-    const { id, active, value, error, label, type, predicted } = this.state;
-    const fieldClassName = `${styles.field} ${active ? styles.active : ( value && styles.filled )}`;
-    return (
-      <div className={fieldClassName}>
-        { type === "text" ?
-          ( active &&
-            predicted &&
-            predicted.startsWith(value) ?
-            <p className={styles.predicted}>{predicted}</p> :
-            ( !value && <p className={styles.placeholder}>{label}</p> ) ) :
-            ( type === "password" &&
-              !active &&
-              !value &&
-              <p className={styles.placeholder}>{label}</p> )}
-        <input
-          id={id}
-          type={type}
-          value={value}
-          onChange={this.changeValue.bind(this)}
-          onKeyPress={this.handleKeyPress.bind(this)}
-          onFocus={() => this.setState({ active: true })}
-          onBlur={() => this.setState({ active: false })}
-        />
-        <label htmlFor={id} className={error && styles.error}>
-          {error || label}
-        </label>
-      </div>
-    );
-  }
+  return (
+    <div className={`${styles.field} ${active ? styles.active : ( value && styles.filled )}`}>
+      { type === "text" ?
+        ( active &&
+          predicted &&
+          predicted.startsWith(value) ?
+          <p className={styles.predicted}>{predicted}</p> :
+          ( !value && <p className={styles.placeholder}>{label}</p> ) ) :
+          ( type === "password" &&
+            !active &&
+            !value &&
+            <p className={styles.placeholder}>{label}</p> )}
+      <input
+        id={id}
+        type={type}
+        value={value}
+        onChange={event => changeValue(event)}
+        onKeyPress={event => handleKeyPress(event)}
+        onFocus={() => setActive(true)}
+        onBlur={() => setActive(false)}
+      />
+      <label htmlFor={id} className={error && styles.error}>
+        {error || label}
+      </label>
+    </div>
+  );
 }
 
 class SignInButton extends React.Component {
