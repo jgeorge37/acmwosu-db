@@ -1,0 +1,33 @@
+.button {
+    background-color: white;
+    color: #373738;
+    font-size: 20px;
+    padding: 5px 20px;
+    border-radius: 5px;
+    margin-right: 10px;
+    margin-top: 10px;
+    display: inline-block;
+    cursor: pointer;
+    transition: 0.3s background-color ease-in-out, 0.3s color ease-in-out;
+    }
+  
+  .button:hover {
+    background-color: #373738;
+    color: white;
+    cursor: pointer;
+  }
+
+  .field {
+    height: 40px;
+    border-radius: 4px;
+    margin: auto;
+    position: relative;
+    font-size: 17px;
+    background-color: white;
+    transition: 0.3s background-color ease-in-out, 0.3s box-shadow ease-in-out;
+  }
+
+  .label {
+    display: block;
+    font-size: 20px;
+  }
