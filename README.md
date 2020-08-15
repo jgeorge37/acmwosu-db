@@ -34,3 +34,5 @@ M_DB_USER={Your local Postgres username, most likely "postgres"}
 M_DB_DATABASE={The name of the database you wish to use from your local instance}
 ~~~~
 3. From the root directory, run the command ```npm run migrate```. This will run migrations on only your local Postgres instance.
+
+Test Comment
