@@ -1,0 +1,205 @@
+/* COLOR SCHEME
+  light purpur: #BA9ADF
+  bright purpur: #9A49CE
+  white: #FFFFFF
+  dark gray: #373738
+*/
+
+.container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #BA9ADF;
+  }
+  
+  .main {
+    padding: 5rem 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .card {
+    margin: 1rem;
+    padding: 2rem 5rem 3rem 5rem;
+    text-align: center;
+    color: inherit;
+    background-color: #FFFFFF;
+    text-decoration: none;
+    border-radius: 10px;
+  }
+  
+  .logo {
+    width: 8rem;
+    border-radius: 5px;
+  }
+  
+  .card h1 {
+    margin-top: 1rem;
+    margin-bottom: 3rem;
+    line-height: 1.15;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 3rem;
+    color: #BA9ADF;
+  }
+  
+  .card h2 {
+    margin-bottom: 0.5rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.25rem;
+    color: #373738;
+  }
+
+  .card h6 {
+    margin-bottom: 0.5rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: .69rem;
+    color: #373738;
+  }
+  
+  .passwordChunk {
+    text-align: left;
+    padding-bottom: 2rem;
+  }
+  
+  .passwordChunk a.smol {
+    margin-top: 1rem;
+    margin-left: 0.75rem;
+    font-size: 0.75rem;
+    font-family: 'Montserrat', sans-serif;
+    color: #373738;
+  }
+  
+  .passwordChunk a.smol:hover {
+    text-decoration: underline;
+  }
+  
+  .field {
+    margin-top: 1rem;
+    width: 100%;
+    height: 56px;
+    border-radius: 4px;
+    position: relative;
+    background-color: #BA9ADF80;
+    transition: 0.3s background-color ease-in-out, 0.3s box-shadow ease-in-out;
+  }
+  
+  .field:hover {
+    background-color: #BA9ADF;
+    box-shadow: 0px 4px 10px 0px #37373810;
+  }
+  
+  .field.active {
+    background-color: #BA9ADF;
+    box-shadow: 0px 4px 10px 0px #37373820;
+  }
+  
+  .field.active input {
+    padding: 24px 16px 8px 16px;
+    color: #373738;
+  }
+  
+  .field.active input + label {
+    top: 4px;
+    opacity: 1;
+    color: #9A49CE;
+  }
+  
+  .field.filled {
+    background-color: #BA9ADF;
+  }
+  
+  .field input {
+    width: 100%;
+    height: 56px;
+    position: relative;
+    padding: 0px 16px;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: normal;
+    background-color: transparent;
+    outline: none;
+    box-shadow: 0px 4px 20px 0px transparent;
+    transition: 0.3s background-color ease-in-out, 0.3s box-shadow ease-in-out,
+      0.1s padding ease-in-out;
+    -webkit-appearance: none;
+  }
+  
+  .field input + label {
+    position: absolute;
+    top: 24px;
+    left: 16px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 24px;
+    color: #FFFFFF;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.1s all ease-in-out;
+  }
+  
+  .field input + label.error {
+    color: #ec392f; /* red */
+  }
+  
+  .field p.predicted {
+    position: absolute;
+    top: 8px;
+    left: 16px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    color: #e0e0e0; /* light gray */
+    opacity: 1;
+    pointer-events: none;
+  }
+  
+  .field p.placeholder {
+    position: absolute;
+    top: 0px;
+    left: 16px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    color: #FFFFFF;
+    opacity: 1;
+    pointer-events: none;
+  }
+  
+  .button {
+    background-color: transparent;
+    color: #373738;
+    font-size: 20px;
+    padding: 10px 60px;
+    border-radius: 5px;
+    margin: 10px 0px;
+    cursor: pointer;
+    transition: 0.3s background-color ease-in-out, 0.3s color ease-in-out;
+  }
+  
+  .button:hover {
+    background-color: #373738;
+    color: white;
+    font-size: 20px;
+    padding: 10px 60px;
+    border-radius: 5px;
+    margin: 10px 0px;
+    cursor: pointer;
+  }
+  
+  @media (max-width: 600px) {
+    .grid {
+      width: 100%;
+      flex-direction: column;
+    }
+  }
