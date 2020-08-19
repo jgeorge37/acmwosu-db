@@ -62,10 +62,28 @@
   }
   
   .passwordChunk {
-    text-align: left;
+    text-align: right;
     padding-bottom: 2rem;
   }
-  
+
+  .password1Chunk {
+    text-align: right;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .emailChunk {
+    text-align: right;
+  }
+
+  .labelStyle{
+    padding-right: 3rem;
+  }
+
+  .passwordRequirements {
+    text-align: center;
+    border-style: solid;
+  }
   .passwordChunk a.smol {
     margin-top: 1rem;
     margin-left: 0.75rem;

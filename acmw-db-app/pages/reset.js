@@ -106,14 +106,14 @@ class ResetPW extends React.Component {
         <h1>Password Reset</h1>
         <form onSubmit={this.handleSubmit}>
   
-          <div className={styles.passwordChunk}>
-            <label for="name">Name:</label>
+        <div className={styles.passwordChunk}>
+            <label className={styles.labelStyle} htmlFor="name">Name:</label>
             <input 
               type="text" 
               name="name" 
               value={this.state.input.name}
               onChange={this.handleChange}
-              class="form-control" 
+              //class="form-control" 
               placeholder="Enter name" 
               id="name" />
   
@@ -121,27 +121,36 @@ class ResetPW extends React.Component {
           </div>
   
           <div className={styles.passwordChunk}>
-            <label for="email">Email Address:</label>
+            <label className={styles.labelStyle} htmlFor="email">Email Address:</label>
             <input 
               type="text" 
               name="email" 
               value={this.state.input.email}
               onChange={this.handleChange}
-              class="form-control" 
+              //class="form-control" 
               placeholder="Enter email" 
               id="email" />
   
               <div className="text-danger">{this.state.errors.email}</div>
           </div>
    
-          <div className={styles.passwordChunk}>
-            <label for="password">Password:</label>
+          <div className={styles.passwordRequirements}>
+            <ul>Enter a password with at least...
+              <li>one uppercase letter</li>
+              <li>one lowercase letter</li>
+              <li>one special character</li>
+              <li>8 characters</li>
+            </ul>
+          </div>
+
+          <div className={styles.password1Chunk}>
+            <label className={styles.labelStyle} htmlFor="password">Password:</label>
             <input 
               type="password" 
               name="password" 
               value={this.state.input.password}
               onChange={this.handleChange}
-              class="form-control" 
+              //class="form-control" 
               placeholder="Enter password" 
               id="password" />
   
@@ -149,13 +158,13 @@ class ResetPW extends React.Component {
           </div>
   
           <div className={styles.passwordChunk}>
-            <label for="password">Confirm Password:</label>
-            <input 
+            <label className={styles.labelStyle} htmlFor="password">Confirm Password:</label>
+            <input
               type="password" 
               name="confirm_password" 
               value={this.state.input.confirm_password}
               onChange={this.handleChange}
-              class="form-control" 
+              //class="form-control" 
               placeholder="Enter confirm password" 
               id="confirm_password" />
   
@@ -163,7 +172,7 @@ class ResetPW extends React.Component {
           </div>
               
           <input type="submit" value="Submit" class="btn btn-success" className={styles.button}/>
-          
+
           <div><a className={styles.smol} href="../signin">Login Instead?</a></div>
 
         </form>
