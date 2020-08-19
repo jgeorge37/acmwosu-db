@@ -6,7 +6,7 @@ Interface for ACM-W Exec Board members to query database of contacts and members
 2. [Install Node.js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) if not already installed
 3. Run ```npm install``` from the root directory
 4. Run ```npm install``` from the acmwosu-db/acmw-db-app directory
-5. Create a file called .env in the acmwosu-db/acmw-db-app directory
+5. Create an .env file called .env in the acmwosu-db/acmw-db-app directory
     - Login to Heroku (username and possword in "Passwords" spreadsheet in Drive)
     - Navigate to Settings -> Config Vars -> Reveal Config Vars
     - Select Database URL and copy text below into .env file
