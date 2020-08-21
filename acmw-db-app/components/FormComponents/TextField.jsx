@@ -1,6 +1,6 @@
 import styles from '../../styles/components/FormComponents.module.css'
 
-const SearchInput = (props) => {
+const TextField = (props) => {
     return (
         <>
             <label className={styles.label}>{props.label}</label>
@@ -9,4 +9,4 @@ const SearchInput = (props) => {
     )
 }   
 
-export default SearchInput
+export default TextField
