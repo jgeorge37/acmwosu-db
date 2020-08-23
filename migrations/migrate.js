@@ -15,7 +15,7 @@ async function runMigrations () {
     const dbConfig = {
         connectionString: connectionString
     }
-    if (process.env.NODE_ENV === 'production') dbConfig[ssl] = {rejectUnauthorized: false};
+    if (process.env.NODE_ENV === 'production') dbConfig["ssl"] = {rejectUnauthorized: false};
         
     {
         const client = new pg.Client(dbConfig) // or a Pool, or a PoolClient
