@@ -4,6 +4,10 @@ import React, { useState } from 'react';
 
 const SignIn = () => {
   // TODO link to page that sends password by email?
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   return (
     <div className={styles.container}>
       <Head>
@@ -13,21 +17,23 @@ const SignIn = () => {
       <main className={styles.main}>
         <div className={styles.card}>
           <img src="/logo.png" alt="ACM-W Logo" className={styles.logo} />
-          <h1> OSU Database </h1>
+          <h1> ACM-W OSU Database </h1>
           <h2> Please sign in to continue </h2>
           <TextInput
             id="username"
-            label="Username"
-            predicted="Brutus Buckeye"
+            label="Email"
+            predicted="brutus@osu.edu"
+            onChange={setEmail}
             type="text"
           />
           <div className={styles.passwordChunk}>
             <TextInput
               id="password"
               label="Password"
+              onChange={setPassword}
               type="password"
             />
-            <a className={styles.smol} href="https://crouton.net/">Forgot username or password?</a>
+            <a className={styles.smol} href="https://crouton.net/">Forgot password?</a>
           </div>
           <SignInButton
           />
@@ -51,6 +57,7 @@ const TextInput = (props) => {
 
   const changeValue = (event) => {
     setValue(event.target.value);
+    props.onChange(event.target.value);
 
     // TODO: Set failed label on password when failed to login
     // this.setState({error: "Failed!"});
@@ -105,13 +112,13 @@ const TextInput = (props) => {
 
 class SignInButton extends React.Component {
 
-  handleClick() {
+  validateSignIn() {
     console.log("YOU CLICKED ME!");
   }
 
   render() {
     return (
-      <button className={styles.button} onClick={() => this.handleClick()}>
+      <button className={styles.button} onClick={() => this.validateSignIn()}>
         Submit
       </button>
     );
