@@ -22,7 +22,8 @@ To view the contents of the database, install pgAdmin. Once your account is set 
 ## Running database migrations
 **If you are creating a new table, the table name should be singular, i.e. "student" not "students" for consistency.**
 1. Install PostgreSQL and create a database.
-2. Create an .env file in the root directory with the following:
+2. Add the pgcrypto extension to the database.
+3. Create an .env file in the root directory with the following:
 ~~~~
 # Specifiy that you are working locally.
 NODE_ENV=local
