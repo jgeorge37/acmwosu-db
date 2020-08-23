@@ -1,5 +1,5 @@
-import Head from 'next/head'
-import styles from '../styles/SignIn.module.css'
+import Head from 'next/head';
+import styles from '../styles/SignIn.module.css';
 import React, { useState } from 'react';
 
 const SignIn = () => {
@@ -36,6 +36,8 @@ const SignIn = () => {
             <a className={styles.smol} href="https://crouton.net/">Forgot password?</a>
           </div>
           <SignInButton
+            email={email}
+            password={password}
           />
         </div>
       </main>
@@ -112,8 +114,19 @@ const TextInput = (props) => {
 
 class SignInButton extends React.Component {
 
-  validateSignIn() {
+  async validateSignIn() {
     console.log("YOU CLICKED ME!");
+    // Check that email and password match
+    //const user = account.byEmailPassword(this.props.email, this.props.password);
+    //console.log(user);
+
+    const requestOptions = {
+      method: 'POST',
+      body: JSON.stringify({ email: this.props.email, password: this.props.password })
+    };
+    const res = await fetch('/api/account/verify', requestOptions);
+    const result = await res.json();
+    console.log(result);
   }
 
   render() {

@@ -4,9 +4,9 @@ import pg from 'pg';
 export default async (query) => {
     dotenv.config({ silent: process.env.NODE_ENV === 'production' });
     const dbConfig = {
-        connectionString: process.env.DATABASE_URL
+        connectionString: process.env.DATABASE_URL,
+        ssl: {rejectUnauthorized: false}  // Comment out this line if connecting to local DB
     }
-    if (process.env.NODE_ENV === 'production') dbConfig[ssl] = {rejectUnauthorized: false};
     
     const client = new pg.Client(dbConfig);
     
