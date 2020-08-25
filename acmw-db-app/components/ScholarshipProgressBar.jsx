@@ -1,16 +1,9 @@
+import styles from '../styles/components/ScholarshipProgressBar.module.css'
 
 const ScholarshipProgressBar = (props) => {
 
     // const ProgressBar = (props) => {
         const { completed } = props;
-      
-        const containerStyles = {
-          height: 20,
-          width: '100%',
-          backgroundColor: "#e0e0de",
-          borderRadius: 50,
-          margin: 50
-        }
       
         const fillerStyles = {
           height: '100%',
@@ -20,16 +13,12 @@ const ScholarshipProgressBar = (props) => {
           textAlign: 'right'
         }
       
-        const labelStyles = {
-          padding: 5,
-          color: 'white',
-          fontWeight: 'bold'
-        }
+        
       
         return (
-          <div style={containerStyles}>
+          <div className={styles.container_styles}>
             <div style={fillerStyles}>
-              <span style={labelStyles}>{`${completed}%`}</span>
+              <span className={styles.label_styles}>{`${completed}%`}</span>
             </div>
           </div>
         )
