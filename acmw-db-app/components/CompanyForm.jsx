@@ -31,7 +31,7 @@ const CompanyForm = (props) => {
                             <TextField label="Company Name"/>
                         </div>
                         <div className={styles.two}>
-                        <TextField label="Contact Name"/>
+                            <TextField label="Contact Name"/>
                         </div>
                     </div>
                     <div>
