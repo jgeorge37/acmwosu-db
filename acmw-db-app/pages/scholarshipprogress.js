@@ -48,6 +48,7 @@ const ScholarshipProgress = () => {
         return percentMeetings;
     }
 
+    // Creating consts to set up lists of completed items for user details
     const testScholarshipItems = testScholarshipList.map((testScholarshipList) =>
         <li>{testScholarshipList}</li>);
 
