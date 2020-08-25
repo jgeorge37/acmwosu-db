@@ -1,14 +1,3 @@
-.popup {  
-    position: fixed;  
-    width: 100%;  
-    height: 100%;  
-    top: 0;  
-    left: 0;  
-    right: 0;  
-    bottom: 0;  
-    margin: auto;  
-    background-color: rgba(0,0,0, 0.5);  
-  }  
   #popup_inner {  
     position: absolute;  
     left: 30%;  
@@ -18,21 +7,6 @@
     border-radius: 20px;  
     background: white;  
     color: black;
-  }
-
-  .one {
-    width: 25%;
-    height: 75px;
-    float: left;
-  }
-  
-  .two {
-    margin-left: 40%;
-    height: 75px;
-  }
-
-  .form {
-    padding: 10px 15px;
   }
 
   .container_styles {
@@ -48,10 +22,6 @@
     padding: 5px;
     color: white;
     font-weight: 900;
-  }
-
-  .inner_table {
-    padding: 10px;
   }
 
   .list_scroll {
