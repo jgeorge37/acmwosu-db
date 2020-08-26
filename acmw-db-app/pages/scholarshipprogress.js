@@ -49,15 +49,15 @@ const ScholarshipProgress = () => {
     }
 
     // Creating consts to set up lists of completed items for user details
-    const testScholarshipItems = testScholarshipList.map((testScholarshipList) =>
-        <li>{testScholarshipList}</li>);
+    const testScholarshipItems = testScholarshipList.map((testScholarshipList, index) =>
+        <li key={index}>{testScholarshipList}</li>);
 
     // need to only map the keys since those hold the string details
     const testVolunteerItems = Object.keys(testVolunteeringList).map((testVolunteeringList) =>
         <li>{testVolunteeringList}</li>);
       
-    const testMeetingItems = testMeetingList.map((testMeetingList) =>
-     <li>{testMeetingList}</li>);
+    const testMeetingItems = testMeetingList.map((testMeetingList, index) =>
+     <li key={index}>{testMeetingList}</li>);
 
 
     return (

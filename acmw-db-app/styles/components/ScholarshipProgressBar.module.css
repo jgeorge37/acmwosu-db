@@ -1,5 +1,5 @@
   #popup_inner {  
-    position: absolute;  
+    position: fixed;  
     left: 30%;  
     right: 30%;  
     top: 16%;  
@@ -7,6 +7,7 @@
     border-radius: 20px;  
     background: white;  
     color: black;
+    overflow: auto;
   }
 
   .container_styles {
