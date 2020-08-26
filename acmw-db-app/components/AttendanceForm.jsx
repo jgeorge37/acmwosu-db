@@ -8,6 +8,8 @@ import Head from 'next/head'
 const AttendanceForm = (props) => {
 
     const [eventCode, setEventCode] = useState("")
+    const [firstName, setFirstName] = useState("")
+    const [lastName, setLastName] = useState("")
 
     const yearOptions = ["First", "Second", "Third", "Fourth", "Fifth+", "Graduate or Phd student :)"]
     const listServOptions = ["I am already on the list :)", "Yes, please!", "Nope, thank you"]
@@ -17,10 +19,12 @@ const AttendanceForm = (props) => {
         // Else if the event code is not valid, display "Invalid event code" message
 
         // This would be changed to pull from a database of event codes and see if there is a match (maybe?)
-        if (eventCode === "007") {
-            console.log("Success!")
+        if (firstName !== "" && lastName !== "" && eventCode === "007") {
+            console.log("Successful recorded your attendance!")
+        } else if (eventCode === "007") {
+            console.log("You must provide your first and last name!")
         } else {
-            console.log("Failure!")
+            console.log("Event code is incorrect!")
         }
     }
 
@@ -38,8 +42,8 @@ const AttendanceForm = (props) => {
                 <p>Thank you for attending an ACM-W event! Please fill out this form to record your attendance!</p>
                 <h2>Event Information</h2>
                 <TextField label="Event Code" onChange={(event) => setEventCode(event.target.value)}/>
-                <TextField label="First Name"/>
-                <TextField label="Last Name.#"/>
+                <TextField label="First Name" onChange={(event) => setFirstName(event.target.value)}/>
+                <TextField label="Last Name.#" onChange={(event) => setLastName(event.target.value)}/>
                 <div>
                     <h2>What year are you in?</h2>
                     <SelectInput options={yearOptions}/>
