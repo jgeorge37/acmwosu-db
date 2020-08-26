@@ -53,8 +53,8 @@ const ScholarshipProgress = () => {
         <li key={index}>{testScholarshipList}</li>);
 
     // need to only map the keys since those hold the string details
-    const testVolunteerItems = Object.keys(testVolunteeringList).map((testVolunteeringList) =>
-        <li>{testVolunteeringList}</li>);
+    const testVolunteerItems = Object.keys(testVolunteeringList).map((testVolunteeringList, index) =>
+        <li key={index}>{testVolunteeringList}</li>);
       
     const testMeetingItems = testMeetingList.map((testMeetingList, index) =>
      <li key={index}>{testMeetingList}</li>);
