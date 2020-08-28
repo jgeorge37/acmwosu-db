@@ -122,7 +122,7 @@ class ResetPW extends React.Component {
               <div className="text-danger">{this.state.errors.confirm_password}</div>
           </div>
               
-          <input type="submit" value="Submit" class="btn btn-success" className={styles.button}/>
+          <input type="submit" value="Submit"  className={styles.button}/>
 
           <div><a className={styles.smol} href="../signin">Login Instead?</a></div>
 
