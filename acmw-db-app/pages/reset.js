@@ -45,24 +45,24 @@ class ResetPW extends React.Component {
       let errors = {};
       let isValid = true;
   
-      if (!input["name"]) {
-        isValid = false;
-        errors["name"] = "Please enter your name.";
-      }
+      // if (!input["name"]) {
+      //   isValid = false;
+      //   errors["name"] = "Please enter your name.";
+      // }
   
-      if (!input["email"]) {
-        isValid = false;
-        errors["email"] = "Please enter your email Address.";
-      }
+      // if (!input["email"]) {
+      //   isValid = false;
+      //   errors["email"] = "Please enter your email Address.";
+      // }
   
-      if (typeof input["email"] !== "undefined") {
+      // if (typeof input["email"] !== "undefined") {
           
-        var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
-        if (!pattern.test(input["email"])) {
-          isValid = false;
-          errors["email"] = "Please enter valid email address.";
-        }
-      }
+      //   var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+      //   if (!pattern.test(input["email"])) {
+      //     isValid = false;
+      //     errors["email"] = "Please enter valid email address.";
+      //   }
+      // }
   
       <h6>Please enter a password containing at least 1 uppercase, 1 lowercase, 1 digit, 1 special character with a length of at least of 8</h6>
       var pattern = new RegExp(/^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/i);
@@ -106,7 +106,7 @@ class ResetPW extends React.Component {
         <h1>Password Reset</h1>
         <form onSubmit={this.handleSubmit}>
   
-        <div className={styles.passwordChunk}>
+        {/* { <div className={styles.passwordChunk}>
             <label className={styles.labelStyle} htmlFor="name">Name:</label>
             <input 
               type="text" 
@@ -132,7 +132,7 @@ class ResetPW extends React.Component {
               id="email" />
   
               <div className="text-danger">{this.state.errors.email}</div>
-          </div>
+          </div> } */}
    
           <div className={styles.passwordRequirements}>
             <ul>Enter a password with at least...

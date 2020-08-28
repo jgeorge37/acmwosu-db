@@ -27,7 +27,7 @@ const SignIn = () => {
               label="Password"
               type="password"
             />
-            <a className={styles.smol} href="../reset">Forgot username or password?</a>
+            <a className={styles.smol} /*href="ENTER EMAIL ADDRESS PAGE LINK WHEN CREATED */>Forgot username or password?</a>
           </div>
           <SignInButton
           />
