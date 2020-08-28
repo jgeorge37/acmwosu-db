@@ -6,10 +6,7 @@ Interface for ACM-W Exec Board members to query database of contacts and members
 2. [Install Node.js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) if not already installed
 3. Run ```npm install``` from the root directory
 4. Run ```npm install``` from the acmwosu-db/acmw-db-app directory
-5. Create an .env file called .env in the acmwosu-db/acmw-db-app directory
-    - Login to Heroku (username and possword in "Passwords" spreadsheet in Drive)
-    - Navigate to Settings -> Config Vars -> Reveal Config Vars
-    - Select Database URL and copy text below into .env file
+5. Create an .env file in the acmwosu-db/acmw-db-app directory with the following (Heroku login in passwords spreadsheet in Drive):
 ~~~~
 # Database connection (use local URI if wanting to use local DB)
 DATABASE_URL={Get the database URI from Heroku}
@@ -25,7 +22,8 @@ To view the contents of the database, install pgAdmin. Once your account is set 
 ## Running database migrations
 **If you are creating a new table, the table name should be singular, i.e. "student" not "students" for consistency.**
 1. Install PostgreSQL and create a database.
-2. Create an .env file in the root directory with the following:
+2. Add the pgcrypto extension to the database.
+3. Create an .env file in the root directory with the following:
 ~~~~
 # Specifiy that you are working locally.
 NODE_ENV=local
