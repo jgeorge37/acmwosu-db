@@ -1,6 +1,11 @@
 // using Twilio SendGrid's v3 Node.js Library
 // https://github.com/sendgrid/sendgrid-nodejs
-const sgMail = require('@sendgrid/mail');
+import dotenv from 'dotenv'
+import sgMail from '@sendgrid/mail'
+
+dotenv.config();
+
+console.log(process.env.SENDGRID_API_KEY);
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const sendEmail = (email, token) => {
@@ -12,5 +17,16 @@ const sendEmail = (email, token) => {
   };
   sgMail.send(msg);
 }
-const email = '';
-sendEmail(email, 'cat')
+
+export default (req, res) => {
+  let result = '';
+  try {
+    const email = 'YOUR EMAIL';
+    sendEmail(email, 'YOUR TOKEN');
+    result = `Success - email sent to ${email}`;
+  } catch (err) {
+    res.statusCode = 500;
+    result = `Error - ${err}`;
+  }
+  res.json(result);
+}
