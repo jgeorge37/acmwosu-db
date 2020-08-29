@@ -12,5 +12,5 @@ const sendEmail = (email, token) => {
   };
   sgMail.send(msg);
 }
-
-sendEmail('li.10011@osu.edu', 'cat')
+const email = '';
+sendEmail(email, 'cat')
