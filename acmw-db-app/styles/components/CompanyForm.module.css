@@ -10,7 +10,8 @@
     background-color: rgba(0,0,0, 0.5);  
   }  
   .popup_inner {  
-    position: absolute;  
+    position: fixed;  
+    overflow: auto;
     left: 30%;  
     right: 30%;  
     top: 16%;  
