@@ -107,7 +107,6 @@ class SignInButton extends React.Component {
 
   handleClick() {
     console.log("YOU CLICKED ME!");
-
   }
 
   render() {
