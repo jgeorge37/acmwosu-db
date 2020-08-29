@@ -103,17 +103,15 @@ const TextInput = (props) => {
   );
 }
 
-class SignInButton extends React.Component {
+const SignInButton = (props) => {
 
-  handleClick() {
+  const handleClick = () => {
     console.log("YOU CLICKED ME!");
   }
 
-  render() {
-    return (
-      <button className={styles.button} onClick={() => this.handleClick()}>
-        Submit
-      </button>
-    );
-  }
+  return (
+    <button className={styles.button} onClick={() => handleClick()}>
+      Submit
+    </button>
+  );
 }
