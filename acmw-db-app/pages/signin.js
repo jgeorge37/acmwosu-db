@@ -64,8 +64,6 @@ const TextInput = (props) => {
   const changeValue = (event) => {
     setValue(event.target.value);
     props.onChange(event.target.value);
-    // TODO: Set failed label on password when failed to login
-    // this.setState({error: "Failed!"});
   }
 
   const handleKeyPress = (event) => {
