@@ -7,6 +7,7 @@ const SignIn = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [status, setStatus] = useState("");
 
   return (
     <div className={styles.container}>
@@ -24,12 +25,14 @@ const SignIn = () => {
             label="Email"
             predicted="brutus@osu.edu"
             onChange={setEmail}
+            status={status}
             type="text"
           />
           <div className={styles.passwordChunk}>
             <TextInput
               id="password"
               label="Password"
+              status={status}
               onChange={setPassword}
               type="password"
             />
@@ -38,6 +41,8 @@ const SignIn = () => {
           <SignInButton
             email={email}
             password={password}
+            onSubmit={setStatus}
+            status={status}
           />
         </div>
       </main>
@@ -105,9 +110,6 @@ const TextInput = (props) => {
         onFocus={() => setActive(true)}
         onBlur={() => setActive(false)}
       />
-      <label htmlFor={id} className={error && styles.error}>
-        {error || label}
-      </label>
     </div>
   );
 }
@@ -115,11 +117,7 @@ const TextInput = (props) => {
 class SignInButton extends React.Component {
 
   async validateSignIn() {
-    console.log("YOU CLICKED ME!");
     // Check that email and password match
-    //const user = account.byEmailPassword(this.props.email, this.props.password);
-    //console.log(user);
-
     const requestOptions = {
       method: 'POST',
       body: JSON.stringify({ email: this.props.email, password: this.props.password })
@@ -127,13 +125,28 @@ class SignInButton extends React.Component {
     const res = await fetch('/api/account/verify', requestOptions);
     const result = await res.json();
     console.log(result);
+
+    if(!result || result.length === 0) {
+      this.props.onSubmit("Failure");
+    } else {
+      this.props.onSubmit("Success");
+    }
   }
 
   render() {
+    let signinError;
+    if (this.props.status === "Failure") {
+      signinError = <div><label className={styles.error}>
+        Incorrect email or password.
+      </label></div>
+    }
     return (
-      <button className={styles.button} onClick={() => this.validateSignIn()}>
-        Submit
-      </button>
+      <div>
+        {signinError}
+        <button className={styles.button} onClick={async () => await this.validateSignIn()}>
+          Submit
+        </button>
+      </div>
     );
   }
 }
