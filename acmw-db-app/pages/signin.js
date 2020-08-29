@@ -57,7 +57,6 @@ const TextInput = (props) => {
   const [id, setId] = useState(props.id);
   const [active, setActive] = useState(false);
   const [value, setValue] = useState("");
-  const [error, setError] = useState("");
   const [label, setLabel] = useState(props.label);
   const [type, setType] = useState(props.type);
   const [predicted, setPredicted] = useState(props.predicted);
@@ -65,7 +64,6 @@ const TextInput = (props) => {
   const changeValue = (event) => {
     setValue(event.target.value);
     props.onChange(event.target.value);
-
     // TODO: Set failed label on password when failed to login
     // this.setState({error: "Failed!"});
   }
@@ -85,9 +83,6 @@ const TextInput = (props) => {
 
      if active (it is focused bc user clicked/tabbed to it)
       then display label bright purpur; display value dark gray; hide placeholder
-
-     if error (incorrect password)
-      then display error red; hide label
   */
   return (
     <div className={`${styles.field} ${active ? styles.active : ( value && styles.filled )}`}>
@@ -124,11 +119,11 @@ class SignInButton extends React.Component {
     };
     const res = await fetch('/api/account/verify', requestOptions);
     const result = await res.json();
-    console.log(result);
 
     if(!result || result.length === 0) {
       this.props.onSubmit("Failure");
     } else {
+      localStorage.setItem("user", JSON.stringify(result[0]));
       this.props.onSubmit("Success");
     }
   }

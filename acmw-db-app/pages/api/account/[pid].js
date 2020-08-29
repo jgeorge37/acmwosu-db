@@ -12,14 +12,21 @@ export default async (req, res) => {
       query: { pid },
     } = req
 
-    var result = ''
+    let result = {};
 
-    if(req.method === 'POST'){
-        const body = JSON.parse(req.body);
-
-        if(pid === 'verify') {
-            result = await verify(body.email, body.password);
+    try {
+        if(req.method === 'POST'){
+            const body = JSON.parse(req.body);
+    
+            if(pid === 'verify') {
+                result = await verify(body.email, body.password);
+            }
         }
+        res.statusCode = 200;
+    } catch(err) {
+        res.statusCode = 500;
+        result.error = err;
+    } finally {
+        res.json(result);
     }
-    res.json(result);
   }
