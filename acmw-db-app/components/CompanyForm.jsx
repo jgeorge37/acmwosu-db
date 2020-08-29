@@ -1,5 +1,5 @@
 import SubmitButton from './FormComponents/SubmitButton'
-import SearchInput from './FormComponents/SearchInput'
+import TextField from './FormComponents/TextField'
 import SelectInput from './FormComponents/SelectInput'
 import MultiSelectInput from './FormComponents/MultiSelectInput'
 import styles from '../styles/components/CompanyForm.module.css'
@@ -28,10 +28,10 @@ const CompanyForm = (props) => {
                     <div>
                         <h2>Search By: </h2>
                         <div className={styles.one}>
-                            <SearchInput label="Company Name"/>
+                            <TextField label="Company Name"/>
                         </div>
                         <div className={styles.two}>
-                        <SearchInput label="Contact Name"/>
+                            <TextField label="Contact Name"/>
                         </div>
                     </div>
                     <div>
