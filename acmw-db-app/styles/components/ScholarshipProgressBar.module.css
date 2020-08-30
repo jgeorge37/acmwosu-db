@@ -1,0 +1,43 @@
+  #popup_inner {  
+    position: fixed;  
+    left: 30%;  
+    right: 30%;  
+    top: 16%;  
+    bottom: 30%;   
+    border-radius: 20px;  
+    background: white;  
+    color: black;
+    overflow: auto;
+  }
+
+  .container_styles {
+    height: 20px;
+    width: '100%';
+    background-color: #c2c2c2;
+    border-radius: 50px;
+    margin-right: 50px;
+    margin-left: 50px;
+  }
+
+  .label_styles {
+    padding: 5px;
+    color: white;
+    font-weight: 900;
+  }
+
+  .list_scroll {
+    padding-top: 13%;
+    padding-bottom: 15px;
+    height: 100px; 
+    overflow: hidden; 
+    overflow-y: scroll;
+  }
+
+  #table_rows {
+    padding-top: 10px;
+    padding-bottom: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
+    vertical-align: top !important;
+  }
+  
