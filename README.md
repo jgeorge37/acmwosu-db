@@ -22,16 +22,31 @@ To view the contents of the database, install pgAdmin. Once your account is set 
 ## Running database migrations
 **If you are creating a new table, the table name should be singular, i.e. "student" not "students" for consistency.**
 1. Install PostgreSQL and create a database.
+Run ```psql postgres``` to go to the psql shell.
+Run ```CREATE acmwosu``` to create a new database called "acmwosu".
+If you run ```\l```, you should see it listed.
+Run ```\c acmwosu``` to connect to the database.
 2. Add the pgcrypto extension to the database.
+*Make sure you are connected to the database you want to add pgcrypto to.*
+In psql shell, run ```CREATE EXTENSION pgcrypto;```.
+If you run ```\dx```, you should see it listed.
 3. Create an .env file in the root directory with the following:
 ~~~~
 # Specifiy that you are working locally.
 NODE_ENV=local
-  
+
 # For running migrations on your local database.
 M_DB_PASSWORD={The password for your local Postgres instance}
 M_DB_PORT={The port of your local Postgres instance}
 M_DB_USER={Your local Postgres username, most likely "postgres"}
 M_DB_DATABASE={The name of the database you wish to use from your local instance}
 ~~~~
+To create a password, run ```\password``` in psql shell.
+The default PostgreSQL port is ```5432```; you can see it if you run:
+~~~~
+SELECT *
+FROM pg_settings
+WHERE name = 'port';
+~~~~
 3. From the root directory, run the command ```npm run migrate```. This will run migrations on only your local Postgres instance.
+If you run ```\dt```, you should see 5 tables.
