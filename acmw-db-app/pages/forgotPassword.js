@@ -27,13 +27,9 @@ class forgotPassword extends React.Component {
     event.preventDefault();
   
     if(this.validate()){
-        console.log(this.state);
-
         let input = {};
         input["email"] = "";
         this.setState({input:input});
-  
-        alert('Email confirmed. Form "submitted"');
     }
   }
   
@@ -41,11 +37,6 @@ class forgotPassword extends React.Component {
       let input = this.state.input;
       let errors = {};
       let isValid = true;
-
-      if (!input["email"]) {
-        isValid = false;
-        errors["email"] = "Please enter your email Address.";
-      }
 
       if (typeof input["email"] !== "undefined") {
 
@@ -80,7 +71,6 @@ class forgotPassword extends React.Component {
               name="email" 
               value={this.state.input.email}
               onChange={this.handleChange}
-              //class="form-control" 
               placeholder="Enter email" 
               id="email" />
   
