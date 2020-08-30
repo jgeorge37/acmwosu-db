@@ -70,32 +70,34 @@ const ScholarshipProgress = () => {
                 <div>
                     <div id={progress_styles.popup_inner}>
                         <table id={progress_styles.table_rows}>
-                            <tr>
-                                <th>Requirement Category</th>
-                                <th>% Done</th>
-                                <th>Details</th>
-                            </tr>
-                            <tr>
-                                <td>Other Scholarship</td>
-                                <td><ScholarshipProgressBar completed={calculateExternalScholarshipProgress(testScholarshipList, requiredAmountForExternalScholarship)}/></td>
-                                <td>
-                                    <div className={progress_styles.list_scroll}>{testScholarshipItems}</div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Volunteer Hours</td>
-                                <td><ScholarshipProgressBar completed={calculateVolunteerProgress(testVolunteeringList, requiredAmountForVolunteerHours)}/></td>
-                                <td>
-                                    <div className={progress_styles.list_scroll}>{testVolunteerItems}</div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>ACM-W Meetings</td>
-                                <td><ScholarshipProgressBar completed={calculateMeetingProgress(testMeetingList, requiredAmountForMeetings)}/></td>
-                                <td>
-                                    <div className={progress_styles.list_scroll}>{testMeetingItems}</div>
-                                </td>
-                            </tr>
+                            <thead>
+                                <tr>
+                                    <th>Requirement Category</th>
+                                    <th>% Done</th>
+                                    <th>Details</th>
+                                </tr>
+                                <tr>
+                                    <td>Other Scholarship</td>
+                                    <td><ScholarshipProgressBar completed={calculateExternalScholarshipProgress(testScholarshipList, requiredAmountForExternalScholarship)}/></td>
+                                    <td>
+                                        <div className={progress_styles.list_scroll}>{testScholarshipItems}</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Volunteer Hours</td>
+                                    <td><ScholarshipProgressBar completed={calculateVolunteerProgress(testVolunteeringList, requiredAmountForVolunteerHours)}/></td>
+                                    <td>
+                                        <div className={progress_styles.list_scroll}>{testVolunteerItems}</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ACM-W Meetings</td>
+                                    <td><ScholarshipProgressBar completed={calculateMeetingProgress(testMeetingList, requiredAmountForMeetings)}/></td>
+                                    <td>
+                                        <div className={progress_styles.list_scroll}>{testMeetingItems}</div>
+                                    </td>
+                                </tr>
+                            </thead>
                         </table>
                     </div>
                 </div>
