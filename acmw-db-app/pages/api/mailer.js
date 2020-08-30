@@ -5,7 +5,6 @@ import sgMail from '@sendgrid/mail'
 
 dotenv.config();
 
-console.log(process.env.SENDGRID_API_KEY);
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const sendEmail = (email, token) => {
@@ -15,7 +14,7 @@ const sendEmail = (email, token) => {
     subject: 'ACM-W OSU Database - Reset Password',
     text: 'hellooooo, here\'s your token: ' + token
   };
-  sgMail.send(msg);
+  sgMail.send(msg).catch(err => {throw err});
 }
 
 export default (req, res) => {
