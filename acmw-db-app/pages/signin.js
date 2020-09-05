@@ -18,12 +18,12 @@ const SignIn = () => {
       <main className={styles.main}>
         <div className={styles.card}>
           <img src="/logo.png" alt="ACM-W Logo" className={styles.logo} />
-          <h1> ACM-W OSU Database </h1>
+          <h1> OSU Database </h1>
           <h2> Please sign in to continue </h2>
           <TextInput
             id="username"
             label="Email"
-            predicted="brutus.1@osu.edu"
+            predicted="buckeye.1@osu.edu"
             onChange={setEmail}
             status={status}
             type="text"
@@ -103,6 +103,9 @@ const TextInput = (props) => {
         onFocus={() => setActive(true)}
         onBlur={() => setActive(false)}
       />
+      <label htmlFor={id}>	
+        {label}
+      </label>
     </div>
   );
 }
