@@ -36,7 +36,7 @@ const CompanyForm = (props) => {
                     </div>
                     <div>
                         <SubmitButton label="Apply" handleChange={handleChange} />
-                        <SubmitButton label="Close" handleChange={props.closeForm} />
+                        <SubmitButton label="Cancel" handleChange={props.closeForm} />
                     </div>
                 </form>
             </div>
