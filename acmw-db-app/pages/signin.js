@@ -57,7 +57,7 @@ const TextInput = (props) => {
   }
 
   const handleKeyPress = (event) => {
-    if (!value && event.key === "Enter") {
+    if (predicted && predicted.startsWith(value) && event.key === "Enter") {
       setValue(predicted);
     }
   }
@@ -103,17 +103,15 @@ const TextInput = (props) => {
   );
 }
 
-class SignInButton extends React.Component {
+const SignInButton = (props) => {
 
-  handleClick() {
+  const handleClick = () => {
     console.log("YOU CLICKED ME!");
   }
 
-  render() {
-    return (
-      <button className={styles.button} onClick={() => this.handleClick()}>
-        Submit
-      </button>
-    );
-  }
+  return (
+    <button className={styles.button} onClick={() => handleClick()}>
+      Submit
+    </button>
+  );
 }

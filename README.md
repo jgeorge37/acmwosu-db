@@ -6,10 +6,13 @@ Interface for ACM-W Exec Board members to query database of contacts and members
 2. [Install Node.js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) if not already installed
 3. Run ```npm install``` from the root directory
 4. Run ```npm install``` from the acmwosu-db/acmw-db-app directory
-5. Create an .env file in the acmwosu-db/acmw-db-app directory with the following (Heroku login in passwords spreadsheet in Drive):
+5. Create an .env file in the acmwosu-db/acmw-db-app directory with the following (Heroku login and SendGrid login/API key in passwords spreadsheet in Drive):
 ~~~~
 # Database connection (use local URI if wanting to use local DB)
 DATABASE_URL={Get the database URI from Heroku}
+
+# SendGrid API key
+SENDGRID_API_KEY={the API key from passwords spreadsheet}
 ~~~~
 The Heroku info may expire at some point; just go get the info again if things stop working.
 
