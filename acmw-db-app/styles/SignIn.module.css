@@ -138,7 +138,8 @@
   transition: 0.1s all ease-in-out;
 }
 
-.field input + label.error {
+label.error {
+  position: relative;
   color: #ec392f; /* red */
 }
 

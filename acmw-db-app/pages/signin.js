@@ -1,9 +1,14 @@
-import Head from 'next/head'
-import styles from '../styles/SignIn.module.css'
+import Head from 'next/head';
+import styles from '../styles/SignIn.module.css';
 import React, { useState } from 'react';
 
 const SignIn = () => {
   // TODO link to page that sends password by email?
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [status, setStatus] = useState("");
+
   return (
     <div className={styles.container}>
       <Head>
@@ -17,19 +22,27 @@ const SignIn = () => {
           <h2> Please sign in to continue </h2>
           <TextInput
             id="username"
-            label="Username"
-            predicted="Brutus Buckeye"
+            label="Email"
+            predicted="buckeye.1@osu.edu"
+            onChange={setEmail}
+            status={status}
             type="text"
           />
           <div className={styles.passwordChunk}>
             <TextInput
               id="password"
               label="Password"
+              status={status}
+              onChange={setPassword}
               type="password"
             />
-            <a className={styles.smol} href="https://crouton.net/">Forgot username or password?</a>
+            <a className={styles.smol} href="https://crouton.net/">Forgot password?</a>
           </div>
           <SignInButton
+            email={email}
+            password={password}
+            onSubmit={setStatus}
+            status={status}
           />
         </div>
       </main>
@@ -44,16 +57,13 @@ const TextInput = (props) => {
   const [id, setId] = useState(props.id);
   const [active, setActive] = useState(false);
   const [value, setValue] = useState("");
-  const [error, setError] = useState("");
   const [label, setLabel] = useState(props.label);
   const [type, setType] = useState(props.type);
   const [predicted, setPredicted] = useState(props.predicted);
 
   const changeValue = (event) => {
     setValue(event.target.value);
-
-    // TODO: Set failed label on password when failed to login
-    // this.setState({error: "Failed!"});
+    props.onChange(event.target.value);
   }
 
   const handleKeyPress = (event) => {
@@ -71,9 +81,6 @@ const TextInput = (props) => {
 
      if active (it is focused bc user clicked/tabbed to it)
       then display label bright purpur; display value dark gray; hide placeholder
-
-     if error (incorrect password)
-      then display error red; hide label
   */
   return (
     <div className={`${styles.field} ${active ? styles.active : ( value && styles.filled )}`}>
@@ -96,8 +103,8 @@ const TextInput = (props) => {
         onFocus={() => setActive(true)}
         onBlur={() => setActive(false)}
       />
-      <label htmlFor={id} className={error && styles.error}>
-        {error || label}
+      <label htmlFor={id}>	
+        {label}
       </label>
     </div>
   );
@@ -105,13 +112,32 @@ const TextInput = (props) => {
 
 const SignInButton = (props) => {
 
-  const handleClick = () => {
-    console.log("YOU CLICKED ME!");
+  const validateSignIn = async () => {
+    // Check that email and password match
+    const requestOptions = {
+      method: 'POST',
+      body: JSON.stringify({ email: props.email, password: props.password })
+    };
+    const res = await fetch('/api/account/verify', requestOptions);
+    const result = await res.json();
+
+    if(!result || result.length === 0) {
+      props.onSubmit("Failure");
+    } else {
+      localStorage.setItem("user", JSON.stringify(result[0]));
+      props.onSubmit("Success");
+    }
   }
 
   return (
-    <button className={styles.button} onClick={() => handleClick()}>
-      Submit
-    </button>
+    <div>
+      {props.status === "Failure" && 
+      <div><label className={styles.error}>
+        Incorrect email or password.
+      </label></div>}
+      <button className={styles.button} onClick={async () => await validateSignIn()}>
+        Submit
+      </button>
+    </div>
   );
 }
