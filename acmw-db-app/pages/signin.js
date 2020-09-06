@@ -67,7 +67,7 @@ const TextInput = (props) => {
   }
 
   const handleKeyPress = (event) => {
-    if (!value && event.key === "Enter") {
+    if (predicted && predicted.startsWith(value) && event.key === "Enter") {
       setValue(predicted);
     }
   }
@@ -110,39 +110,34 @@ const TextInput = (props) => {
   );
 }
 
-class SignInButton extends React.Component {
+const SignInButton = (props) => {
 
-  async validateSignIn() {
+  const validateSignIn = async () => {
     // Check that email and password match
     const requestOptions = {
       method: 'POST',
-      body: JSON.stringify({ email: this.props.email, password: this.props.password })
+      body: JSON.stringify({ email: props.email, password: props.password })
     };
     const res = await fetch('/api/account/verify', requestOptions);
     const result = await res.json();
 
     if(!result || result.length === 0) {
-      this.props.onSubmit("Failure");
+      props.onSubmit("Failure");
     } else {
       localStorage.setItem("user", JSON.stringify(result[0]));
-      this.props.onSubmit("Success");
+      props.onSubmit("Success");
     }
   }
 
-  render() {
-    let signinError;
-    if (this.props.status === "Failure") {
-      signinError = <div><label className={styles.error}>
+  return (
+    <div>
+      {props.status === "Failure" && 
+      <div><label className={styles.error}>
         Incorrect email or password.
-      </label></div>
-    }
-    return (
-      <div>
-        {signinError}
-        <button className={styles.button} onClick={async () => await this.validateSignIn()}>
-          Submit
-        </button>
-      </div>
-    );
-  }
+      </label></div>}
+      <button className={styles.button} onClick={async () => await validateSignIn()}>
+        Submit
+      </button>
+    </div>
+  );
 }
