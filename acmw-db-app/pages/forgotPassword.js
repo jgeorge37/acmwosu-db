@@ -36,17 +36,19 @@ class forgotPassword extends React.Component {
   validate(){
       let input = this.state.input;
       let errors = {};
-      let isValid = true;
+      let isValid = false;
 
-        if ( input.value !== "undefined" && input.value !== null && input.value !== "") {
+        if (input.email !== "undefined" && input.email !== null && input.email !== "") {
 
         var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
-        if (!pattern.test(input["email"])) {
-          isValid = false;
-          errors["email"] = "Please enter valid email address.";
+          if (pattern.test(input["email"])) {
+            isValid = true;
+          }
         }
-        }
-      
+      if(!isValid){
+        errors["email"] = "Please enter valid email address.";
+      }
+
       this.setState({
         errors: errors
       });
