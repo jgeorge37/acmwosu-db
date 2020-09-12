@@ -36,7 +36,7 @@ const SignIn = () => {
               onChange={setPassword}
               type="password"
             />
-            <a className={styles.smol} href="https://crouton.net/">Forgot password?</a>
+            <a className={styles.smol} href="/reset">Forgot password?</a>
           </div>
           <SignInButton
             email={email}
@@ -103,7 +103,7 @@ const TextInput = (props) => {
         onFocus={() => setActive(true)}
         onBlur={() => setActive(false)}
       />
-      <label htmlFor={id}>	
+      <label htmlFor={id}>
         {label}
       </label>
     </div>
@@ -131,7 +131,7 @@ const SignInButton = (props) => {
 
   return (
     <div>
-      {props.status === "Failure" && 
+      {props.status === "Failure" &&
       <div><label className={styles.error}>
         Incorrect email or password.
       </label></div>}

@@ -3,9 +3,10 @@ import styles from '../styles/Database.module.css'
 import progress_styles from '../styles/components/ScholarshipProgressBar.module.css'
 import {useState} from 'react'
 import ScholarshipProgressBar from '../components/ScholarshipProgressBar'
+import NavBar from '../components/NavBar'
 
 const ScholarshipProgress = () => {
-    
+
     // can be easily changed if scholarship requirements change
     const requiredAmountForExternalScholarship = 1;
     const requiredAmountForVolunteerHours = 4;
@@ -15,7 +16,7 @@ const ScholarshipProgress = () => {
     // For future, these will be passed in from Admin input
 
     // Milly: my thoughts on how to implement on admin/backend side to
-    // work with this to be choose: category, amount (either: single-scholarship, hours, or single-meeting), 
+    // work with this to be choose: category, amount (either: single-scholarship, hours, or single-meeting),
     // and string comment of details like the date and have that passed into corresponding list
     // then the progress calculated from the inputted amount matched to category
 
@@ -27,7 +28,7 @@ const ScholarshipProgress = () => {
 
     // pass in string of details, added to list
     const testMeetingList = ['ACM-W Meeting 9/2','ACM-W Meeting 9/9','ACM-W Meeting 9/16','ACM-W Meeting 9/23','ACM-W Meeting 9/30','ACM-W Meeting 10/7'];
-    
+
     function calculateExternalScholarshipProgress(testScholarshipList, requiredAmountForExternalScholarship) {
         let percentExternScholarship = (testScholarshipList.length / requiredAmountForExternalScholarship) * 100;
         return percentExternScholarship;
@@ -55,7 +56,7 @@ const ScholarshipProgress = () => {
     // need to only map the keys since those hold the string details
     const testVolunteerItems = Object.keys(testVolunteeringList).map((testVolunteeringList, index) =>
         <li key={index}>{testVolunteeringList}</li>);
-      
+
     const testMeetingItems = testMeetingList.map((testMeetingList, index) =>
      <li key={index}>{testMeetingList}</li>);
 
@@ -66,6 +67,7 @@ const ScholarshipProgress = () => {
                 <title>GHC Scholarship Progress</title>
             </Head>
             <h1 className={styles.header}>GHC Scholarship Progress Page</h1>
+            <NavBar current="scholarshipprogress"/>
             <main className={styles.main}>
                 <div>
                     <div id={progress_styles.popup_inner}>
