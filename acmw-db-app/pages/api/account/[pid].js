@@ -37,6 +37,8 @@ export default async (req, res) => {
                 default:
                     throw("Invalid pid");
             }
+        } else {
+            throw("Invalid request type for account");
         }
         res.statusCode = 200;
     } catch(err) {
