@@ -10,6 +10,8 @@ const SponsorshipForm = (props) => {
         console.log("Hello!")
     }
 
+    // I think this could be expanded out some more once we get the databases finished
+
     const tempOptions = ["Most recent sponsorship date", "Least recent sponsorship date"]
     const temp2Options = ["All sponsors", "2019-2020 Sponsors", "2018-2019 Sponsors"]
 
@@ -27,13 +29,13 @@ const SponsorshipForm = (props) => {
                     </div>
                     <div>
                         <h2>Search for Company Sponsor: </h2>
-                        <div className={styles.one}>
+                        <div>
                             <TextField label="Company Name"/>
                         </div>
                     </div>
                     <div>
                         <SubmitButton label="Apply" handleChange={handleChange} />
-                        <SubmitButton label="Cancel" handleChange={props.closeForm} />
+                        <SubmitButton label="Cancel" handleChange={props.handleCancel} />
                     </div>
                 </form>
             </div>
