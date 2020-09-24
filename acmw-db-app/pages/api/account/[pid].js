@@ -12,7 +12,6 @@ async function verify (email, password) {
 async function create (email, password, student_id) {
     const data = await pgQuery(`INSERT INTO account (email, password, student_id) 
         VALUES ('${email}', crypt('${password}', gen_salt('md5')), ${student_id ? `'${student_id}'`: null});`); // Ensure that if student_id is undefined, empty, etc. it gets inserted as null
-    console.log(data)
     return data;
 }
 
