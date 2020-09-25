@@ -27,7 +27,22 @@
     transition: 0.3s background-color ease-in-out, 0.3s box-shadow ease-in-out;
   }
 
+  .multi {
+    height: 60px;
+    width: 220px;
+    border-radius: 4px;
+    margin: auto;
+    position: relative;
+    font-size: 17px;
+    background-color: white;
+  }
+
   .label {
     display: block;
     font-size: 20px;
+  }
+
+  label.error {
+    position: relative;
+    color: #ec392f; /* red */
   }

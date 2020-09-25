@@ -22,17 +22,6 @@
     color: black;
   }
 
-  .one {
-    width: 25%;
-    height: 75px;
-    float: left;
-  }
-  
-  .two {
-    margin-left: 40%;
-    height: 75px;
-  }
-
   .form {
     padding: 10px 15px;
   }
