@@ -16,3 +16,8 @@
   border-radius: 10px;
   overflow: auto;
 }
+
+label.error {
+  position: relative;
+  color: #ec392f; /* red */
+}
