@@ -11,6 +11,7 @@ const CompanyContacts = () => {
     const [showOptionsForm, setOptionsForm] = useState(false)
     const [showAddCompanyForm, setAddCompanyForm] = useState(false)
     const [showAddContactForm, setAddContactForm] = useState(false)
+    const [showSponsorshipForm, setSponsorshipForm] = useState(false)
 
     return (
         <div className={styles.container}>
@@ -25,7 +26,9 @@ const CompanyContacts = () => {
                 <SubmitButton label="Add Company" handleChange={() => {setAddCompanyForm(true)}}/>
                 {showAddCompanyForm && <AddCompanyForm handleCancel={() => {setAddCompanyForm(false)}}/>}
                 <SubmitButton label="Add Contact" handleChange={() => {setAddContactForm(true)}}/>
-                {showAddContactForm && <AddContactForm handleCancel={() => PsetAddContactForm(false)}/>}
+                {showAddContactForm && <AddContactForm handleCancel={() => {setAddContactForm(false)}}/>}
+                <SubmitButton label="Sponsorship Options" handleChange={() => {setSponsorshipForm(true)}}/>
+                {showSponsorshipForm && <SponsorshipForm handleCancel={() => {setSponsorshipForm(false)}}/>}
             </main>
         </div>
     )

@@ -16,6 +16,9 @@ SENDGRID_API_KEY={the API key from passwords spreadsheet}
 ~~~~
 The Heroku info may expire at some point; just go get the info again if things stop working.
 
+## Developing with local Postgres instance
+If working on database-related features where testing on a local instance is necessary, change the DATABASE_URL in the acmw-db-app .env to your local database URL, and comment out the indicated line in acmw-db-app/postgres/pg-query.js. Do not commit pg-query.js with that line commented out.
+
 ## Usage
 To start the application locally, run ```npm run dev``` from the root directory.
 
