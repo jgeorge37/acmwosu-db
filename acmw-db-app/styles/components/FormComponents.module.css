@@ -31,3 +31,7 @@
     display: block;
     font-size: 20px;
   }
+
+  .error {
+    color: red;
+  }

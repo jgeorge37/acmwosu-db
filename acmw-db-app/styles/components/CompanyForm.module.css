@@ -9,6 +9,7 @@
     margin: auto;  
     background-color: rgba(0,0,0, 0.5);  
   }  
+  
   .popup_inner {  
     position: fixed;  
     overflow: auto;
