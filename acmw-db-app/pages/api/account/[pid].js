@@ -21,12 +21,38 @@ async function generateToken (email) {
     const data = await pgQuery(`
         UPDATE account 
         SET reset_token = '${token}', token_expire_time = current_timestamp + INTERVAL '2 days'
-        WHERE email = '${email}'
+        WHERE email = '${email}';
     `);
 
     // throw error if the email address doesn't match an account
     if(data.rowCount === 0) throw (`Account with email ${email} does not exist.`);
     return data;
+}
+
+// POST /api/account/reset-pw
+// Reset password for the account associated with a token provided token is not expired.
+// Returns the email address of the account whose password was reset.
+async function resetPassword (token, password) {
+    // Get the email address associated with a token if token is not expired
+    const validResetWindow = await pgQuery(`
+        SELECT email FROM account 
+        WHERE current_timestamp <= token_expire_time AND reset_token = '${token}';
+    `);
+    if(validResetWindow.rowCount === 0) throw ('Reset password link either expired or invalid');
+    
+    try {
+        // Set reset_token to null so link cannot be reused and set new password
+        await pgQuery(`
+            UPDATE account SET 
+                reset_token = null,
+                token_expire_time = null,
+                password = crypt('${password}', gen_salt('md5')) 
+            WHERE email = '${validResetWindow.rows[0].email}';
+        `);
+    } catch(err) {
+        throw("Could not update password: " + err);
+    }
+    return validResetWindow.rows[0].email;
 }
 
 export default async (req, res) => {
@@ -42,9 +68,12 @@ export default async (req, res) => {
     
             if(pid === 'verify') {
                 result = await verify(body.email, body.password);
-            } else if(pid == 'generate-token') {
-                if(!body.email) throw("Missing email address in request body.");
+            } else if(pid === 'generate-token') {
+                if(!body.email) throw ("Missing email address in request body.");
                 result = await generateToken(body.email);
+            } else if(pid === 'reset-pw') {
+                if(!body.password || !body.token) throw ("Missing token and/or new password");
+                result = await resetPassword(body.token, body.password);
             } else {
                 throw("Invalid pid");
             }
