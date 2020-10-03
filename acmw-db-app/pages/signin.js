@@ -36,7 +36,7 @@ const SignIn = () => {
               onChange={setPassword}
               type="password"
             />
-            <a className={styles.smol} href="https://crouton.net/">Forgot password?</a>
+            <a className={styles.smol} href="/reset">Forgot password?</a>
           </div>
           <SignInButton
             email={email}

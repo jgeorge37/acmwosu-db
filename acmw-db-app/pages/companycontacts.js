@@ -5,7 +5,7 @@ import CompanyForm from '../components/CompanyForm'
 import AddCompanyForm from '../components/AddCompanyForm'
 import SubmitButton from '../components/FormComponents/SubmitButton'
 import AddContactForm from '../components/AddContactForm'
-import SponsorshipForm from '../components/SponsorshipForm'
+import NavBar from '../components/NavBar'
 
 const CompanyContacts = () => {
     const [showOptionsForm, setOptionsForm] = useState(false)
@@ -18,6 +18,7 @@ const CompanyContacts = () => {
             <Head>
                 <title>Company Contacts Database</title>
             </Head>
+            <NavBar current="companycontacts"/>
             <h1 className={styles.header}>Company Contacts Database</h1>
             <main className={styles.main}>
                 <SubmitButton label="Options" handleChange={() => {setOptionsForm(true)}}/>
