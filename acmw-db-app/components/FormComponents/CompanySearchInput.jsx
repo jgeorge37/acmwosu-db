@@ -45,7 +45,7 @@ const CompanySearchInput = (props) => {
     return (
         <div>
             <label className={styles.label}>Company Search</label>
-            <input autoComplete="off" type="text" className={styles.field} placeholder="Search..." id="companySearch" onKeyDown={filterFunction}></input>
+            <input autoComplete="off" type="text" className={styles.field} placeholder="Search..." id="companySearch" onChange={filterFunction}></input>
             {(companyList.length > 0) && <MultiSelectInput options={companyList} onChange={props.handleMultiSelect}/>}
             {(isText && companyList.length == 0) && <div><label className={styles.error}>That company does not exist!</label></div>}
         </div>
