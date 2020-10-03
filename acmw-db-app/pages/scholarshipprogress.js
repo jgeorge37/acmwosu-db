@@ -11,6 +11,7 @@ const ScholarshipProgress = () => {
     const requiredAmountForExternalScholarship = 1;
     const requiredAmountForVolunteerHours = 4;
     const requiredAmountForMeetings = 10;
+    const requiredAmountForSemester = 5;
 
 
     // For future, these will be passed in from Admin input
@@ -93,8 +94,15 @@ const ScholarshipProgress = () => {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>ACM-W Meetings</td>
-                                    <td><ScholarshipProgressBar completed={calculateMeetingProgress(testMeetingList, requiredAmountForMeetings)}/></td>
+                                    <td>ACM-W Meetings Fall</td>
+                                    <td><ScholarshipProgressBar completed={calculateMeetingProgress(testMeetingList, requiredAmountForSemester)}/></td>
+                                    <td>
+                                        <div className={progress_styles.list_scroll}>{testMeetingItems}</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ACM-W Meetings Spring</td>
+                                    <td><ScholarshipProgressBar completed={calculateMeetingProgress(testMeetingList, requiredAmountForSemester)}/></td>
                                     <td>
                                         <div className={progress_styles.list_scroll}>{testMeetingItems}</div>
                                     </td>
