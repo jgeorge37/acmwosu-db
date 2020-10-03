@@ -27,7 +27,7 @@ const CompanySearchInput = (props) => {
     const [isText, setIsText] = useState(false) // Has the user entered text
 
     const filterFunction = (event) => {
-        if (event.target.value != "") {
+        if (event.target.value) {
             setIsText(true)
             getCompanyInfo(event.target.value).then((data) => {
                 const tempList = []
