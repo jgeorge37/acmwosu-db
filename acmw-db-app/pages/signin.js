@@ -36,7 +36,7 @@ const SignIn = () => {
               onChange={setPassword}
               type="password"
             />
-            <a className={styles.smol} href="https://crouton.net/">Forgot password?</a>
+            <a className={styles.smol} href="/reset">Forgot password?</a>
           </div>
           <SignInButton
             email={email}
@@ -69,6 +69,7 @@ const TextInput = (props) => {
   const handleKeyPress = (event) => {
     if (predicted && predicted.startsWith(value) && event.key === "Enter") {
       setValue(predicted);
+      props.onChange(predicted);
     }
   }
 
@@ -103,7 +104,7 @@ const TextInput = (props) => {
         onFocus={() => setActive(true)}
         onBlur={() => setActive(false)}
       />
-      <label htmlFor={id}>	
+      <label htmlFor={id}>
         {label}
       </label>
     </div>
@@ -112,28 +113,45 @@ const TextInput = (props) => {
 
 const SignInButton = (props) => {
 
+  const [message, setMessage] = useState("");
+
   const validateSignIn = async () => {
     // Check that email and password match
-    const requestOptions = {
-      method: 'POST',
-      body: JSON.stringify({ email: props.email, password: props.password })
-    };
-    const res = await fetch('/api/account/verify', requestOptions);
-    const result = await res.json();
+    const regex = new RegExp("[a-z]+\.[1-9]([0-9]+)?@(buckeyemail\.)?osu\.edu"); //matches letters . number w/o leading 0 @ (buckeyemail.) osu . edu
+    if (props.email && props.password && regex.test(props.email)) {
+      const requestOptions = {
+        method: 'POST',
+        body: JSON.stringify({ email: props.email, password: props.password })
+      };
+      const res = await fetch('/api/account/verify', requestOptions);
+      const result = await res.json();
 
-    if(!result || result.length === 0) {
-      props.onSubmit("Failure");
+      if(!result || result.length === 0) {
+        props.onSubmit("Failure");
+        setMessage("Incorrect email or password.");
+      } else {
+        localStorage.setItem("user", JSON.stringify(result[0]));
+        props.onSubmit("Success");
+      }
     } else {
-      localStorage.setItem("user", JSON.stringify(result[0]));
-      props.onSubmit("Success");
+      props.onSubmit("Failure");
+      if (!props.email && !props.password) {
+        setMessage("Please enter your email and password.")
+      } else if (!props.email) {
+        setMessage("Please enter your OSU email.")
+      } else if (!props.password) {
+        setMessage("Please enter your password.")
+      } else {
+        setMessage("Invalid OSU email address.");
+      }
     }
   }
 
   return (
     <div>
-      {props.status === "Failure" && 
+      {props.status === "Failure" &&
       <div><label className={styles.error}>
-        Incorrect email or password.
+        {message}
       </label></div>}
       <button className={styles.button} onClick={async () => await validateSignIn()}>
         Submit
