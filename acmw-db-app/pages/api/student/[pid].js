@@ -5,7 +5,7 @@ async function totalUniqueMembers () {
     const d = new Date();
     const year = d.getFullYear() - 2000;
     const month = d.getMonth();
-    var fall = "AU", spring = "SP";
+    let fall = "AU", spring = "SP";
     if (8 <= month <= 12) {
       // it's currrently fall semester
       fall += year;
@@ -17,12 +17,12 @@ async function totalUniqueMembers () {
     }
     const data = await pgQuery(`SELECT COUNT(DISTINCT name_dot_num)
                                 FROM student
-                                INNER JOIN
-                                  meeting_student INNER JOIN meeting
+                                INNER JOIN meeting_student
+                                  INNER JOIN meeting
                                   ON meeting_student.meeting_id=meeting.id
-                                  AND (meeting.semester='${fall}' OR meeting.semester='${spring}')
-                                ON student.id=meeting_student.student_id`);
-    return data.rows[0]["count"];
+                                ON student.id=meeting_student.student_id
+                                WHERE (meeting.semester='${fall}' OR meeting.semester='${spring}')`);
+    return data.rows[0]["count"] ? data.rows[0]["count"] : 0;
 }
 
 export default async (req, res) => {
