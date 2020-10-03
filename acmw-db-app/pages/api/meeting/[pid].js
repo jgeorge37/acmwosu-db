@@ -2,13 +2,28 @@ import pgQuery from '../../../postgres/pg-query.js';
 
 // GET /api/meeting/averageAttendance
 async function averageAttendance () {
-    var attendees = 0;
-    const meetingIds = await pgQuery(`SELECT id FROM meeting`);
-    for (var i = 0; i < meetingIds.rows.length; i++) {
-        const data = await pgQuery(`SELECT COUNT (*) FROM meeting_student WHERE meeting_id=${meetingIds.rows[i]["id"]}`);
-        attendees += parseInt(data.rows[0]["count"], 10);
+    const d = new Date();
+    const year = d.getFullYear() - 2000;
+    const month = d.getMonth();
+    var fall = "AU", spring = "SP";
+    if (8 <= month <= 12) {
+      // it's currrently fall semester
+      fall += year;
+      spring += (year + 1);
+    } else {
+      //it's currrently spring (or summer)
+      fall += (year - 1);
+      spring += year;
     }
-    return attendees/meetingIds.rows.length;
+    const data = await pgQuery(`SELECT AVG(COUNT) FROM
+                                      ( SELECT COUNT(DISTINCT student_id)
+                                        FROM meeting_student
+                                        INNER JOIN meeting
+                                        ON meeting_student.meeting_id=meeting.id
+                                        AND (meeting.semester='${fall}' OR meeting.semester='${spring}')
+                                        GROUP BY meeting_student.meeting_id)
+                                      as counts;`);
+    return data.rows[0]["avg"];
 }
 
 export default async (req, res) => {
