@@ -17,8 +17,8 @@ const CompanyContacts = () => {
             <Head>
                 <title>Company Contacts Database</title>
             </Head>
-            <h1 className={styles.header}>Company Contacts Database</h1>
             <NavBar current="companycontacts"/>
+            <h1 className={styles.header}>Company Contacts Database</h1>
             <main className={styles.main}>
                 <SubmitButton label="Options" handleChange={() => {setOptionsForm(true)}}/>
                 {showOptionsForm && <CompanyForm handleCancel={() => {setOptionsForm(false)}}/>}

@@ -66,8 +66,8 @@ const ScholarshipProgress = () => {
             <Head>
                 <title>GHC Scholarship Progress</title>
             </Head>
-            <h1 className={styles.header}>GHC Scholarship Progress Page</h1>
             <NavBar current="scholarshipprogress"/>
+            <h1 className={styles.header}>GHC Scholarship Progress Page</h1>
             <main className={styles.main}>
                 <div>
                     <div id={progress_styles.popup_inner}>
