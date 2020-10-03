@@ -5,7 +5,7 @@ async function averageAttendance () {
     const d = new Date();
     const year = d.getFullYear() - 2000;
     const month = d.getMonth();
-    var fall = "AU", spring = "SP";
+    let fall = "AU", spring = "SP";
     if (8 <= month <= 12) {
       // it's currrently fall semester
       fall += year;
@@ -16,14 +16,14 @@ async function averageAttendance () {
       spring += year;
     }
     const data = await pgQuery(`SELECT AVG(COUNT) FROM
-                                      ( SELECT COUNT(DISTINCT student_id)
-                                        FROM meeting_student
-                                        INNER JOIN meeting
-                                        ON meeting_student.meeting_id=meeting.id
-                                        AND (meeting.semester='${fall}' OR meeting.semester='${spring}')
-                                        GROUP BY meeting_student.meeting_id)
-                                      as counts;`);
-    return data.rows[0]["avg"];
+                                ( SELECT COUNT(DISTINCT student_id)
+                                  FROM meeting_student
+                                  RIGHT JOIN meeting
+                                  ON meeting_student.meeting_id=meeting.id
+                                  WHERE (meeting.semester='${fall}' OR meeting.semester='${spring}')
+                                GROUP BY meeting.id)
+                                as counts;`);
+    return data.rows[0]["avg"] ? data.rows[0]["avg"] : 0;
 }
 
 export default async (req, res) => {
