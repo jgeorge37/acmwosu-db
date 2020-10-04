@@ -17,7 +17,7 @@ async function averageAttendance () {
     }
     const data = await pgQuery(
       `SELECT AVG(COUNT) FROM
-      ( SELECT COUNT(DISTINCT student_id)
+      ( SELECT COUNT(student_id)
       FROM meeting_student
       RIGHT JOIN meeting
       ON meeting_student.meeting_id=meeting.id
