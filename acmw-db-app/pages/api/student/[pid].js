@@ -1,20 +1,9 @@
 import pgQuery from '../../../postgres/pg-query.js';
+import {currentAcademicYear} from '../utility';
 
 // GET /api/student/totalUniqueMembers
 async function totalUniqueMembers () {
-    const d = new Date();
-    const year = d.getFullYear() - 2000;
-    const month = d.getMonth();
-    let fall = "AU", spring = "SP";
-    if (8 <= month <= 12) {
-      // it's currrently fall semester
-      fall += year;
-      spring += (year + 1);
-    } else {
-      //it's currrently spring (or summer)
-      fall += (year - 1);
-      spring += year;
-    }
+    const [fall, spring] = currentAcademicYear();
     const data = await pgQuery(`SELECT COUNT(DISTINCT name_dot_num)
                                 FROM student
                                 INNER JOIN meeting_student
