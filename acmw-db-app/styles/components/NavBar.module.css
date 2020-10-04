@@ -1,0 +1,44 @@
+/* COLOR SCHEME
+  light purpur: #BA9ADF
+  bright purpur: #9A49CE
+  white: #FFFFFF
+  dark gray: #373738
+*/
+
+.bar {
+  list-style-type: none;
+  margin: 0px;
+  padding: 0px;
+  overflow: hidden;
+  justify-content: left;
+  align-items: center;
+  background-color: #9A49CE;
+}
+
+.tab {
+  float: left;
+}
+
+.tab.signin {
+  float: right;
+}
+
+.tab a {
+  display: block;
+  color: #FFFFFF;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  margin: 0px;
+  transition: 0.2s background-color ease-in-out, 0.2s color ease-in-out;
+}
+
+.tab a:hover {
+  background-color: #FFFFFF;
+  color: #9A49CE;
+}
+
+.tab a.current {
+  background-color: #FFFFFF;
+  color: #9A49CE;
+}
