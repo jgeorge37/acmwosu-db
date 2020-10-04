@@ -15,10 +15,18 @@ const GHCVolunteerForm = (props) => {
     const [volunteerEventName, setVolunteerEventName] = useState("")
     const [numHours, setNumHours] = useState(0)
     const [hourError, setHourError] = useState("")
+    const [eventError, setEventError] = useState("")
 
     const onSubmit = () => {
-        // replace later with an api call to POST data
-        
+        if (volunteerEventName == "" || numHours == 0) {
+            setEventError("Event name must not be blank!")
+            setHourError("Must provide a number greater than 0!")
+            return false;
+        } else {
+            // do api call to POST data
+            props.closeForm()
+            return true;
+        }
     }
 
     const validateHours = (value) => {
@@ -41,14 +49,14 @@ const GHCVolunteerForm = (props) => {
                         <SelectInput label={"Update volunteer hours for: "} options={GHCNames} onChange={(event) => setGHCName(event.target.value)}/>
                     </div>
                     <div>
-                        <TextField label="Volunteer Event Name" onChange={(event) => setVolunteerEventName(event.target.value)}/>
+                        <TextField label="Volunteer Event Name" error={eventError} onChange={(event) => setVolunteerEventName(event.target.value)}/>
                         <TextField label="Number of Hours" error={hourError} onChange={(event) => validateHours(event.target.value)}/>
-                    </div>
-                    <div>
-                        <SubmitButton label="Apply" handleChange={onSubmit} />
-                        <SubmitButton label="Cancel" handleChange={props.closeForm} />
-                    </div>
+                    </div>                    
                 </form>
+                <span className={styles.buttons}>
+                    <SubmitButton label="Apply" handleChange={onSubmit} />
+                    <SubmitButton label="Cancel" handleChange={props.closeForm} />
+                </span>
             </div>
      </div>
     )

@@ -22,7 +22,7 @@ const ExecDashboard = () => {
             <h1 className={styles.header}>Exec Dashboard</h1>
             <main className={styles.main}>
                 <SubmitButton label="Update GHC Volunteer Hours" handleChange={() => {setShowGHCForm(true)}}/>
-                {showGHCForm && <GHCVolunteerForm onSubmit={() => {onSubmit}} closeForm={() => {setShowGHCForm(false)}}/>}
+                {showGHCForm && <GHCVolunteerForm closeForm={() => {setShowGHCForm(false)}}/>}
             </main>
         </div>
     )
