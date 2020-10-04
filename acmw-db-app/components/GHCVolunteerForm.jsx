@@ -18,14 +18,18 @@ const GHCVolunteerForm = (props) => {
     const [eventError, setEventError] = useState("")
 
     const onSubmit = () => {
-        if (volunteerEventName == "" || numHours == 0) {
+        if (volunteerEventName == "" && numHours == 0) {
             setEventError("Event name must not be blank!")
             setHourError("Must provide a number greater than 0!")
-            return false;
+        } else if (volunteerEventName == "") {
+            setEventError("Event name must not be blank!")
+            setHourError("")
+        } else if (numHours == 0) {
+            setEventError("")
+            setHourError("Must provide a number greater than 0!")
         } else {
             // do api call to POST data
             props.closeForm()
-            return true;
         }
     }
 
