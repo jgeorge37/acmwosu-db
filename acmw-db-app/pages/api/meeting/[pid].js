@@ -21,8 +21,7 @@ async function averageAttendance () {
                                   RIGHT JOIN meeting
                                   ON meeting_student.meeting_id=meeting.id
                                   WHERE (meeting.semester='${fall}' OR meeting.semester='${spring}')
-                                GROUP BY meeting.id)
-                                as counts;`);
+                                  GROUP BY meeting.id) as counts;`);
     return data.rows[0]["avg"] ? data.rows[0]["avg"] : 0;
 }
 
