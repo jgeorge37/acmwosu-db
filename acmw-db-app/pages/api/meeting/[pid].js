@@ -1,20 +1,9 @@
 import pgQuery from '../../../postgres/pg-query.js';
+import {currentAcademicYear} from '../utility';
 
 // GET /api/meeting/averageAttendance
 async function averageAttendance () {
-    const d = new Date();
-    const year = d.getFullYear() - 2000;
-    const month = d.getMonth();
-    let fall = "AU", spring = "SP";
-    if (8 <= month <= 12) {
-      // it's currrently fall semester
-      fall += year;
-      spring += (year + 1);
-    } else {
-      //it's currrently spring (or summer)
-      fall += (year - 1);
-      spring += year;
-    }
+    const [fall, spring] = currentAcademicYear();
     const data = await pgQuery(
       `SELECT AVG(COUNT) FROM
       ( SELECT COUNT(student_id)
