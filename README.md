@@ -29,15 +29,15 @@ To view the contents of the database, install pgAdmin. Once your account is set 
 **If you are creating a new table, the table name should be singular, i.e. "student" not "students" for consistency.**
 1. Install PostgreSQL and create a database.
 2. Add the pgcrypto extension to the database.
-3. Create an .env file in the **root directory, not where the other .env is,** with the following:
+3. Create an .env file in the **root directory, not where the other .env is,** with the following (**excluding curly braces**):
 ~~~~
 # Specifiy that you are working locally.
 NODE_ENV=local
   
 # For running migrations on your local database.
-M_DB_PASSWORD=*The password for your local Postgres instance*
-M_DB_PORT=*The port of your local Postgres instance*
-M_DB_USER=*Your local Postgres username, most likely "postgres"*
-M_DB_DATABASE=*The name of the database you wish to use from your local instance*
+M_DB_PASSWORD={The password for your local Postgres instance}
+M_DB_PORT={The port of your local Postgres instance}
+M_DB_USER={Your local Postgres username, most likely "postgres"}
+M_DB_DATABASE={The name of the database you wish to use from your local instance}
 ~~~~
 3. From the root directory, run the command ```npm run migrate```. This will run migrations on only your local Postgres instance.
