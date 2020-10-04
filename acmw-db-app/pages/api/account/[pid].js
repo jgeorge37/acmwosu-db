@@ -72,7 +72,7 @@ export default async (req, res) => {
 
     try {
         if(req.method === 'POST'){
-            const body = JSON.parse(req.body);
+            const body = typeof(req.body) === 'object' ? req.body : JSON.parse(req.body);
             switch(pid) {
                 case 'verify':
                     result = await verify(body.email, body.password);
