@@ -4,15 +4,15 @@ import {currentAcademicYear} from '../utility';
 // GET /api/student/totalUniqueMembers
 async function totalUniqueMembers () {
     const [fall, spring] = currentAcademicYear();
-    const data = await pgQuery(
-      `SELECT COUNT(DISTINCT name_dot_num)
+    const data = await pgQuery(`
+      SELECT COUNT(DISTINCT name_dot_num)
       FROM student
       INNER JOIN meeting_student
       INNER JOIN meeting
       ON meeting_student.meeting_id=meeting.id
       ON student.id=meeting_student.student_id
-      WHERE (meeting.semester='${fall}' OR meeting.semester='${spring}')`
-    );
+      WHERE (meeting.semester='${fall}' OR meeting.semester='${spring}')
+    `);
     return data.rows[0]["count"] ? data.rows[0]["count"] : 0;
 }
 
