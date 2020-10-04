@@ -1,7 +1,7 @@
 import pgQuery from '../../../postgres/pg-query.js';
 import {currentAcademicYear} from '../utility';
 
-// GET /api/meeting/averageAttendance
+// GET /api/meeting/average-attendance
 async function averageAttendance () {
     const [fall, spring] = currentAcademicYear();
     const data = await pgQuery(
@@ -31,7 +31,7 @@ async function studentAttendance(id) {
 // GET /api/meeting/account-attendance
 async function accountAttendance(email) {
 	const data = await pgQuery(`SELECT s.id FROM student s INNER JOIN account a on s.id = a.student_id WHERE a.email = '${email}'`);
-	if(data.rowCount === 0) throw (`No student associated with account ${email}`);
+	if(!data.rowCount) throw (`No student associated with account ${email}`);
 	return (await studentAttendance(data.rows[0].id));
 }
 
@@ -44,7 +44,7 @@ export default async (req, res) => {
 
     try {
         if (req.method === 'GET'){
-            if (pid === 'averageAttendance') {
+            if (pid === 'average-attendance') {
                 result = await averageAttendance();
             } else if (pid === 'account-attendance') {
 				if(!req.query || (!req.query.email)) {
