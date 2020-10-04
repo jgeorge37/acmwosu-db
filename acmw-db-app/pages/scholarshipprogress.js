@@ -72,8 +72,9 @@ const ScholarshipProgress = () => {
         return percentVolunteerHours;
     }
 
-    function calculateMeetingProgress(testMeetingList, requiredAmountForMeetings) {
-        let percentMeetings = (testMeetingList.length / requiredAmountForMeetings) * 100;
+    function calculateMeetingProgress(numMeetings, requiredAmountForMeetings) {
+        // let percentMeetings = (testMeetingList.length / requiredAmountForMeetings) * 100;
+        let percentMeetings = (numMeetings / requiredAmountForMeetings) * 100;
         return percentMeetings;
     }
 
@@ -122,14 +123,14 @@ const ScholarshipProgress = () => {
                                 </tr>
                                 <tr>
                                     <td>ACM-W Meetings Fall: {fallMeetings} attended</td>
-                                    <td><ScholarshipProgressBar completed={calculateMeetingProgress(testMeetingList, requiredAmountForSemester)}/></td>
+                                    <td><ScholarshipProgressBar completed={calculateMeetingProgress(fallMeetings, requiredAmountForSemester)}/></td>
                                     <td>
                                         <div className={progress_styles.list_scroll}>{testMeetingItems}</div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>ACM-W Meetings Spring: {springMeetings} attended</td>
-                                    <td><ScholarshipProgressBar completed={calculateMeetingProgress(testMeetingList, requiredAmountForSemester)}/></td>
+                                    <td><ScholarshipProgressBar completed={calculateMeetingProgress(springMeetings, requiredAmountForSemester)}/></td>
                                     <td>
                                         <div className={progress_styles.list_scroll}>{testMeetingItems}</div>
                                     </td>
