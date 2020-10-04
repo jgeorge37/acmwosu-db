@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import styles from '../styles/Database.module.css'
 import progress_styles from '../styles/components/ScholarshipProgressBar.module.css'
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import ScholarshipProgressBar from '../components/ScholarshipProgressBar'
 import NavBar from '../components/NavBar'
 
@@ -13,13 +13,39 @@ const ScholarshipProgress = () => {
     const requiredAmountForMeetings = 10;
     const requiredAmountForSemester = 5;
 
-
     // For future, these will be passed in from Admin input
 
     // Milly: my thoughts on how to implement on admin/backend side to
     // work with this to be choose: category, amount (either: single-scholarship, hours, or single-meeting),
     // and string comment of details like the date and have that passed into corresponding list
     // then the progress calculated from the inputted amount matched to category
+
+    // We'll need to make sure to current user logged will be passed in
+    const currentUserEmail = 'miskus.1@osu.edu';
+    const [fallMeetings, setFallMeetings] = useState(0);
+    const [springMeetings, setSpringMeetings] = useState(0);
+
+    useEffect(() => {
+        var data = {}
+        const fetchData = async () => {
+            const requestOptions = {
+                method: 'GET',
+            };
+            console.log("here")
+            const api = '/api/meeting/account-attendance?email=' + currentUserEmail;
+            const res = await fetch(api, requestOptions);
+            const result = await res.json();
+            data = result
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].semester.indexOf("AU") >= 0) {
+                    setFallMeetings(data[i].count)    
+                } else {
+                    setSpringMeetings(data[i].count)
+                }
+            }
+        }
+        fetchData()
+    }, [])
 
     // pass in string of details, added to list
     const testScholarshipList = ['External Scholarship: AnitaB'];
@@ -30,6 +56,7 @@ const ScholarshipProgress = () => {
     // pass in string of details, added to list
     const testMeetingList = ['ACM-W Meeting 9/2','ACM-W Meeting 9/9','ACM-W Meeting 9/16','ACM-W Meeting 9/23','ACM-W Meeting 9/30','ACM-W Meeting 10/7'];
 
+    
     function calculateExternalScholarshipProgress(testScholarshipList, requiredAmountForExternalScholarship) {
         let percentExternScholarship = (testScholarshipList.length / requiredAmountForExternalScholarship) * 100;
         return percentExternScholarship;
@@ -94,14 +121,14 @@ const ScholarshipProgress = () => {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>ACM-W Meetings Fall</td>
+                                    <td>ACM-W Meetings Fall: {fallMeetings} attended</td>
                                     <td><ScholarshipProgressBar completed={calculateMeetingProgress(testMeetingList, requiredAmountForSemester)}/></td>
                                     <td>
                                         <div className={progress_styles.list_scroll}>{testMeetingItems}</div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>ACM-W Meetings Spring</td>
+                                    <td>ACM-W Meetings Spring: {springMeetings} attended</td>
                                     <td><ScholarshipProgressBar completed={calculateMeetingProgress(testMeetingList, requiredAmountForSemester)}/></td>
                                     <td>
                                         <div className={progress_styles.list_scroll}>{testMeetingItems}</div>
