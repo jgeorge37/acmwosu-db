@@ -38,7 +38,7 @@ const AttendanceForm = () => {
                     id="Last Name"
                     input type="text"
                     label="Last Name.#" 
-                    predicted="Buckeye" 
+                    predicted="Buckeye.1" 
                     onChange={setLastName}/>
                 <div>
                     <h2>What year are you in?</h2>
@@ -133,7 +133,7 @@ const SubmitButton = (props) => {
 
     const validateSubmitButton = async () => {
     const regex = new RegExp(/^[a-z ,.'-]+$/i); //tests for first name
-    const regexLast = new RegExp(/^[a-z ,.'-]+\.[1-9]+$/i); //tests for last name.#
+    const regexLast = new RegExp(/^[a-z ,.'-]+\.[0-9]+$/i); //tests for last name.#
 
     // can change the 007 to actual event codes later
     // This would be changed to pull from a database of event codes and see if there is a match (maybe?)
@@ -143,12 +143,13 @@ const SubmitButton = (props) => {
     
     if ((props.eventCode == "007") && regex.test(props.firstName) && regexLast.test(props.lastName)) {
         props.onSubmit("Success");
+        //Successful insert submit page here
         setMessage("Successfully submitted your attendance.")
     } else {
       props.onSubmit("Failure");
       if (!regex.test(props.firstName) && !regexLast.test(props.lastName)) {
-        setMessage("Please enter your first and last name.")
-      } else if (!(props.eventCode == "007")) {
+        setMessage("Please enter your first and last name.#")
+      } else if (props.eventCode != "007") {
         // can change the 007 to actual event codes later
         setMessage("Please enter valid event code.")
       } else if (!regexLast.test(props.lastName)) {
