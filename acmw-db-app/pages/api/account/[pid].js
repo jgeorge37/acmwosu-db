@@ -55,6 +55,14 @@ async function resetPassword (token, password) {
     return validResetWindow.rows[0].email;
 }
 
+// POST /api/account/create
+// Create an account: email = new user's email address, password = unencrypted new password, student_id may be null
+async function create (email, password, student_id) {
+    const data = await pgQuery(`INSERT INTO account (email, password, student_id) 
+        VALUES ('${email}', crypt('${password}', gen_salt('md5')), ${student_id ? `'${student_id}'`: null});`); // Ensure that if student_id is undefined, empty, etc. it gets inserted as null
+    return data;
+}
+
 export default async (req, res) => {
     const { 
       query: { pid },
@@ -65,17 +73,23 @@ export default async (req, res) => {
     try {
         if(req.method === 'POST'){
             const body = JSON.parse(req.body);
-    
-            if(pid === 'verify') {
-                result = await verify(body.email, body.password);
-            } else if(pid === 'generate-token') {
-                if(!body.email) throw ("Missing email address in request body.");
-                result = await generateToken(body.email);
-            } else if(pid === 'reset-pw') {
-                if(!body.password || !body.token) throw ("Missing token and/or new password");
-                result = await resetPassword(body.token, body.password);
-            } else {
-                throw("Invalid pid");
+            switch(pid) {
+                case 'verify':
+                    result = await verify(body.email, body.password);
+                    break;
+                case 'create':
+                    result = await create(body.email, body.password, body.student_id);
+                    break;
+                case 'generate-token':
+                    if(!body.email) throw ("Missing email address in request body.");
+                    result = await generateToken(body.email);
+                    break;
+                case 'reset-pw':
+                    if(!body.password || !body.token) throw ("Missing token and/or new password");
+                    result = await resetPassword(body.token, body.password);
+                    break;
+                default:
+                    throw("Invalid pid");
             }
         } else {
             throw("Invalid request type for account");
