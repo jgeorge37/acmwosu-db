@@ -42,7 +42,6 @@
     font-size: 20px;
   }
 
-  label.error {
-    position: relative;
-    color: #ec392f; /* red */
+  .error {
+    color: red;
   }

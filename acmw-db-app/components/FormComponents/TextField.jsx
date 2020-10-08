@@ -5,6 +5,7 @@ const TextField = (props) => {
         <>
             <label className={styles.label}>{props.label}</label>
             <input type="text" className={styles.field} onChange={props.onChange}></input>
+            <p className={styles.error}>{props.error}</p>
         </>
     )
 }   
