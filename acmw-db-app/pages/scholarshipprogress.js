@@ -26,7 +26,6 @@ const ScholarshipProgress = () => {
     const [springMeetings, setSpringMeetings] = useState(0);
 
     useEffect(() => {
-        var data = {}
         const fetchData = async () => {
             const requestOptions = {
                 method: 'GET',
@@ -34,13 +33,12 @@ const ScholarshipProgress = () => {
             console.log("here")
             const api = '/api/meeting/account-attendance?email=' + currentUserEmail;
             const res = await fetch(api, requestOptions);
-            const result = await res.json();
-            data = result
-            for (var i = 0; i < data.length; i++) {
-                if (data[i].semester.indexOf("AU") >= 0) {
-                    setFallMeetings(data[i].count)    
+            const result = await res.json();           
+            for (var i = 0; i < result.length; i++) {
+                if (result[i].semester.indexOf("AU") >= 0) {
+                    setFallMeetings(result[i].count)    
                 } else {
-                    setSpringMeetings(data[i].count)
+                    setSpringMeetings(result[i].count)
                 }
             }
         }
