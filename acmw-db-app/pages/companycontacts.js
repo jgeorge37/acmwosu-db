@@ -5,6 +5,7 @@ import CompanyForm from '../components/CompanyForm'
 import AddCompanyForm from '../components/AddCompanyForm'
 import SubmitButton from '../components/FormComponents/SubmitButton'
 import AddContactForm from '../components/AddContactForm'
+import SponsorshipForm from '../components/SponsorshipForm'
 import NavBar from '../components/NavBar'
 
 const CompanyContacts = () => {
