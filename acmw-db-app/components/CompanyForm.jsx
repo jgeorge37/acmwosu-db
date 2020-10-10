@@ -3,11 +3,16 @@ import TextField from './FormComponents/TextField'
 import SelectInput from './FormComponents/SelectInput'
 import MultiSelectInput from './FormComponents/MultiSelectInput'
 import styles from '../styles/components/CompanyForm.module.css'
+import CompanySearchInput from './FormComponents/CompanySearchInput'
 
 const CompanyForm = (props) => {
 
     const handleChange = () => {
         console.log("Hello!")
+    }
+
+    const handleMultiSelect = (event) => {
+        console.log(event.target.value)
     }
 
     const tempOptions = ["Company Name A-Z", "Contact Name A-Z", "Number of Contacts", "Date of Sponsorship Packet"]
@@ -28,7 +33,7 @@ const CompanyForm = (props) => {
                     <div>
                         <h2>Search By: </h2>
                         <div className={styles.one}>
-                            <TextField label="Company Name"/>
+                            <CompanySearchInput handleMultiSelect={handleMultiSelect}/>
                         </div>
                         <div className={styles.two}>
                             <TextField label="Contact Name"/>
