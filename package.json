@@ -1,30 +1,38 @@
 {
-    "author": "Jing George",
-    "name": "acmwosu-db",
-    "description": "Interface for Exec Board members to perform CRUD operations on contact database.",
-    "version": "0.0.1",
-    "dependencies": {
-        "dotenv": "^8.2.0",
-        "pg": "^8.3.0",
-        "postgres-migrations": "^4.0.3",
-        "next": "9.5.1",
-        "react": "16.13.1",
-        "react-dom": "16.13.1",
-        "@sendgrid/mail": "^7.2.4"
-    },
-    "scripts": {
-        "dev": "npm run dev --prefix acmw-db-app",
-        "build": "npm run build --prefix acmw-db-app",
-        "start": "npm run start --prefix acmw-db-app",
-        "heroku-start": "npm run heroku-start --prefix acmw-db-app",
-        "migrate": "node migrations/migrate.js"
-    },
-    "type": "module",
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/jgeorge37/acmwosu-db.git"
-    },
-    "engines": {
-        "node": "13.x"
-    }
+  "author": "Jing George",
+  "name": "acmwosu-db",
+  "description": "Interface for Exec Board members to perform CRUD operations on contact database.",
+  "version": "0.0.1",
+  "dependencies": {
+    "@sendgrid/mail": "^7.2.4",
+    "dotenv": "^8.2.0",
+    "next": "^9.5.5",
+    "pg": "^8.4.0",
+    "postgres-migrations": "^4.0.3",
+    "react": "16.13.1",
+    "react-dom": "16.13.1"
+  },
+  "scripts": {
+    "dev": "npm run dev --prefix acmw-db-app",
+    "build": "npm run build --prefix acmw-db-app",
+    "start": "npm run start --prefix acmw-db-app",
+    "heroku-start": "npm run heroku-start --prefix acmw-db-app",
+    "migrate": "node migrations/migrate.js"
+  },
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jgeorge37/acmwosu-db.git"
+  },
+  "engines": {
+    "node": "13.x"
+  },
+  "bugs": {
+    "url": "https://github.com/jgeorge37/acmwosu-db/issues"
+  },
+  "homepage": "https://github.com/jgeorge37/acmwosu-db#readme",
+  "main": "index.js",
+  "devDependencies": {},
+  "keywords": [],
+  "license": "ISC"
 }
