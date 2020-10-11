@@ -28,7 +28,7 @@ const Statistics = () => {
                 <div className={styles.card}>
                 <h1> ACM-W Database Statistics</h1>  
                 <h2>Average Meeting Attendence</h2>
-                {get_data(averageURL)}
+                {average}
                 </div>
             </main>
         </div>
