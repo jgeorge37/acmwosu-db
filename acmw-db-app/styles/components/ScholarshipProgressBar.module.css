@@ -1,9 +1,7 @@
   #popup_inner {  
-    position: fixed;  
-    left: 30%;  
-    right: 30%;  
-    top: 16%;  
-    bottom: 30%;   
+    position: fixed; 
+    margin: 10px 450px;
+    width: 700px;
     border-radius: 20px;  
     background: white;  
     color: black;
