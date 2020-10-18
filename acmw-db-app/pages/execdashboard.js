@@ -4,6 +4,7 @@ import Head from 'next/head'
 import {useState} from 'react'
 import SubmitButton from '../components/FormComponents/SubmitButton'
 import GHCVolunteerForm from '../components/GHCVolunteerForm'
+import StudentSearch from '../components/FormComponents/StudentSearch'
 
 /* 
     Sara: I think this page could be used for any updates/modifications exec board members would
@@ -23,6 +24,7 @@ const ExecDashboard = () => {
             <main className={styles.main}>
                 <SubmitButton label="Update GHC Volunteer Hours" handleChange={() => {setShowGHCForm(true)}}/>
                 {showGHCForm && <GHCVolunteerForm closeForm={() => {setShowGHCForm(false)}}/>}
+                <StudentSearch />
             </main>
         </div>
     )
