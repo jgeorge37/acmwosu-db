@@ -6,7 +6,7 @@ import TextField from './TextField'
 
 const StudentSearch = (props) => {
 
-    var isDotNum = false;
+    const isDotNum = useRef(false);
 
     const fName = useRef("")
     const lName = useRef("")
@@ -23,7 +23,7 @@ const StudentSearch = (props) => {
         response.json().then((data) => {
             const tempList = []
             for (var i in data) {
-                tempList.push(data[i]["fname"] + " " + data[i]["lname"])
+                tempList.push(data[i]["fname"] + " " + data[i]["lname"] + " - " + data[i]["name_dot_num"])
             }
             setSearchOptions(tempList)
         })
@@ -34,7 +34,7 @@ const StudentSearch = (props) => {
         if (fName.current.length > 0) {
             query = 'fname=' + fName.current
         }
-        if (lName.current.length > 0 && isDotNum) {
+        if (lName.current.length > 0 && isDotNum.current) {
             query += '&name_dot_num=' + lName.current
         } else if (lName.current.length > 0) {
             query += '&lname='+ lName.current
@@ -53,6 +53,11 @@ const StudentSearch = (props) => {
             setfNameError("First name must only contain letters!")
         } else {
             fName.current = ""
+            if (lName.current.length > 0) {
+                getStudentInfo()
+            } else {
+                setSearchOptions([])
+            }
             setfNameError("")
         }
         setHasText(lName.current.length > 0 || fName.current.length > 0)
@@ -61,8 +66,8 @@ const StudentSearch = (props) => {
     const lNameSearch = (event) => {
         const letters = new RegExp(/^[a-zA-Z]+$/)
         const dotNumCheck = new RegExp(/^[a-zA-Z]+\.[1-9][0-9]*$/)
-        isDotNum = dotNumCheck.test(event.target.value)
-        if (letters.test(event.target.value) || isDotNum) {
+        isDotNum.current = dotNumCheck.test(event.target.value)
+        if (letters.test(event.target.value) || isDotNum.current) {
             lName.current = event.target.value
             setlNameError("")
             getStudentInfo()
@@ -71,6 +76,11 @@ const StudentSearch = (props) => {
             setlNameError("Last name.# is formatted incorrectly!")
         } else {
             lName.current = ""
+            if (fName.current.length > 0) {
+                getStudentInfo()
+            } else {
+                setSearchOptions([])
+            }
             setlNameError("")
         }
         setHasText(lName.current.length > 0 || fName.current.length > 0)
