@@ -4,14 +4,12 @@ const MultiSelectInput = (props) => {
 
     return (
         <div>
-            {props.options.map((value, index) => {
-                return (
-                    <div>
-                        <input type="checkbox" id={value}/>
-                        <label for={value}>{value}</label>
-                    </div>
-                ) 
-            })}
+            <label className={styles.label}>{props.label}</label>
+            <select className={styles.multi} onChange={props.onChange} multiple={true}>
+                {props.options.map((value, index) => {
+                    return <option key={index}>{value}</option>
+                })}
+            </select>
         </div>
     )
 }

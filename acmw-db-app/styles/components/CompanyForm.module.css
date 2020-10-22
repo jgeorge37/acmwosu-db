@@ -9,6 +9,7 @@
     margin: auto;  
     background-color: rgba(0,0,0, 0.5);  
   }  
+  
   .popup_inner {  
     position: fixed;  
     overflow: auto;
@@ -22,17 +23,10 @@
     color: black;
   }
 
-  .one {
-    width: 25%;
-    height: 75px;
-    float: left;
-  }
-  
-  .two {
-    margin-left: 40%;
-    height: 75px;
-  }
-
   .form {
     padding: 10px 15px;
+  }
+
+  .buttons {
+    margin: 15px;
   }
