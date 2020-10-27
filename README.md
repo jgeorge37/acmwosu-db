@@ -9,7 +9,7 @@ Interface for ACM-W Exec Board members to query database of contacts and members
 5. Create an .env file in the acmwosu-db/acmw-db-app directory with the following (Heroku login and SendGrid login/API key in passwords spreadsheet in Drive):
 ~~~~
 # Database connection (use local URI if wanting to use local DB)
-DATABASE_URL={Get the database URI from Heroku}
+DATABASE_URL={Get the database URI from the dev-ada app in Heroku}
 
 # SendGrid API key
 SENDGRID_API_KEY={the API key from passwords spreadsheet}
@@ -22,8 +22,8 @@ If working on database-related features where testing on a local instance is nec
 ## Usage
 To start the application locally, run ```npm run dev``` from the root directory.
 
-## Heroku database visualization
-To view the contents of the database, install pgAdmin. Once your account is set up, add a server. In the pop up, fill out the name field in the first tab. Then go to the connection tab and fill out the host, port, database, username, and password with data from Heroku. Next go to the SSL tab, and set SSL to "required", then click save. The new connection should appear under servers. You will need to expand the Databases section, and search for the database name that you got from Heroku using command/control f. From here you can go to the public schema to view the tables and their contents.
+## Heroku Dev database visualization
+To view the contents of the development database, install pgAdmin. Once your account is set up, add a server. In the pop up, fill out the name field in the first tab. Then go to the connection tab and fill out the host, port, database, username, and password with data from the **dev-ada app (NOT acmwosu-db)** in Heroku. Next go to the SSL tab, and set SSL to "required", then click save. The new connection should appear under servers. You will need to expand the Databases section, and search for the database name that you got from Heroku using command/control f. From here you can go to the public schema to view the tables and their contents.
 
 ## Running database migrations
 **If you are creating a new table, the table name should be singular, i.e. "student" not "students" for consistency.**
