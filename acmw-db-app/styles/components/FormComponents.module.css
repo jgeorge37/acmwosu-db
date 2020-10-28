@@ -42,6 +42,37 @@
     font-size: 20px;
   }
 
+  .hours {
+    width: 35px;
+    height: 35px;
+    border-radius: 4px;
+    font-size: 20px;
+    font-display: center;
+    margin: auto;
+    position: relative;
+  }
+
+  .minutes {
+    width: 60px;
+    height: 35px;
+    border-radius: 4px;
+    font-size: 20px;
+    font-display: center;
+    margin: auto;
+    position: relative;
+  }
+
+  .set {
+    width: 60px;
+    margin-left: 10px;
+    height: 35px;
+    border-radius: 4px;
+    font-size: 20px;
+    font-display: center;
+    margin: auto;
+    position: relative;
+  }
+
   .error {
     color: red;
   }
