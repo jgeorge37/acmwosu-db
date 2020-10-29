@@ -3,8 +3,6 @@ import styles from '../styles/SignIn.module.css';
 import React, { useState } from 'react';
 
 const SignIn = () => {
-  // TODO link to page that sends password by email?
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState("");
@@ -36,7 +34,7 @@ const SignIn = () => {
               onChange={setPassword}
               type="password"
             />
-            <a className={styles.smol} href="/reset">Forgot password?</a>
+            <a className={styles.smol} href="/forgotPassword">Forgot password?</a>
           </div>
           <SignInButton
             email={email}

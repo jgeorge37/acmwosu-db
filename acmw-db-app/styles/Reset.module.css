@@ -92,7 +92,7 @@
     color: #373738;
   }
   
-  .passwordChunk a.smol:hover {
+  a.smol:hover {
     text-decoration: underline;
   }
   
@@ -164,7 +164,7 @@
     transition: 0.1s all ease-in-out;
   }
   
-  .field input + label.error {
+  .error {
     color: #ec392f; /* red */
   }
   

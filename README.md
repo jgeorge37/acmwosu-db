@@ -13,6 +13,9 @@ DATABASE_URL={Get the database URI from Heroku}
 
 # SendGrid API key
 SENDGRID_API_KEY={the API key from passwords spreadsheet}
+
+# App URL
+APP_URL=http://localhost:3000
 ~~~~
 The Heroku info may expire at some point; just go get the info again if things stop working.
 
