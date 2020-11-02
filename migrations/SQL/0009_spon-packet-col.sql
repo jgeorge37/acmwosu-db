@@ -1,0 +1,2 @@
+ALTER TABLE sponsorship
+ADD COLUMN IF NOT EXISTS packet_date TIMESTAMP;
