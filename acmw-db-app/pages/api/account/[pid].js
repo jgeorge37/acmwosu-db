@@ -24,35 +24,39 @@ async function generateToken (email) {
         WHERE email = '${email}';
     `);
 
-    // throw error if the email address doesn't match an account
-    if(data.rowCount === 0) throw (`Account with email ${email} does not exist.`);
+    data.token = token;
     return data;
 }
 
-// POST /api/account/reset-pw
-// Reset password for the account associated with a token provided token is not expired.
-// Returns the email address of the account whose password was reset.
-async function resetPassword (token, password) {
+// GET /api/account/check-reset
+async function checkReset (token) {
     // Get the email address associated with a token if token is not expired
     const validResetWindow = await pgQuery(`
         SELECT email FROM account
         WHERE current_timestamp <= token_expire_time AND reset_token = '${token}';
     `);
+  
     if(validResetWindow.rowCount === 0) throw ('Reset password link either expired or invalid');
 
+    return validResetWindow.rows;
+}
+
+// POST /api/account/reset-pw
+// Reset password for the account with the given email
+async function resetPassword (email, password) {
     try {
         // Set reset_token to null so link cannot be reused and set new password
         await pgQuery(`
             UPDATE account SET
                 reset_token = null,
                 token_expire_time = null,
-                password = crypt('${password}', gen_salt('md5'))
-            WHERE email = '${validResetWindow.rows[0].email}';
+                password = crypt('${password}', gen_salt('md5')) 
+            WHERE email = '${email}';
         `);
     } catch(err) {
         throw("Could not update password: " + err);
     }
-    return validResetWindow.rows[0].email;
+    return "Changed password for " + email;
 }
 
 // POST /api/account/create
@@ -85,8 +89,16 @@ export default async (req, res) => {
                     result = await generateToken(body.email);
                     break;
                 case 'reset-pw':
-                    if(!body.password || !body.token) throw ("Missing token and/or new password");
-                    result = await resetPassword(body.token, body.password);
+                    if(!body.password || !body.email) throw ("Missing email and/or new password");
+                    result = await resetPassword(body.email, body.password);
+                    break;
+                default:
+                    throw("Invalid pid");
+            }
+        } else if(req.method === 'GET') {
+            switch(pid) {
+                case 'check-reset':
+                    result = await checkReset(req.query.token);
                     break;
                 default:
                     throw("Invalid pid");

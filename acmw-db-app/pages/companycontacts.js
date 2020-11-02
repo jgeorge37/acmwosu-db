@@ -5,8 +5,8 @@ import CompanyForm from '../components/CompanyForm'
 import AddCompanyForm from '../components/AddCompanyForm'
 import SubmitButton from '../components/FormComponents/SubmitButton'
 import AddContactForm from '../components/AddContactForm'
-import NavBar from '../components/NavBar'
 import SponsorshipForm from '../components/SponsorshipForm'
+import NavBar from '../components/NavBar'
 
 const CompanyContacts = () => {
     const [showOptionsForm, setOptionsForm] = useState(false)

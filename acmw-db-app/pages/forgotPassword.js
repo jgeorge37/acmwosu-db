@@ -1,91 +1,83 @@
 import Head from 'next/head'
 import styles from '../styles/Reset.module.css'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
+const ForgotPassword = (props) => {
+  const [view, setView] = useState("");
+  const [email, setEmail] = useState("");
   
-class forgotPassword extends React.Component {
-    constructor() {
-    super();
-    this.state = {
-      input: {},
-      errors: {}
-    };
+  return (
+    <div className={styles.container}>
+      <Head>
+        <title>Forgot Password</title>
+      </Head>
+    <main className={styles.card}>
+      {view === "submitted" ? 
+      <h3>Password reset email sent to {email}</h3> : 
+      <PasswordForm changeView={setView} changeEmail={setEmail}/>}
+      <div><a className={styles.smol} href="../signin">Sign in</a></div>
+    </main>
+    </div>
+  );
+}
+
+export default ForgotPassword;
+
+const PasswordForm = (props) => {
+  const [input, setInput] = useState("");
+  const [error, setError] = useState("");
      
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-     
-  handleChange(event) {
-    let input = this.state.input;
-    input[event.target.name] = event.target.value;
-  
-    this.setState({
-      input
-    });
-  }
-     
-  handleSubmit(event) {
-    event.preventDefault();
-  
-    if(this.validate()){
-        let input = {};
-        input["email"] = "";
-        this.setState({input:input});
+  const handleSubmit = async () => {
+    if(validate()){
+      // Generate password reset token
+      const email = input.slice(0);  // copy string value to not make an alias
+      const requestOpts = {
+        method: 'POST',
+        body: JSON.stringify({ email: email })
+      };
+      const data = await (await fetch('/api/account/generate-token', requestOpts)).json();
+      if(data.rowCount !== 0) {
+        requestOpts.body = JSON.stringify({token: data.token, email: email});
+        await fetch('/api/mailer/reset-pw', requestOpts);
+        props.changeEmail(email);
+        props.changeView("submitted");
+      } else {
+        // email does not belong to an account
+        setError(`No account found for ${email}`);
+        setInput("");
+      }
     }
   }
   
-  validate(){
-      let input = this.state.input;
-      let errors = {};
-      let isValid = false;
-
-        if (typeof input.email !== "undefined" && input.email !== null && input.email !== "") {
-
-        var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
-          if (pattern.test(input["email"])) {
-            isValid = true;
-          }
-        }
-      if(!isValid){
-        errors["email"] = "Please enter valid email address.";
-      }
-
-      this.setState({
-        errors: errors
-      });
-    
-      return isValid;
+  const validate = () => {
+    var isValid = false;
+    if (input.length > 0) {
+      //matches case insensitive letters. number w/o leading 0 @ (buckeyemail.) osu . edu
+      const pattern = new RegExp(/^([a-z]+\.[1-9]([0-9]+)?@(buckeyemail\.)?osu\.edu)$/i);
+      isValid = pattern.test(input);
+    }
+    if(!isValid) setError("Enter a valid osu.edu email");
+    return isValid;
   }
      
-  render() {
-    return (
-      <div className={styles.container}>
-        <Head>
-        <title>ACM-W Database Forgot Password</title>
-        </Head>
-      <main className={styles.card}>
+  return (
+        <div>
         <h1>Forgot Password</h1>
-        <form onSubmit={this.handleSubmit}>
-
-        { <div className={styles.passwordChunk}>
-            <label className={styles.labelStyle} htmlFor="email">Email Address:</label>
-            <input 
-              type="text" 
-              name="email" 
-              value={this.state.input.email || ""}
-              onChange={this.handleChange}
-              placeholder="Enter email" 
-              id="email" />
-  
-              <div className="text-danger">{this.state.errors.email}</div>
-          </div> } 
-
-          <input type="submit" value="Submit"  className={styles.button}/>
-          <div><a className={styles.smol} href="../signin">Login Instead?</a></div>
-        </form>
-        </main>
+        <div className={styles.passwordChunk}>
+          <label className={styles.labelStyle} htmlFor="email">Email Address:</label>
+          <input 
+            type="text" 
+            name="email" 
+            value={input}
+            onChange={event => setInput(event.target.value)}
+            placeholder="Enter email" 
+            id="email" />
+            <div className={styles.error}>{error}</div>
+        </div> 
+        <button className={styles.button} onClick={async () => await handleSubmit()}>
+        Submit 
+      </button>
       </div>
-    );
-  }
+  );
 }
-  
-export default forgotPassword;
+
