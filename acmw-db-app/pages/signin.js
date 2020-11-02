@@ -117,9 +117,9 @@ const SignInButton = (props) => {
 
   const validateSignIn = async () => {
     // Check that email and password match
-    
+
     //matches case insensitive letters. number w/o leading 0 @ (buckeyemail.) osu . edu
-    const regex = new RegExp(/^([a-z]+\.[1-9]([0-9]+)?@(buckeyemail\.)?osu\.edu)$/i);
+    const regex = new RegExp(/^([a-z]+\.[1-9]([0-9]+)?@osu\.edu)$/i);
     if (props.email && props.password && regex.test(props.email)) {
       const requestOptions = {
         method: 'POST',

@@ -5,31 +5,46 @@ import pgQuery from '../../../postgres/pg-query.js';
 // This is an AND situation, not OR, so when given multiple fields, the function will only return students who %match% (where input is a substring of actual) all criteria
 async function searchStudents (query) {
     const data = await pgQuery(`
-        SELECT 
+        SELECT
         id, fname, lname, name_dot_num
         FROM student
-        WHERE 
-        ${!!query.name_dot_num ? 
+        WHERE
+        ${!!query.name_dot_num ?
             "LOWER(name_dot_num) LIKE LOWER('%" + query.name_dot_num + "%')" : ""
         }
         ${!!query.name_dot_num && (!!query.lname || !!query.fname) ?
             " AND " : ""
         }
-        ${!!query.lname ? 
+        ${!!query.lname ?
             "LOWER(lname) LIKE LOWER('%" + query.lname + "%')" : ""
         }
         ${!!query.lname && !!query.fname ?
             " AND " : ""
         }
-        ${!!query.fname ? 
+        ${!!query.fname ?
             "LOWER(fname) LIKE LOWER('%" + query.fname + "%')" : ""
         }
     `);
     return data.rows;
 }
 
+// POST /api/student/create
+// Creates a new student. all params after name_dot_num are optional
+// Returns the id of the new student
+async function createStudent(fname, lname, name_dot_num, personal_email, school_level, packet_sent_date) {
+  const data = await pgQuery(`
+    INSERT INTO student (fname, lname, name_dot_num, personal_email, school_level, packet_sent_date)
+    VALUES ('${fname}', '${lname}', '${name_dot_num}',
+            ${personal_email ? `'${personal_email}'`: null},
+            ${school_level ? `'${school_level}'`: null},
+            ${packet_sent_date ? `'${packet_sent_date}'`: null})
+    RETURNING id;
+  `);
+  return data.rows
+}
+
 export default async (req, res) => {
-    const { 
+    const {
       query: { pid },
     } = req
 
@@ -46,8 +61,16 @@ export default async (req, res) => {
             } else {
                 throw("Invalid pid");
             }
+        } else if (req.method === 'POST') {
+          const body = typeof(req.body) === 'object' ? req.body : JSON.parse(req.body);
+          if (pid === 'create') {
+            if (!body || !body.fname || !body.lname || !body.name_dot_num) {
+              throw("Missing parameters: body must include fname, lname, and name_dot_num")
+            }
+            result = await createStudent(body.fname, body.lname, body.name_dot_num, body.personal_email, body.school_level, body.packet_sent_date);
+          }
         } else {
-            throw("Invalid request type for company");
+            throw("Invalid request type for student");
         }
         res.statusCode = 200;
     } catch(err) {

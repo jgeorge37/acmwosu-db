@@ -22,10 +22,12 @@ const StudentSearch = (props) => {
         const response = await fetch(url, {method: 'GET'})
         response.json().then((data) => {
             const tempList = []
+            const tempList2 = []
             for (var i in data) {
-                tempList.push(data[i]["fname"] + " " + data[i]["lname"] + " - " + data[i]["name_dot_num"])
+                tempList.push(data[i]["fname"] + " " + data[i]["lname"] + " - " + data[i]["name_dot_num"] + " (" + data[i]["id"] + ")")
             }
             setSearchOptions(tempList)
+            props.selectStudent(tempList.length > 0 && tempList[0]) //async so searchOptions[0] is actually undefined...
         })
     }
 
@@ -41,7 +43,7 @@ const StudentSearch = (props) => {
         }
         return query
     }
-    
+
     const fNameSearch = (event) => {
         const regex = new RegExp(/^[a-zA-Z]+$/)
         if (regex.test(event.target.value)) {
@@ -57,6 +59,7 @@ const StudentSearch = (props) => {
                 getStudentInfo()
             } else {
                 setSearchOptions([])
+                props.selectStudent() //protection when deleting
             }
             setfNameError("")
         }
@@ -80,6 +83,7 @@ const StudentSearch = (props) => {
                 getStudentInfo()
             } else {
                 setSearchOptions([])
+                props.selectStudent() //protection when deleting
             }
             setlNameError("")
         }
@@ -91,7 +95,7 @@ const StudentSearch = (props) => {
             <h2>Student Search</h2>
             <TextField label='First Name' onChange={fNameSearch} error={fNameError}/>
             <TextField label='Last Name (.# Optional)' onChange={lNameSearch} error={lNameError}/>
-            {searchOptions.length > 0 && <SelectInput label='Choose Student' options={searchOptions} onChange={props.selectStudent}/>}
+            {searchOptions.length > 0 && <SelectInput label='Choose Student' options={searchOptions} onChange={event => props.selectStudent(event.target.value)}/>}
             {searchOptions.length <= 0 && hasText && <p>Unable to find student</p>}
         </div>
     )
