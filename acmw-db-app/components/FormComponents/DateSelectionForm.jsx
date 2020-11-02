@@ -85,8 +85,8 @@ const DateSelectionForm = (props) => {
         logTime()
     }
 
-    const setMonth = (event) => {
-        month.current = event.target.value
+    const setMonth = (option) => {
+        month.current = option.label
         if (thirtyMonths.includes(month.current) && (day.current > 30)) {
             setDayError(month.current + " only has 30 days!")
             daySet.current = false
@@ -107,7 +107,7 @@ const DateSelectionForm = (props) => {
         <div>
             <label className={styles.label}>Set Date</label>
             <div>
-                <SelectInput options={months} onChange={setMonth}/>
+                <SelectInput options={months.map((m) => ({label: m}))} onChange={setMonth}/>
                 <label> Day </label>
                 <input type="text" onChange={checkDay} className={styles.hours}></input>
                 <label> Year </label>

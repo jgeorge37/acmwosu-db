@@ -10,8 +10,22 @@ const AttendanceForm = () => {
     const [lastName, setLastName] = useState("")
     const [status, setStatus] = useState("");
 
-    const yearOptions = ["First", "Second", "Third", "Fourth", "Fifth+", "Graduate or Phd student :)"]
-    const listServOptions = ["I am already on the list :)", "Yes, please!", "Nope, thank you"]
+    const [year, setYear] = useState({});
+    const [listServ, setListServe] = useState({});
+
+    const yearOptions = [
+      {label: "First", value: 1}, 
+      {label: "Second", value: 2}, 
+      {label: "Third", value: 3}, 
+      {label: "Fourth", value: 4}, 
+      {label: "Fifth+", value: 5}, 
+      {label: "Graduate or Phd student :)", value: 6}
+    ];
+    const listServOptions = [
+      {label: "I am already on the list :)", value: false}, 
+      {label: "Yes, please!", value: true}, 
+      {label: "Nope, thank you", value: false}
+    ];
 
     return (
         <div className={styles.container}>
@@ -42,11 +56,11 @@ const AttendanceForm = () => {
                     onChange={setLastName}/>
                 <div>
                     <h2>What year are you in?</h2>
-                    <SelectInput options={yearOptions}/>
+                    <SelectInput options={yearOptions} onChange={setYear}/>
                 </div>
                 <div>
                     <h2>Would you like to be included in our list-serv?</h2>
-                    <SelectInput options={listServOptions}/>
+                    <SelectInput options={listServOptions} onChange={setListServe}/>
                 </div>
                 <span>
                     <SubmitButton 

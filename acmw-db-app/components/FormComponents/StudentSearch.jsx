@@ -8,13 +8,15 @@ const StudentSearch = (props) => {
 
     const isDotNum = useRef(false);
 
-    const fName = useRef("")
-    const lName = useRef("")
+    const fName = useRef("");
+    const lName = useRef("");
 
-    const [hasText, setHasText] = useState(false)
-    const [fNameError, setfNameError] = useState("")
-    const [lNameError, setlNameError] = useState("")
-    const [searchOptions, setSearchOptions] = useState([])
+    const [hasText, setHasText] = useState(false);
+    const [fNameError, setfNameError] = useState("");
+    const [lNameError, setlNameError] = useState("");
+    const [searchOptions, setSearchOptions] = useState([]);
+
+    const [student, setStudent] = useState({});
 
     const getStudentInfo = async () => {
         var query = createQuery()
@@ -23,7 +25,10 @@ const StudentSearch = (props) => {
         response.json().then((data) => {
             const tempList = []
             for (var i in data) {
-                tempList.push(data[i]["fname"] + " " + data[i]["lname"] + " - " + data[i]["name_dot_num"])
+                tempList.push({
+                    label: data[i]["fname"] + " " + data[i]["lname"] + " - " + data[i]["name_dot_num"],
+                    value: {name_dot_num: data[i]["name_dot_num"]}
+                });
             }
             setSearchOptions(tempList)
         })
@@ -91,7 +96,7 @@ const StudentSearch = (props) => {
             <h2>Student Search</h2>
             <TextField label='First Name' onChange={fNameSearch} error={fNameError}/>
             <TextField label='Last Name (.# Optional)' onChange={lNameSearch} error={lNameError}/>
-            {searchOptions.length > 0 && <SelectInput label='Choose Student' options={searchOptions} onChange={props.selectStudent}/>}
+            {searchOptions.length > 0 && <SelectInput label='Choose Student' options={searchOptions} onChange={setStudent}/>}
             {searchOptions.length <= 0 && hasText && <p>Unable to find student</p>}
         </div>
     )
