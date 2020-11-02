@@ -9,7 +9,14 @@ const GHCVolunteerForm = (props) => {
 
     // eventually connect this to actual GHC scholarship awardees from database
     // Can implement a search similar to "company search component" but for members
-    const GHCNames = ["Milly Mason", "Jing George", "Angela Li", "Morgan Zahner", "Sara Miskus", "Amy Huang"]
+    const GHCNames = [
+        {label: "Milly Mason"}, 
+        {label: "Jing George"}, 
+        {label: "Angela Li"}, 
+        {label: "Morgan Zahner"}, 
+        {label: "Sara Miskus"}, 
+        {label: "Amy Huang"}
+    ];
 
     const [GHCName, setGHCName] = useState("")
     const [volunteerEventName, setVolunteerEventName] = useState("")
@@ -50,7 +57,7 @@ const GHCVolunteerForm = (props) => {
                 <form className={styles.form}>
                     <h2>Volunteer Hour Update Form</h2>
                     <div>                        
-                        <SelectInput label={"Update volunteer hours for: "} options={GHCNames} onChange={(event) => setGHCName(event.target.value)}/>
+                        <SelectInput label={"Update volunteer hours for: "} options={GHCNames} onChange={(option) => setGHCName(option.label)}/>
                     </div>
                     <div>
                         <TextField label="Volunteer Event Name" error={eventError} onChange={(event) => setVolunteerEventName(event.target.value)}/>

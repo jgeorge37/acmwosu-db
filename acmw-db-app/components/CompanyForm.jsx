@@ -15,7 +15,12 @@ const CompanyForm = (props) => {
         console.log(event.target.value)
     }
 
-    const tempOptions = ["Company Name A-Z", "Contact Name A-Z", "Number of Contacts", "Date of Sponsorship Packet"]
+    const tempOptions = [
+        {label: "Company Name A-Z"},
+        {label: "Contact Name A-Z"}, 
+        {label: "Number of Contacts"}, 
+        {label: "Date of Sponsorship Packet"}
+    ];
     const temp2Options = ["Company Name", "Contact Name", "Contact Email", "Date Sent"]
 
     return (
@@ -24,7 +29,7 @@ const CompanyForm = (props) => {
                 <form className={styles.form}>
                     <div>
                         <h2>Sort By: </h2>
-                        <SelectInput options={tempOptions} />
+                        <SelectInput options={tempOptions} onChange={(option) => {console.log(option)}}/>
                     </div>
                     <div>
                         <h2>Filter By: </h2>
