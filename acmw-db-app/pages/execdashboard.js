@@ -6,6 +6,7 @@ import SubmitButton from '../components/FormComponents/SubmitButton'
 import GHCVolunteerForm from '../components/GHCVolunteerForm'
 import StudentSearch from '../components/FormComponents/StudentSearch'
 import TimeSelectionForm from '../components/FormComponents/TimeSelectionForm'
+import DateSelectionForm from '../components/FormComponents/DateSelectionForm'
 
 /* 
     Sara: I think this page could be used for any updates/modifications exec board members would
@@ -16,6 +17,7 @@ const ExecDashboard = () => {
 
     const [showGHCForm, setShowGHCForm] = useState(false)
     const [time, setTime] = useState("")
+    const [date, setDate] = useState("")
 
 
     const recordTime = (hours, minutes, timeOfDay) => {
@@ -25,6 +27,16 @@ const ExecDashboard = () => {
             setTime(hours + ":" + minutes + " " + timeOfDay)
         } else {
             setTime("")
+        }
+    }
+
+    const recordDate = (month, day, year) => {
+        // This is just for illustration purposes.
+        // If you wanted to save the values, then you would save the passed in values to local variables
+        if (day.length > 0) {
+            setDate("Month: " + month + " Day: " + day + " Year: " + year)
+        } else {
+            setDate("")
         }
     }
 
@@ -38,6 +50,8 @@ const ExecDashboard = () => {
                 <SubmitButton label="Update GHC Volunteer Hours" handleChange={() => {setShowGHCForm(true)}}/>
                 {showGHCForm && <GHCVolunteerForm closeForm={() => {setShowGHCForm(false)}}/>}
                 <StudentSearch />
+                <DateSelectionForm recordDate={recordDate}/>
+                <p>{date}</p>
                 <TimeSelectionForm recordTime={recordTime}/>
                 <p>{time}</p>
             </main>
