@@ -9,8 +9,6 @@ const AddCompanyForm = (props) => {
         console.log("Added company successfully!")
     }
 
-    const companyTypes = ["Big Tech", "Start Up", "Financial", "Retail"]
-
     return (
         <div className={styles.popup}>
             <div className={styles.popup_inner}>
@@ -18,7 +16,6 @@ const AddCompanyForm = (props) => {
                     <h2>Add Company Information</h2>
                     <div>
                         <TextField label="Company Name"/>
-                        <SelectInput options={companyTypes} label="Company Type"/>
                     </div>
                     <h2>Add Contact Information</h2>
                     <div>

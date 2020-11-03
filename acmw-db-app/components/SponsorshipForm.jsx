@@ -21,7 +21,7 @@ const SponsorshipForm = (props) => {
                 <form className={styles.form}>
                     <div>
                         <h2>Sort by: </h2>
-                        <SelectInput options={tempOptions} />
+                        <SelectInput options={tempOptions.map((value) => {label: value})} onChange={(opt) => console.log(opt)}/>
                     </div>
                     <div>
                         <h2>Show: </h2>
