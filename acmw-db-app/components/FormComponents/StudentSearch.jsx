@@ -27,7 +27,7 @@ const StudentSearch = (props) => {
                 });
             }
             if (tempList.length > 0) {
-              tempList.push({label: "New Student?", value: {fname: fName.current, name_dot_num: lName.current, student_id: ""}}) // placeholder first value
+              tempList.push({label: "New Student?", value: {fname: fName.current, name_dot_num: lName.current, student_id: ""}}) // last value
               // this is so you can add a new person even if other people are matched in the search
             }
             setSearchOptions(tempList)
