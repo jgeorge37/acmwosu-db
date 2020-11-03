@@ -38,7 +38,6 @@ async function resetPassword (token, password) {
         SELECT email FROM account
         WHERE current_timestamp <= token_expire_time AND reset_token = '${token}';
     `);
-    if(validResetWindow.rowCount === 0) throw ('Reset password link either expired or invalid');
 
     try {
         // Set reset_token to null so link cannot be reused and set new password

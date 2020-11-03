@@ -22,7 +22,6 @@ const StudentSearch = (props) => {
         const response = await fetch(url, {method: 'GET'})
         response.json().then((data) => {
             const tempList = []
-            const tempList2 = []
             for (var i in data) {
                 tempList.push(data[i]["fname"] + " " + data[i]["lname"] + " - " + data[i]["name_dot_num"] + " (" + data[i]["id"] + ")")
             }
