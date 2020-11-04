@@ -75,13 +75,13 @@ const ResetForm = (props) => {
   }
   
   const validate = () => {
-      <h6>Please enter a password containing at least 1 uppercase, 1 lowercase, 1 digit, 1 special character with a length of at least of 8</h6>
+      <h6>Password must be at least 8 characters long and contain at least 1 each of: uppercase letter, lowercase letter, digit, special character</h6>
       
       var err = "";
 
       var pattern = new RegExp(/^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/i);
       if (!pattern.test(input1)) {
-        err = "Password must have: 1 uppercase, 1 lowercase, 1 special character, length of 8+";
+        err = "Password must have: 1 digit, 1 uppercase letter, 1 lowercase letter, 1 special character, length of 8+";
       } else if(!input1 || !input2) {
         err = "Please enter and confirm a password";
       } else if (input1 !== input2) {
