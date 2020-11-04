@@ -58,7 +58,7 @@ const AddAccountForm = (props) => {
           const requestOptions = {
             method: 'POST',
             body: JSON.stringify(
-              { fname: fname, lname: lnamedotnum.split(/\./)[0], name_dot_num: lnamedotnum,
+              { fname: fname, lname: lnamedotnum.split(/\./)[0], name_dot_num: lnamedotnum.toLowerCase(),
                 personal_email: "",
                 school_level: "",
                 packet_sent_date: ""
@@ -84,7 +84,7 @@ const AddAccountForm = (props) => {
           setFname(student.value.fname)
           setLnamedotnum(student.value.name_dot_num)
           setStudentID(student.value.student_id)
-          setOsuEmail(student.value.name_dot_num + "@osu.edu")
+          setOsuEmail(student.value.name_dot_num.toLowerCase() + "@osu.edu")
         } else {
           setFname("")
           setLnamedotnum("")
