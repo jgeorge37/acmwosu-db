@@ -68,6 +68,7 @@ const ResetForm = (props) => {
       props.changeView(
         <main className={styles.card}>
           {res}
+          <div><a className={styles.smol} href="../signin">Sign in</a></div>
         </main>
       );
     }
