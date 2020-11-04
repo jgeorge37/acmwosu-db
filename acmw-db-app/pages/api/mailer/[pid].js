@@ -22,7 +22,7 @@ const sendEmail = (email, subject, body) => {
 async function resetPassword(email, token) {
   const subject = "ACMWOSU - Reset your password";
   const message = `
-    <p>Click the link below to reset your password. The link with expire in 48 hours.</p>
+    <p>Click the link below to reset your password. The link will expire in 48 hours.</p>
     <p><a href="${process.env.APP_URL}/reset?token=${token}">
       ${process.env.APP_URL}/reset?token=${token}
     </a></p>
