@@ -19,7 +19,7 @@ async function generateToken (email) {
 
     // save token and set expiration time 2 days in the future
     const data = await pgQuery(`
-        UPDATE account 
+        UPDATE account
         SET reset_token = '${token}', token_expire_time = current_timestamp + INTERVAL '2 days'
         WHERE email = '${email}';
     `);
@@ -32,9 +32,10 @@ async function generateToken (email) {
 async function checkReset (token) {
     // Get the email address associated with a token if token is not expired
     const validResetWindow = await pgQuery(`
-        SELECT email FROM account 
+        SELECT email FROM account
         WHERE current_timestamp <= token_expire_time AND reset_token = '${token}';
     `);
+
     return validResetWindow.rows;
 }
 
@@ -44,10 +45,10 @@ async function resetPassword (email, password) {
     try {
         // Set reset_token to null so link cannot be reused and set new password
         await pgQuery(`
-            UPDATE account SET 
+            UPDATE account SET
                 reset_token = null,
                 token_expire_time = null,
-                password = crypt('${password}', gen_salt('md5')) 
+                password = crypt('${password}', gen_salt('md5'))
             WHERE email = '${email}';
         `);
     } catch(err) {
@@ -59,13 +60,13 @@ async function resetPassword (email, password) {
 // POST /api/account/create
 // Create an account: email = new user's email address, password = unencrypted new password, student_id may be null
 async function create (email, password, student_id) {
-    const data = await pgQuery(`INSERT INTO account (email, password, student_id) 
+    const data = await pgQuery(`INSERT INTO account (email, password, student_id)
         VALUES ('${email}', crypt('${password}', gen_salt('md5')), ${student_id ? `'${student_id}'`: null});`); // Ensure that if student_id is undefined, empty, etc. it gets inserted as null
     return data;
 }
 
 export default async (req, res) => {
-    const { 
+    const {
       query: { pid },
     } = req
 

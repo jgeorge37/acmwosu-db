@@ -4,11 +4,11 @@ import Head from 'next/head'
 import {useState} from 'react'
 import SubmitButton from '../components/FormComponents/SubmitButton'
 import GHCVolunteerForm from '../components/GHCVolunteerForm'
-import StudentSearch from '../components/FormComponents/StudentSearch'
+import AddAccountForm from '../components/AddAccountForm'
 import TimeSelectionForm from '../components/FormComponents/TimeSelectionForm'
 import DateSelectionForm from '../components/FormComponents/DateSelectionForm'
 
-/* 
+/*
     Sara: I think this page could be used for any updates/modifications exec board members would
     need to do regarding member data. Maybe have a link from this page to the database pages??
 */
@@ -16,9 +16,9 @@ import DateSelectionForm from '../components/FormComponents/DateSelectionForm'
 const ExecDashboard = () => {
 
     const [showGHCForm, setShowGHCForm] = useState(false)
+    const [showAddAccountForm, setShowAddAccountForm] = useState(false)
     const [time, setTime] = useState("")
     const [date, setDate] = useState("")
-
 
     const recordTime = (hours, minutes, timeOfDay) => {
         // This is just for illustration purposes.
@@ -49,7 +49,8 @@ const ExecDashboard = () => {
             <main className={styles.main}>
                 <SubmitButton label="Update GHC Volunteer Hours" handleChange={() => {setShowGHCForm(true)}}/>
                 {showGHCForm && <GHCVolunteerForm closeForm={() => {setShowGHCForm(false)}}/>}
-                <StudentSearch />
+                <SubmitButton label="Create Account" handleChange={() => {setShowAddAccountForm(true)}}/>
+                {showAddAccountForm && <AddAccountForm closeForm={() => {setShowAddAccountForm(false)}}/>}
                 <DateSelectionForm recordDate={recordDate}/>
                 <p>{date}</p>
                 <TimeSelectionForm recordTime={recordTime}/>
