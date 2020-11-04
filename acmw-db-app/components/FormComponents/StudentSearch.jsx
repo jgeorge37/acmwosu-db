@@ -31,7 +31,7 @@ const StudentSearch = (props) => {
               // this is so you can add a new person even if other people are matched in the search
             }
             setSearchOptions(tempList)
-            props.selectStudent({value: {fname: fName.current, name_dot_num: lName.current, student_id: ""}})
+            props.selectStudent(tempList.length > 0 ? tempList[0] : {value: {fname: fName.current, name_dot_num: lName.current, student_id: ""}}) //use templist bc async
         })
     }
 
