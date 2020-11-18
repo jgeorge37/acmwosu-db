@@ -1,19 +1,24 @@
-import styles from '../styles/components/CompanyForm.module.css'
+import styles from '../styles/components/AccountForm.module.css'
 import SubmitButton from './FormComponents/SubmitButton'
 import TextField from './FormComponents/TextField'
 import StudentSearch from '../components/FormComponents/StudentSearch'
+import SelectInput from '../components/FormComponents/SelectInput'
 import {useState} from 'react'
 
 const AddAccountForm = (props) => {
+
+    const accountTypes = [{label: "Exec"}, {label: "GHC"}]
 
     const [fname, setFname] = useState("")
     const [lnamedotnum, setLnamedotnum] = useState("")
     const [osuEmail, setOsuEmail] = useState("@osu.edu")
     const [password, setPassword] = useState("")
     const [studentID, setStudentID] = useState("")
+    const [accountType, setAccountType] = useState(accountTypes[0].value)
+    const [searchFound, setSearchFound] = useState(false)
 
     const [fNameError, setfNameError] = useState("");
-    const [lNameError, setlNameError] = useState("");
+    const [lNameDotNumError, setlNameDotNumError] = useState("");
     const [passwordError, setPasswordError] = useState("")
 
     const onSubmit = () => {
@@ -32,11 +37,11 @@ const AddAccountForm = (props) => {
               setfNameError("")
             }
             if (!lnamedotnum) {
-              setlNameError("Enter a Last name.#")
+              setlNameDotNumError("Enter a Last name.#")
             } else if (!goodlnamedotnum) {
-              setlNameError("Last name.# is formatted incorrectly!")
+              setlNameDotNumError("Last name.# is formatted incorrectly!")
             } else {
-              setlNameError("")
+              setlNameDotNumError("")
             }
             if (!password) {
               setPasswordError("Enter a password")
@@ -45,7 +50,7 @@ const AddAccountForm = (props) => {
             }
         } else {
             setfNameError("")
-            setlNameError("")
+            setlNameDotNumError("")
             setPasswordError("")
             create()
             props.closeForm()
@@ -55,11 +60,14 @@ const AddAccountForm = (props) => {
     const create = async () => {
       let id = studentID; // for async protection
       if (!id) { // creating a new student
+          let lname = lnamedotnum.split(/\./)[0];
           const requestOptions = {
             method: 'POST',
             body: JSON.stringify(
-              { fname: fname, lname: lnamedotnum.split(/\./)[0], name_dot_num: lnamedotnum.toLowerCase(),
-                personal_email: "",
+              { fname: fname.charAt(0).toUpperCase() + fname.slice(1).toLowerCase(), //capitalization convention
+                lname: lname.charAt(0).toUpperCase() + lname.slice(1).toLowerCase(), //capitalization convention
+                name_dot_num: lnamedotnum.toLowerCase(),
+                personal_email: "", //these are blank for now
                 school_level: "",
                 packet_sent_date: ""
               }
@@ -70,27 +78,33 @@ const AddAccountForm = (props) => {
           id = result1[0]["id"];
       }
       // creating a new account
-      const requestOptions = {
+      const requestOptions = { //currently account_type does not do anything; todo: make account_type col
         method: 'POST',
-        body: JSON.stringify({ email: osuEmail, password: password, student_id: id})
+        body: JSON.stringify({ email: osuEmail, password: password, student_id: id, account_type: accountType})
       };
       const res2 = await fetch('/api/account/create', requestOptions);
       const result2 = await res2.json();
     }
 
     const selectStudent = (student) => {
-      console.log(student)
         if (student) {
+          setSearchFound(true)
           setFname(student.value.fname)
           setLnamedotnum(student.value.name_dot_num)
           setStudentID(student.value.student_id)
           setOsuEmail(student.value.name_dot_num.toLowerCase() + "@osu.edu")
         } else {
+          setSearchFound(false)
           setFname("")
           setLnamedotnum("")
           setStudentID("")
           setOsuEmail("@osu.edu")
         }
+    }
+
+    const handleLastNameChange = (event) => {
+      setLnamedotnum(event.target.value)
+      setOsuEmail(event.target.value.toLowerCase() + "@osu.edu")
     }
 
     return (
@@ -99,16 +113,20 @@ const AddAccountForm = (props) => {
                 <form className={styles.form}>
                     <h2>Create Account</h2>
                     <div>
-                        <StudentSearch
-                          fNameError={fNameError}
-                          setfNameError={setfNameError}
-                          lNameError={lNameError}
-                          setlNameError={setlNameError}
-                          selectStudent={student => selectStudent(student)}
+                        <div className={styles.box}>
+                          <StudentSearch
+                            fNameError={fNameError}
+                            setfNameError={setfNameError}
+                            lNameDotNumError={lNameDotNumError}
+                            setlNameDotNumError={setlNameDotNumError}
+                            selectStudent={student => selectStudent(student)}
                           />
-                        <br />
+                        </div>
+                        <TextField label="First Name" value={fname} error={fNameError} onChange={(event) => setFname(event.target.value)} disabled={searchFound} />
+                        <TextField label="Last Name.#" value={lnamedotnum} error={lNameDotNumError} onChange={(event) => handleLastNameChange(event)} disabled={searchFound} />
                         <TextField label="OSU Email Address" value={osuEmail} disabled={true} />
-                        <TextField label="Password" error={passwordError} onChange={(event) => setPassword(event.target.value)}/>
+                        <TextField label="Password" error={passwordError} onChange={setPassword}/>
+                        <SelectInput label='Account Type' options={accountTypes} onChange={setAccountType}/>
                     </div>
                 </form>
                 <div className={styles.buttons}>
