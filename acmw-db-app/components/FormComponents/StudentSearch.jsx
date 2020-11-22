@@ -10,6 +10,8 @@ const StudentSearch = (props) => {
 
     const fName = useRef("");
     const lName = useRef("");
+    const [fNameError, setfNameError] = useState("")
+    const [lNameError, setlNameError] = useState("")
 
     const [hasText, setHasText] = useState(false);
     const [searchOptions, setSearchOptions] = useState([]);
@@ -26,12 +28,8 @@ const StudentSearch = (props) => {
                     value: {fname: data[i]["fname"], name_dot_num: data[i]["name_dot_num"], student_id: data[i]["id"]}
                 });
             }
-            if (tempList.length > 0) {
-              tempList.push({label: "New Student?", value: {fname: fName.current, name_dot_num: lName.current, student_id: ""}}) // last value
-              // this is so you can add a new person even if other people are matched in the search
-            }
             setSearchOptions(tempList)
-            props.selectStudent(tempList.length > 0 ? tempList[0] : {value: {fname: fName.current, name_dot_num: lName.current, student_id: ""}}) //use templist bc async
+            props.selectStudent(tempList.length > 0 && tempList[0]) //use templist bc async
         })
     }
 
@@ -52,11 +50,11 @@ const StudentSearch = (props) => {
         const regex = new RegExp(/^[a-zA-Z]+$/)
         if (regex.test(event.target.value)) {
             fName.current = event.target.value
-            props.setfNameError("")
+            setfNameError("")
             getStudentInfo()
         } else if (event.target.value) {
             fName.current = ""
-            props.setfNameError("First name must only contain letters!")
+            setfNameError("First name must only contain letters!")
         } else {
             fName.current = ""
             if (lName.current.length > 0) {
@@ -65,7 +63,7 @@ const StudentSearch = (props) => {
                 setSearchOptions([])
                 props.selectStudent() //protection when deleting
             }
-            props.setfNameError("")
+            setfNameError("")
         }
         setHasText(lName.current.length > 0 || fName.current.length > 0)
     }
@@ -76,11 +74,11 @@ const StudentSearch = (props) => {
         isDotNum.current = dotNumCheck.test(event.target.value)
         if (letters.test(event.target.value) || isDotNum.current) {
             lName.current = event.target.value
-            props.setlNameError("")
+            setlNameError("")
             getStudentInfo()
         } else if (event.target.value) {
             lName.current = ""
-            props.setlNameError("Last name.# is formatted incorrectly!")
+            setlNameError("Last name.# is formatted incorrectly!")
         } else {
             lName.current = ""
             if (fName.current.length > 0) {
@@ -89,16 +87,16 @@ const StudentSearch = (props) => {
                 setSearchOptions([])
                 props.selectStudent() //protection when deleting
             }
-            props.setlNameError("")
+            setlNameError("")
         }
         setHasText(lName.current.length > 0 || fName.current.length > 0)
     }
 
     return (
         <div>
-            <h2>Student Search</h2>
-            <TextField label='First Name' onChange={fNameSearch} error={props.fNameError}/>
-            <TextField label='Last Name (.# Optional)' onChange={lNameSearch} error={props.lNameError}/>
+            <h3>Student Search</h3>
+            <TextField label='First Name' onChange={fNameSearch} error={fNameError}/>
+            <TextField label='Last Name (.# Optional)' onChange={lNameSearch} error={lNameError}/>
             {searchOptions.length > 0 && <SelectInput label='Choose Student' options={searchOptions} onChange={props.selectStudent}/>}
             {searchOptions.length <= 0 && hasText && <p>Unable to find student</p>}
         </div>
