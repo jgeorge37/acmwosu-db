@@ -7,7 +7,6 @@ const SelectInput = (props) => {
         if(props.options) {
             props.options.forEach((option) => {
                 if(option.label === selectedValue || option.value == selectedValue ) {
-                    console.log("Reached equality!")
                     selectedOption = option
                 }
             });

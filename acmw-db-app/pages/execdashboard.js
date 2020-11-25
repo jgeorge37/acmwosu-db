@@ -19,6 +19,7 @@ const ExecDashboard = () => {
     const [showGHCForm, setShowGHCForm] = useState(false)
     const [time, setTime] = useState("")
     const [date, setDate] = useState("")
+    const [attendees, setAttendees] = useState([])
 
 
     const recordTime = (hours, minutes, timeOfDay) => {
@@ -41,6 +42,23 @@ const ExecDashboard = () => {
         }
     }
 
+    const getAttendees = async (meeting) => {
+        if (meeting) {
+            const url = '/api/meeting/meeting-attendance?meetingId=' + meeting.value
+            const response = await fetch(url, {method: 'GET'})
+            response.json().then((data) => {
+                const tempList = []
+                for (var i in data) {
+                    tempList.push(data[i]["fname"] + " " + data[i]["lname"])
+                }
+                setAttendees(tempList)
+            })
+        } else {
+            const tempList = ["There were no attendees at this meeting."]
+            setAttendees([tempList])
+        }
+    }
+
     return (
         <div className={styles.container}>
             <Head>
@@ -55,7 +73,19 @@ const ExecDashboard = () => {
                 <p>{date}</p>
                 <TimeSelectionForm recordTime={recordTime}/>
                 <p>{time}</p>
-                <SelectMeeting />
+                <h2 className={styles.header}>View Meeting Attendance</h2>
+                <SelectMeeting selectMeeting={getAttendees}/>
+                {attendees.length > 0 && <table className={styles.table}>
+                    <tbody>
+                        <tr key={"header"}>
+                            <th>Attendance</th>
+                        </tr>
+                        {attendees.map((attendee, index)=> {
+                            return (<tr key={index}><td key={index}>{attendee}</td></tr>)
+                        })}
+                    </tbody>
+                </table>
+                }   
             </main>
         </div>
     )
