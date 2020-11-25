@@ -7,6 +7,7 @@ import GHCVolunteerForm from '../components/GHCVolunteerForm'
 import StudentSearch from '../components/FormComponents/StudentSearch'
 import TimeSelectionForm from '../components/FormComponents/TimeSelectionForm'
 import DateSelectionForm from '../components/FormComponents/DateSelectionForm'
+import SelectMeeting from '../components/SelectMeeting'
 
 /* 
     Sara: I think this page could be used for any updates/modifications exec board members would
@@ -54,6 +55,7 @@ const ExecDashboard = () => {
                 <p>{date}</p>
                 <TimeSelectionForm recordTime={recordTime}/>
                 <p>{time}</p>
+                <SelectMeeting />
             </main>
         </div>
     )

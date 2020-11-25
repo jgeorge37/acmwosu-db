@@ -2,11 +2,14 @@ import styles from '../../styles/components/FormComponents.module.css'
 
 const SelectInput = (props) => {
     const changeCurrent = (event) => {
-        const selectedLabel = event.target.value;
+        const selectedValue = event.target.value;
         var selectedOption = props.options ? props.options[0] : {}
         if(props.options) {
             props.options.forEach((option) => {
-                if(option.label === selectedLabel) selectedOption = option;
+                if(option.label === selectedValue || option.value == selectedValue ) {
+                    console.log("Reached equality!")
+                    selectedOption = option
+                }
             });
         }
         props.onChange(selectedOption);
@@ -17,7 +20,7 @@ const SelectInput = (props) => {
             <label className={styles.label}>{props.label}</label>
             <select className={styles.field} onChange={changeCurrent}>
                 {props.options.map((option, index) => {
-                    return <option key={index}>{option.label}</option>
+                    return <option key={index} value={option.value ? option.value : option.label}>{option.label}</option>
                 })}
             </select>
         </>
