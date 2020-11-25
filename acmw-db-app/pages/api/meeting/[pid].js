@@ -35,6 +35,21 @@ async function accountAttendance(email) {
 	return (await studentAttendance(data.rows[0].id));
 }
 
+// GET /api/meeting/meeting-list
+async function meetingList() {
+    const data = await pgQuery(`SELECT meeting_name, meeting_date, id FROM meeting`);
+    return data.rows;
+}
+
+// GET /api/meeting/meeting-attendance
+async function meetingAttendance(meetingId) {
+    const data = await pgQuery(`
+        SELECT s.fname, s.lname
+        FROM student s INNER JOIN meeting_student ms ON s.id = ms.student_id
+        WHERE ms.meeting_id = '${meetingId}'`)
+    return data.rows;
+}
+
 export default async (req, res) => {
     const {
       query: { pid },
@@ -56,6 +71,13 @@ export default async (req, res) => {
                     throw("Missing student id in query.");
                 }
                 result = await studentAttendance(req.query.id);
+            } else if (pid == 'meeting-list') {
+                result = await meetingList();
+            } else if (pid == 'meeting-attendance') {
+                if(!req.query || (!req.query.meetingId)) {
+                    throw("Missing meeting id in query.")
+                }
+                result = await meetingAttendance(req.query.meetingId);
             } else {
                 throw("Invalid pid");
             }
