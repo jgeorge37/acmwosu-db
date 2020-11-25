@@ -8,6 +8,7 @@ import AddAccountForm from '../components/AddAccountForm'
 import TimeSelectionForm from '../components/FormComponents/TimeSelectionForm'
 import DateSelectionForm from '../components/FormComponents/DateSelectionForm'
 import ScholarshipReqForm from '../components/ScholarshipReqForm'
+import SelectMeeting from '../components/SelectMeeting'
 
 /*
     Sara: I think this page could be used for any updates/modifications exec board members would
@@ -59,6 +60,7 @@ const ExecDashboard = () => {
                 <p>{date}</p>
                 <TimeSelectionForm recordTime={recordTime}/>
                 <p>{time}</p>
+                <SelectMeeting />
             </main>
         </div>
     )
