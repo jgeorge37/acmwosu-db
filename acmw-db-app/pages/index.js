@@ -8,7 +8,10 @@ export default function Home() {
         <title>ACM-W Database</title>
       </Head>
 
+      <div onClick={() => console.log("hello")} className={styles.corner}>Log out</div>
+
       <main className={styles.main}>
+        
         <h1 className={styles.title}>
           ACM-W OSU Database
         </h1>

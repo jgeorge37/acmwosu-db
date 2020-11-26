@@ -1,3 +1,14 @@
+.corner {
+  position: absolute;
+  right: 1em;
+  top: 1em;
+  text-decoration: underline;
+}
+.corner:hover {
+  cursor: pointer;
+  font-weight: bold;
+}
+
 .container {
   min-height: 100vh;
   padding: 0 0.5rem;
