@@ -50,6 +50,46 @@ async function meetingAttendance(meetingId) {
     return data.rows;
 }
 
+// POST /api/meeting/create
+// Create a meeting: meeting_name, meeting_date, semester (AUXX or SPXX), and company_name associated (null if no company)
+async function create(meeting_name, meeting_date, semester, company_name) {
+    // For code expiration, you can get the meeting_date and add two hours to it
+    const code = ("" + Math.random()).substring(2, 7);
+
+    const data = await pgQuery(`INSERT INTO meeting (meeting_name, meeting_date, code, semester) 
+    VALUES('${meeting_name}', '${meeting_date}', '${code}', '${semester}');`)
+
+    if (company_name) {
+        // Find company ID
+        const companyIdData = await pgQuery(`
+            SELECT id
+            FROM company
+            WHERE cname = '${company_name}'`);
+        
+        const companyId = companyIdData.rows[0]["id"];
+
+        // Get recently created meeting id
+        const meetingIdData = await pgQuery(`
+            SELECT id 
+            FROM meeting
+            WHERE meeting_name = '${meeting_name}'`);
+
+        const meetingId = meetingIdData.rows[0]["id"];
+
+        // add to meeting_company table
+        if (companyId) {
+            await pgQuery(`INSERT INTO meeting_company (meeting_id, company_id)
+            VALUES('${meetingId}', '${companyId}');`);
+        } else {
+            // This shouldn't happen b/c company search should be used but just in case
+            throw ("No company was found under that name!");
+        }
+    }
+
+    data.code = code;
+    return data;  
+}
+
 export default async (req, res) => {
     const {
       query: { pid },
@@ -58,7 +98,7 @@ export default async (req, res) => {
     let result = {};
 
     try {
-        if (req.method === 'GET'){
+        if (req.method === 'GET') {
             if (pid === 'average-attendance') {
                 result = await averageAttendance();
             } else if (pid === 'account-attendance') {
@@ -80,6 +120,18 @@ export default async (req, res) => {
                 result = await meetingAttendance(req.query.meetingId);
             } else {
                 throw("Invalid pid");
+            }
+        } else if (req.method === 'POST') {
+            const body = typeof(req.body) === 'object' ? req.body : JSON.parse(req.body);
+            switch(pid) {
+                case 'create': 
+                    if (!body.meeting_name) throw ("Must provide a meeting name!");
+                    if (!body.meeting_date) throw ("Must provide meeting date!");
+                    if (!body.semester) throw ("Must provide semester!");
+                    result = await create(body.meeting_name, body.meeting_date, body.semester, body.company_name);
+                    break;
+                default:
+                    throw("Invalid pid");
             }
         } else {
             throw("Invalid request type for meeting");
