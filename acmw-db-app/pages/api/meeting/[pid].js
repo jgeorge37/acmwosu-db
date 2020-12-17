@@ -51,22 +51,20 @@ async function meetingAttendance(meetingId) {
 }
 
 // POST /api/meeting/create
-// Create a meeting: meeting_name, meeting_date, semester (AUXX or SPXX), and company_name associated (null if no company)
-async function create(meeting_name, meeting_date, semester, company_name) {
+// Create a meeting: meeting_name, meeting_date, semester (AUXX or SPXX), and company_id associated (null if no company)
+async function create(meeting_name, meeting_date, semester, company_id) {
     // For code expiration, you can get the meeting_date and add two hours to it
     const code = ("" + Math.random()).substring(2, 7);
+
+    // re-generate code if already in table - highly unlikely to happen even once, so runtime in reality is not bad.
+    while((await pgQuery(`SELECT * FROM meeting WHERE code = '${code}';`)).rows.length > 0) {
+        token = ("" + Math.random()).substring(2, 7);
+    }
 
     const data = await pgQuery(`INSERT INTO meeting (meeting_name, meeting_date, code, semester) 
     VALUES('${meeting_name}', '${meeting_date}', '${code}', '${semester}');`)
 
-    if (company_name) {
-        // Find company ID
-        const companyIdData = await pgQuery(`
-            SELECT id
-            FROM company
-            WHERE cname = '${company_name}'`);
-        
-        const companyId = companyIdData.rows[0]["id"];
+    if (company_id) {
 
         // Get recently created meeting id
         const meetingIdData = await pgQuery(`
@@ -77,9 +75,9 @@ async function create(meeting_name, meeting_date, semester, company_name) {
         const meetingId = meetingIdData.rows[0]["id"];
 
         // add to meeting_company table
-        if (companyId) {
+        if ((await pgQuery(`SELECT * FROM company WHERE id = '${company_id}';`)).rows.length > 0) {
             await pgQuery(`INSERT INTO meeting_company (meeting_id, company_id)
-            VALUES('${meetingId}', '${companyId}');`);
+            VALUES('${meetingId}', '${company_id}');`);
         } else {
             // This shouldn't happen b/c company search should be used but just in case
             throw ("No company was found under that name!");
@@ -128,7 +126,7 @@ export default async (req, res) => {
                     if (!body.meeting_name) throw ("Must provide a meeting name!");
                     if (!body.meeting_date) throw ("Must provide meeting date!");
                     if (!body.semester) throw ("Must provide semester!");
-                    result = await create(body.meeting_name, body.meeting_date, body.semester, body.company_name);
+                    result = await create(body.meeting_name, body.meeting_date, body.semester, body.company_id);
                     break;
                 default:
                     throw("Invalid pid");
