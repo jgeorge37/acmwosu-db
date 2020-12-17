@@ -5,59 +5,43 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Create Next App</title>
+        <title>ACM-W Database</title>
       </Head>
 
+      <div onClick={() => console.log("hello")} className={styles.corner}>Log out</div>
+
       <main className={styles.main}>
+        
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          ACM-W OSU Database
         </h1>
 
         <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
+          Learn more about The Ohio State University's Association of Computing Machinery - Women's Chapter at 
+          our <a target="_blank" href="https://acmwosu.github.io/">information site</a>.
         </p>
 
         <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
+          <a href="/attendance" className={styles.card}>
+            <h3>Event attendance form &rarr;</h3>
+            <p>Record your attendance at one of our meetings</p>
           </a>
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
+          <a href="/signin" className={styles.card}>
+            <h3>GHC scholarship progress &rarr;</h3>
+            <p>For GHC scholarship recipients: view your progress on the scholarship requirements</p>
           </a>
 
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
+          <a href="/signin" className={styles.card}>
+            <h3>Exec login &rarr;</h3>
+            <p>For ACM-W executive board members: access executive features</p>
           </a>
         </div>
       </main>
 
       <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
+        <p>Created by members of the ACM-W OSU 2020-2021 Executive Board with React, Node.js, and PostgreSQL - 
+          view our code <a target="_blank" href="https://github.com/jgeorge37/acmwosu-db">here</a>!</p>
       </footer>
     </div>
   )
