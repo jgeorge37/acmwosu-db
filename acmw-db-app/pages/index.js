@@ -7,9 +7,6 @@ export default function Home() {
       <Head>
         <title>ACM-W Database</title>
       </Head>
-
-      <div onClick={() => console.log("hello")} className={styles.corner}>Log out</div>
-
       <main className={styles.main}>
         
         <h1 className={styles.title}>
@@ -33,7 +30,7 @@ export default function Home() {
           </a>
 
           <a href="/signin" className={styles.card}>
-            <h3>Exec login &rarr;</h3>
+            <h3>Executive console &rarr;</h3>
             <p>For ACM-W executive board members: access executive features</p>
           </a>
         </div>

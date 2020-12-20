@@ -14,3 +14,20 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.app-container {
+  display: flex;
+  flex-flow: column;
+  min-height: 100vh;
+}
+.app-container .navbar {
+  flex: 0 1 auto;
+}
+.app-container .component {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+.app-container .component > div {
+  height: 100%;
+}
