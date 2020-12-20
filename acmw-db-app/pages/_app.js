@@ -18,14 +18,20 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     setBlocked(null);
-    const userFromStorage = localStorage.getItem('user');
-    // occasionally it's the literal string "undefined"
-    setUser(userFromStorage === "undefined" ? null : userFromStorage);
     const pageName = Component.name.toLowerCase();
     setCurrentPage(pageName);
   }, [Component]);
 
   useEffect(() => {
+    const userFromStorage = localStorage.getItem('user');
+    // occasionally it's the literal string "undefined"
+    setUser(userFromStorage === "undefined" ? null : userFromStorage);
+  }, [Component]);
+
+
+  useEffect(() => {
+    console.log(currentPage)
+    console.log(user)
     subscribed.current = true;
     if(currentPage) {
       checkBlocked().then(val => {
