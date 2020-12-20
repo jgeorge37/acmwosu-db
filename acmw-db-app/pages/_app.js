@@ -34,6 +34,7 @@ function MyApp({ Component, pageProps }) {
     } else {
       blocked = false;
     }
+    console.log("blocked: " + blocked);
     return blocked;
   }
   checkBlocked().then(val => setBlocked(val));
