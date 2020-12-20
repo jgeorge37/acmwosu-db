@@ -1,7 +1,7 @@
 import '../styles/globals.css';
 import Head from 'next/head';
 import NavBar from '../components/NavBar';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 const loadingWheel = (
   <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
@@ -14,30 +14,45 @@ function MyApp({ Component, pageProps }) {
   const [user, setUser] = useState(null);
   const [currentPage, setCurrentPage] = useState('');
   const [blocked, setBlocked] = useState(null);
+  const subscribed = useRef(false);
 
   useEffect(() => {
     setBlocked(null);
     const userFromStorage = localStorage.getItem('user');
-    setUser(userFromStorage);
+    // occasionally it's the literal string "undefined"
+    setUser(userFromStorage === "undefined" ? null : userFromStorage);
     const pageName = Component.name.toLowerCase();
     setCurrentPage(pageName);
   }, [Component]);
+
+  useEffect(() => {
+    subscribed.current = true;
+    if(currentPage) {
+      checkBlocked().then(val => {
+        if(subscribed.current) setBlocked(val);
+        subscribed.current = false;
+      });
+    }
+    return () => {subscribed.current = false};
+  }, [user, currentPage])
+
 
   // check if user is unauthorized
   const checkBlocked = async () => {
     const pageName = Component.name.toLowerCase();
     let blocked = null;
+    console.log("user: " + user);
     if(accountOnly.includes(pageName)) {
-      blocked = !!user ? false : true;
+      blocked = user ? false : true;
     } else if(execOnly.includes(pageName)) {
-      blocked = !!user && JSON.parse(user).is_exec ? false : true;
+      blocked = user && JSON.parse(user).is_exec ? false : true;
     } else {
       blocked = false;
     }
+    console.log("page name: " + pageName);
     console.log("blocked: " + blocked);
     return blocked;
   }
-  checkBlocked().then(val => setBlocked(val));
 
   return ( 
     <div>
