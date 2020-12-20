@@ -3,7 +3,7 @@ import pgQuery from '../../../postgres/pg-query.js';
 // POST /api/account/verify
 // Check for matching email and password
 async function verify (email, password) {
-    const data = await pgQuery(`SELECT email FROM account WHERE email = '${email}' AND password = crypt('${password}', password);`);
+    const data = await pgQuery(`SELECT email, is_exec, id FROM account WHERE email = '${email}' AND password = crypt('${password}', password);`);
     return data.rows;
 }
 

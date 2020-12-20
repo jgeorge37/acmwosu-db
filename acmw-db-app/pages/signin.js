@@ -113,6 +113,15 @@ const SignInButton = (props) => {
 
   const [message, setMessage] = useState("");
 
+  const redirect = (userInfo) => {
+    let page = "scholarshipprogress";
+    // check if page to go to is given in URL
+    const to = window.location.href.split("?to=")[1];
+    if((to && to === "exec") || (!to && userInfo.is_exec)) page = "execdashboard";
+    // redirect to new page
+    window.location = `/${page}`;
+  }
+
   const validateSignIn = async () => {
     // Check that email and password match
 
@@ -132,6 +141,7 @@ const SignInButton = (props) => {
       } else {
         localStorage.setItem("user", JSON.stringify(result[0]));
         props.onSubmit("Success");
+        redirect(result[0]);
       }
     } else {
       props.onSubmit("Failure");

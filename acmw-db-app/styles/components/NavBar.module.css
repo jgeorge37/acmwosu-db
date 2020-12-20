@@ -4,6 +4,14 @@
   white: #FFFFFF
   dark gray: #373738
 */
+.alert {
+  float: right;
+  margin: 0.5em 0.7em;
+  color: white;
+  background-color: rgba(0,0,0,0.5);
+  padding: 0.3em 0.5em;
+  border-radius: 4px;
+}
 
 .bar {
   list-style-type: none;
@@ -18,11 +26,30 @@
 .tab {
   float: left;
 }
-
-.tab.signin {
+.tab.account {
   float: right;
+  color: white;
+  margin-right: 0.7em;
 }
-
+.tab.account .email {
+  float: left;
+  margin-left: 0.5em;
+  margin-top: 0.5em;
+  padding: 0.3em 0.5em;
+}
+.tab.account .cornerButton {
+  float: right;
+  margin-left: 0.5em;
+  margin-top: 0.5em;
+  padding: 0.3em 0.5em;
+  border: 1px solid rgba(256,256,256,0.5);
+  border-radius: 4px;
+}
+.tab.account .cornerButton:hover {
+  cursor: pointer;
+  background-color: rgba(256,256,256,0.8);
+  color: #9A49CE;
+}
 .tab a {
   display: block;
   color: #FFFFFF;
@@ -41,4 +68,13 @@
 .tab a.current {
   background-color: #FFFFFF;
   color: #9A49CE;
+}
+.bar .navlogo {
+  width: 3.45em;
+  float: left;
+  padding: 0.4em 0.6em;
+  background-color: #6d60e6; /* i thought an indigo accent could be fun */
+}
+.bar .navlogo:hover {
+  background-color: #988ff0; 
 }
