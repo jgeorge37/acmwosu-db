@@ -1,7 +1,7 @@
 import '../styles/globals.css';
 import Head from 'next/head';
 import NavBar from '../components/NavBar';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 
 const loadingWheel = (
   <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
@@ -52,7 +52,13 @@ function MyApp({ Component, pageProps }) {
             <Component {...pageProps} />
           }
           { blocked === true &&
-            <div className="unauth">You are not authorized to access this page. <br/><a href="/signin">Sign in</a></div>
+            <div className="unauth">You are not authorized to access this page. 
+            { !(user && !JSON.parse(user).is_exec) &&
+              <Fragment>
+                <br/><a href="/signin">Sign in</a>
+              </Fragment>
+            }
+            </div>
           }
         </div>
       </div>
