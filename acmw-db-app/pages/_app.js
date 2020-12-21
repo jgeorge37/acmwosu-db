@@ -1,7 +1,7 @@
 import '../styles/globals.css';
 import Head from 'next/head';
 import NavBar from '../components/NavBar';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const loadingWheel = (
   <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
