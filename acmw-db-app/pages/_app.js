@@ -14,38 +14,20 @@ function MyApp({ Component, pageProps }) {
   const [user, setUser] = useState(null);
   const [currentPage, setCurrentPage] = useState('');
   const [blocked, setBlocked] = useState(null);
-  const subscribed = useRef(false);
 
   useEffect(() => {
-    setBlocked(null);
+    const storedUser = localStorage.getItem('user');
+    // occasionally it's the literal string "undefined"
+    setUser(storedUser === "undefined" ? null : storedUser);
     const pageName = Component.name.toLowerCase();
     setCurrentPage(pageName);
-  }, [Component]);
-
-  useEffect(() => {
-    const userFromStorage = localStorage.getItem('user');
-    // occasionally it's the literal string "undefined"
-    setUser(userFromStorage === "undefined" ? null : userFromStorage);
-  }, [Component]);
-
-
-  useEffect(() => {
-    console.log(currentPage)
-    console.log(user)
-    subscribed.current = true;
     if(currentPage) {
-      checkBlocked().then(val => {
-        if(subscribed.current) setBlocked(val);
-        subscribed.current = false;
-      });
+      checkBlocked(pageName, storedUser === "undefined" ? null : storedUser)
     }
-    return () => {subscribed.current = false};
-  }, [user, currentPage])
-
+  });
 
   // check if user is unauthorized
-  const checkBlocked = async () => {
-    const pageName = Component.name.toLowerCase();
+  const checkBlocked = (pageName, user) => {
     let blocked = null;
     console.log("user: " + user);
     if(accountOnly.includes(pageName)) {
@@ -55,9 +37,7 @@ function MyApp({ Component, pageProps }) {
     } else {
       blocked = false;
     }
-    console.log("page name: " + pageName);
-    console.log("blocked: " + blocked);
-    return blocked;
+    setBlocked(blocked);
   }
 
   return ( 
