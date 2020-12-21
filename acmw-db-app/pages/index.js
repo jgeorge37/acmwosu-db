@@ -2,14 +2,13 @@ import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 
 export default function Home() {
+  const user = localStorage.getItem('user');
+
   return (
     <div className={styles.container}>
       <Head>
         <title>ACM-W Database</title>
       </Head>
-
-      <div onClick={() => console.log("hello")} className={styles.corner}>Log out</div>
-
       <main className={styles.main}>
         
         <h1 className={styles.title}>
@@ -27,15 +26,18 @@ export default function Home() {
             <p>Record your attendance at one of our meetings</p>
           </a>
 
-          <a href="/signin" className={styles.card}>
+          <a href={user ? "/scholarshipprogress" : "/signin?to=ghc"} className={styles.card}>
             <h3>GHC scholarship progress &rarr;</h3>
             <p>For GHC scholarship recipients: view your progress on the scholarship requirements</p>
           </a>
 
-          <a href="/signin" className={styles.card}>
-            <h3>Exec login &rarr;</h3>
-            <p>For ACM-W executive board members: access executive features</p>
+          { !(user && !JSON.parse(user).is_exec) &&  // do not show to gh-only users since they can't access this anyway
+            <a href={user && JSON.parse(user).is_exec ? "/execdashboard" : "/signin?to=exec"} className={styles.card}>
+              <h3>Executive console &rarr;</h3>
+              <p>For ACM-W executive board members: access executive features</p>
           </a>
+          }
+          
         </div>
       </main>
 

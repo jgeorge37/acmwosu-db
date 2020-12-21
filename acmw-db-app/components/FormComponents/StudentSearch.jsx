@@ -27,10 +27,11 @@ const StudentSearch = (props) => {
             for (var i in data) {
                 tempList.push({
                     label: data[i]["fname"] + " " + data[i]["lname"] + " - " + data[i]["name_dot_num"],
-                    value: {name_dot_num: data[i]["name_dot_num"]}
+                    value: {fname: data[i]["fname"], name_dot_num: data[i]["name_dot_num"], student_id: data[i]["id"]}
                 });
             }
             setSearchOptions(tempList)
+            props.selectStudent(tempList.length > 0 ? tempList[0] : {value: {fname: fName.current, name_dot_num: lName.current, student_id: ""}}) //use templist bc async
         })
     }
 
@@ -62,6 +63,7 @@ const StudentSearch = (props) => {
                 getStudentInfo()
             } else {
                 setSearchOptions([])
+                props.selectStudent() //protection when deleting
             }
             setfNameError("")
         }
@@ -96,7 +98,7 @@ const StudentSearch = (props) => {
             <h2>Student Search</h2>
             <TextField label='First Name' onChange={fNameSearch} error={fNameError}/>
             <TextField label='Last Name (.# Optional)' onChange={lNameSearch} error={lNameError}/>
-            {searchOptions.length > 0 && <SelectInput label='Choose Student' options={searchOptions} onChange={setStudent}/>}
+            {searchOptions.length > 0 && <SelectInput label='Choose Student' options={searchOptions} onChange={props.selectStudent}/>}
             {searchOptions.length <= 0 && hasText && <p>Unable to find student</p>}
         </div>
     )

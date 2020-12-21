@@ -1,5 +1,4 @@
 import styles from '../styles/Database.module.css'
-import NavBar from '../components/NavBar'
 import Head from 'next/head'
 import {useState} from 'react'
 import SubmitButton from '../components/FormComponents/SubmitButton'
@@ -8,6 +7,8 @@ import StudentSearch from '../components/FormComponents/StudentSearch'
 import TimeSelectionForm from '../components/FormComponents/TimeSelectionForm'
 import DateSelectionForm from '../components/FormComponents/DateSelectionForm'
 import SelectMeeting from '../components/SelectMeeting'
+import ScholarshipReqForm from '../components/ScholarshipReqForm'
+
 
 /* 
     Sara: I think this page could be used for any updates/modifications exec board members would
@@ -17,6 +18,7 @@ import SelectMeeting from '../components/SelectMeeting'
 const ExecDashboard = () => {
 
     const [showGHCForm, setShowGHCForm] = useState(false)
+    const [showScholarshipReqForm, setShowScholarshipReqForm] = useState(false)
     const [time, setTime] = useState("")
     const [date, setDate] = useState("")
     const [attendees, setAttendees] = useState([])
@@ -68,6 +70,8 @@ const ExecDashboard = () => {
             <main className={styles.main}>
                 <SubmitButton label="Update GHC Volunteer Hours" handleChange={() => {setShowGHCForm(true)}}/>
                 {showGHCForm && <GHCVolunteerForm closeForm={() => {setShowGHCForm(false)}}/>}
+                <SubmitButton label="Add Scholarship Req" handleChange={() =>{setShowScholarshipReqForm(true)}}/>
+                {showScholarshipReqForm && <ScholarshipReqForm handleCancel={() => {setShowScholarshipReqForm(false)}}/>}
                 <StudentSearch />
                 <DateSelectionForm recordDate={recordDate}/>
                 <p>{date}</p>
