@@ -10,7 +10,7 @@
     cursor: pointer;
     transition: 0.3s background-color ease-in-out, 0.3s color ease-in-out;
     }
-  
+
   .button:hover {
     background-color: #373738;
     color: white;
@@ -25,6 +25,10 @@
     font-size: 17px;
     background-color: white;
     transition: 0.3s background-color ease-in-out, 0.3s box-shadow ease-in-out;
+  }
+
+  .field.disabled {
+    background-color: #37373820;
   }
 
   .multi {
