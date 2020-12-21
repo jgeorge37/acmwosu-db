@@ -6,6 +6,7 @@ import GHCVolunteerForm from '../components/GHCVolunteerForm'
 import StudentSearch from '../components/FormComponents/StudentSearch'
 import TimeSelectionForm from '../components/FormComponents/TimeSelectionForm'
 import DateSelectionForm from '../components/FormComponents/DateSelectionForm'
+import ScholarshipReqForm from '../components/ScholarshipReqForm'
 
 /* 
     Sara: I think this page could be used for any updates/modifications exec board members would
@@ -15,6 +16,7 @@ import DateSelectionForm from '../components/FormComponents/DateSelectionForm'
 const ExecDashboard = () => {
 
     const [showGHCForm, setShowGHCForm] = useState(false)
+    const [showScholarshipReqForm, setShowScholarshipReqForm] = useState(false)
     const [time, setTime] = useState("")
     const [date, setDate] = useState("")
 
@@ -48,6 +50,8 @@ const ExecDashboard = () => {
             <main className={styles.main}>
                 <SubmitButton label="Update GHC Volunteer Hours" handleChange={() => {setShowGHCForm(true)}}/>
                 {showGHCForm && <GHCVolunteerForm closeForm={() => {setShowGHCForm(false)}}/>}
+                <SubmitButton label="Add Scholarship Req" handleChange={() =>{setShowScholarshipReqForm(true)}}/>
+                {showScholarshipReqForm && <ScholarshipReqForm handleCancel={() => {setShowScholarshipReqForm(false)}}/>}
                 <StudentSearch />
                 <DateSelectionForm recordDate={recordDate}/>
                 <p>{date}</p>
