@@ -54,6 +54,21 @@ async function searchStudents (query) {
     return data.rows;
 }
 
+// POST /api/student/create
+// Creates a new student. all params after name_dot_num are optional
+// Returns the id of the new student
+async function createStudent(fname, lname, name_dot_num, personal_email, school_level, packet_sent_date) {
+  const data = await pgQuery(`
+    INSERT INTO student (fname, lname, name_dot_num, personal_email, school_level, packet_sent_date)
+    VALUES ('${fname}', '${lname}', '${name_dot_num}',
+            ${personal_email ? `'${personal_email}'`: null},
+            ${school_level ? `'${school_level}'`: null},
+            ${packet_sent_date ? `'${packet_sent_date}'`: null})
+    RETURNING id;
+  `);
+  return data.rows
+}
+
 export default async (req, res) => {
     const {
       query: { pid },
@@ -79,6 +94,14 @@ export default async (req, res) => {
             } else {
                 throw("Invalid pid");
             }
+        } else if (req.method === 'POST') {
+          const body = typeof(req.body) === 'object' ? req.body : JSON.parse(req.body);
+          if (pid === 'create') {
+            if (!body || !body.fname || !body.lname || !body.name_dot_num) {
+              throw("Missing parameters: body must include fname, lname, and name_dot_num")
+            }
+            result = await createStudent(body.fname, body.lname, body.name_dot_num, body.personal_email, body.school_level, body.packet_sent_date);
+          }
         } else {
             throw("Invalid request type for student");
         }

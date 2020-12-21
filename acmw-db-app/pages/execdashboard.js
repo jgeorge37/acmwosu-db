@@ -3,12 +3,15 @@ import Head from 'next/head'
 import {useState} from 'react'
 import SubmitButton from '../components/FormComponents/SubmitButton'
 import GHCVolunteerForm from '../components/GHCVolunteerForm'
-import StudentSearch from '../components/FormComponents/StudentSearch'
+import AddAccountForm from '../components/AddAccountForm'
 import TimeSelectionForm from '../components/FormComponents/TimeSelectionForm'
 import DateSelectionForm from '../components/FormComponents/DateSelectionForm'
+
+import SelectMeeting from '../components/SelectMeeting'
 import ScholarshipReqForm from '../components/ScholarshipReqForm'
 
-/* 
+
+/*
     Sara: I think this page could be used for any updates/modifications exec board members would
     need to do regarding member data. Maybe have a link from this page to the database pages??
 */
@@ -16,10 +19,12 @@ import ScholarshipReqForm from '../components/ScholarshipReqForm'
 const ExecDashboard = () => {
 
     const [showGHCForm, setShowGHCForm] = useState(false)
+    const [showAddAccountForm, setShowAddAccountForm] = useState(false)
     const [showScholarshipReqForm, setShowScholarshipReqForm] = useState(false)
+
     const [time, setTime] = useState("")
     const [date, setDate] = useState("")
-
+    const [attendees, setAttendees] = useState([])
 
     const recordTime = (hours, minutes, timeOfDay) => {
         // This is just for illustration purposes.
@@ -41,6 +46,23 @@ const ExecDashboard = () => {
         }
     }
 
+    const getAttendees = async (meeting) => {
+        if (meeting) {
+            const url = '/api/meeting/meeting-attendance?meetingId=' + meeting.value
+            const response = await fetch(url, {method: 'GET'})
+            response.json().then((data) => {
+                const tempList = []
+                for (var i in data) {
+                    tempList.push(data[i]["fname"] + " " + data[i]["lname"])
+                }
+                setAttendees(tempList)
+            })
+        } else {
+            const tempList = ["There were no attendees at this meeting."]
+            setAttendees([tempList])
+        }
+    }
+
     return (
         <div className={styles.container}>
             <Head>
@@ -50,13 +72,28 @@ const ExecDashboard = () => {
             <main className={styles.main}>
                 <SubmitButton label="Update GHC Volunteer Hours" handleChange={() => {setShowGHCForm(true)}}/>
                 {showGHCForm && <GHCVolunteerForm closeForm={() => {setShowGHCForm(false)}}/>}
+                <SubmitButton label="Create Account" handleChange={() => {setShowAddAccountForm(true)}}/>
+                {showAddAccountForm && <AddAccountForm closeForm={() => {setShowAddAccountForm(false)}}/>}
                 <SubmitButton label="Add Scholarship Req" handleChange={() =>{setShowScholarshipReqForm(true)}}/>
                 {showScholarshipReqForm && <ScholarshipReqForm handleCancel={() => {setShowScholarshipReqForm(false)}}/>}
-                <StudentSearch />
+
                 <DateSelectionForm recordDate={recordDate}/>
                 <p>{date}</p>
                 <TimeSelectionForm recordTime={recordTime}/>
                 <p>{time}</p>
+                <h2 className={styles.header}>View Meeting Attendance</h2>
+                <SelectMeeting selectMeeting={getAttendees}/>
+                {attendees.length > 0 && <table className={styles.table}>
+                    <tbody>
+                        <tr key={"header"}>
+                            <th>Attendance</th>
+                        </tr>
+                        {attendees.map((attendee, index)=> {
+                            return (<tr key={index}><td key={index}>{attendee}</td></tr>)
+                        })}
+                    </tbody>
+                </table>
+                }   
             </main>
         </div>
     )
