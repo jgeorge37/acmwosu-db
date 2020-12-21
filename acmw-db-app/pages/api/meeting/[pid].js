@@ -96,7 +96,7 @@ export default async (req, res) => {
     let result = {};
 
     try {
-        if (req.method === 'GET'){
+        if (req.method === 'GET') {
             if (pid === 'average-attendance') {
                 result = await averageAttendance();
             } else if (pid === 'account-attendance') {

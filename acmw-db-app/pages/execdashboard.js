@@ -6,6 +6,7 @@ import GHCVolunteerForm from '../components/GHCVolunteerForm'
 import AddAccountForm from '../components/AddAccountForm'
 import TimeSelectionForm from '../components/FormComponents/TimeSelectionForm'
 import DateSelectionForm from '../components/FormComponents/DateSelectionForm'
+
 import SelectMeeting from '../components/SelectMeeting'
 import ScholarshipReqForm from '../components/ScholarshipReqForm'
 
@@ -20,7 +21,7 @@ const ExecDashboard = () => {
     const [showGHCForm, setShowGHCForm] = useState(false)
     const [showAddAccountForm, setShowAddAccountForm] = useState(false)
     const [showScholarshipReqForm, setShowScholarshipReqForm] = useState(false)
-    
+
     const [time, setTime] = useState("")
     const [date, setDate] = useState("")
     const [attendees, setAttendees] = useState([])
@@ -75,7 +76,7 @@ const ExecDashboard = () => {
                 {showAddAccountForm && <AddAccountForm closeForm={() => {setShowAddAccountForm(false)}}/>}
                 <SubmitButton label="Add Scholarship Req" handleChange={() =>{setShowScholarshipReqForm(true)}}/>
                 {showScholarshipReqForm && <ScholarshipReqForm handleCancel={() => {setShowScholarshipReqForm(false)}}/>}
-                <StudentSearch />
+
                 <DateSelectionForm recordDate={recordDate}/>
                 <p>{date}</p>
                 <TimeSelectionForm recordTime={recordTime}/>
