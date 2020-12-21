@@ -1,7 +1,19 @@
 import pgQuery from '../../../postgres/pg-query.js';
 import {currentAcademicYear} from '../utility';
 
-// GET /api/student/totalUniqueMembers
+// GET /api/student/meeting-attendees
+async function getMeetingAttendees(meeting_id) {
+    const data = await pgQuery(`
+      SELECT id, fname, lname, name_dot_num
+      FROM student
+      LEFT JOIN meeting_student
+      ON student.id=meeting_student.student_id
+      WHERE meeting_student.meeting_id='${meeting_id}'
+    `);
+    return data.rows;
+}
+
+// GET /api/student/total-unique-members
 async function totalUniqueMembers () {
     const [fall, spring] = currentAcademicYear();
     const data = await pgQuery(
@@ -66,7 +78,7 @@ export default async (req, res) => {
 
     try {
         if (req.method === 'GET') {
-            if (pid === 'totalUniqueMembers') {
+            if (pid === 'total-unique-members') {
                 result = await totalUniqueMembers();
             } else if (pid === 'search') {
                 // Throw error if no valid search criteria is provided
@@ -74,6 +86,11 @@ export default async (req, res) => {
                     throw("Missing search criteria: query must include name_dot_num, lname, and/or fname.");
                 }
                 result = await searchStudents(req.query);
+            } else if (pid === 'meeting-attendees') {
+              if (!req.query || !req.query.meeting_id) {
+                throw("Missing search criteria: query must include meeting_id");
+              }
+              result = await getMeetingAttendees(req.query.meeting_id);
             } else {
                 throw("Invalid pid");
             }

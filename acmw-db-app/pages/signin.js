@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import styles from '../styles/SignIn.module.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -110,10 +110,20 @@ const TextInput = (props) => {
 }
 
 const SignInButton = (props) => {
-
   const [message, setMessage] = useState("");
+  const subscribed = useRef(false);
+
+  const redirect = (userInfo) => {
+    let page = "scholarshipprogress";
+    // check if page to go to is given in URL
+    const to = window.location.href.split("?to=")[1];
+    if((to && to === "exec") || (!to && userInfo.is_exec)) page = "execdashboard";
+    // redirect to new page
+    window.location = `/${page}`;
+  }
 
   const validateSignIn = async () => {
+    subscribed.current = true;
     // Check that email and password match
 
     //matches case insensitive letters. number w/o leading 0 @ (buckeyemail.) osu . edu
@@ -126,12 +136,15 @@ const SignInButton = (props) => {
       const res = await fetch('/api/account/verify', requestOptions);
       const result = await res.json();
 
+      if(!subscribed.current) return;
+
       if(!result || result.length === 0) {
         props.onSubmit("Failure");
         setMessage("Incorrect email or password.");
       } else {
         localStorage.setItem("user", JSON.stringify(result[0]));
         props.onSubmit("Success");
+        redirect(result[0]);
       }
     } else {
       props.onSubmit("Failure");
@@ -145,7 +158,13 @@ const SignInButton = (props) => {
         setMessage("Invalid OSU email address.");
       }
     }
+    subscribed.current = false;
   }
+
+  // prevent state update on unmounted components
+  useEffect(() => {
+    return () =>{subscribed.current = false};
+  }, [])
 
   return (
     <div>
