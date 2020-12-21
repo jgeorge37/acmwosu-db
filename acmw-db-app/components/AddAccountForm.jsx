@@ -14,7 +14,7 @@ const AddAccountForm = (props) => {
     const [osuEmail, setOsuEmail] = useState("@osu.edu")
     const [password, setPassword] = useState("")
     const [studentID, setStudentID] = useState("")
-    const [accountType, setAccountType] = useState(accountTypes[0].value)
+    const [accountType, setAccountType] = useState(accountTypes[0].label)
     const [searchFound, setSearchFound] = useState(false)
 
     const [fNameError, setfNameError] = useState("");
@@ -49,9 +49,6 @@ const AddAccountForm = (props) => {
               setPasswordError("")
             }
         } else {
-            setfNameError("")
-            setlNameDotNumError("")
-            setPasswordError("")
             create()
             props.closeForm()
         }
@@ -61,7 +58,7 @@ const AddAccountForm = (props) => {
       let id = studentID; // for async protection
       if (!id) { // creating a new student
           let lname = lnamedotnum.split(/\./)[0];
-          const requestOptions = {
+          const requestOptionsStudent = {
             method: 'POST',
             body: JSON.stringify(
               { fname: fname.charAt(0).toUpperCase() + fname.slice(1).toLowerCase(), //capitalization convention
@@ -73,26 +70,32 @@ const AddAccountForm = (props) => {
               }
             )
           };
-          const res1 = await fetch('/api/student/create', requestOptions);
+          const res1 = await fetch('/api/student/create', requestOptionsStudent);
           const result1 = await res1.json(); //returns the id
           id = result1[0]["id"];
       }
       // creating a new account
-      const requestOptions = { //currently account_type does not do anything; todo: make account_type col
+      const requestOptionsAccount = { //currently account_type does not do anything; todo: make account_type col
         method: 'POST',
-        body: JSON.stringify({ email: osuEmail, password: password, student_id: id, account_type: accountType})
+        body: JSON.stringify( // makes copies to prevent synthetic event error
+          { email: osuEmail.toLowerCase(),
+            password: password + "",
+            student_id: id,
+            account_type: accountType + "" }
+        )
       };
-      const res2 = await fetch('/api/account/create', requestOptions);
-      const result2 = await res2.json();
+      const res2 = await fetch('/api/account/create', requestOptionsAccount);
+      // const result2 = await res2.json();
     }
 
     const selectStudent = (student) => {
         if (student) {
+          let {fname, name_dot_num, student_id} = student;
           setSearchFound(true)
-          setFname(student.value.fname)
-          setLnamedotnum(student.value.name_dot_num)
-          setStudentID(student.value.student_id)
-          setOsuEmail(student.value.name_dot_num.toLowerCase() + "@osu.edu")
+          setFname(fname)
+          setLnamedotnum(name_dot_num)
+          setStudentID(student_id)
+          setOsuEmail(name_dot_num.toLowerCase() + "@osu.edu")
         } else {
           setSearchFound(false)
           setFname("")
@@ -103,8 +106,9 @@ const AddAccountForm = (props) => {
     }
 
     const handleLastNameChange = (event) => {
-      setLnamedotnum(event.target.value)
-      setOsuEmail(event.target.value.toLowerCase() + "@osu.edu")
+      let lastname = event.target.value;
+      setLnamedotnum(lastname)
+      setOsuEmail(lastname.toLowerCase() + "@osu.edu")
     }
 
     return (

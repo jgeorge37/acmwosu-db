@@ -25,12 +25,27 @@ const StudentSearch = (props) => {
             for (var i in data) {
                 tempList.push({
                     label: data[i]["fname"] + " " + data[i]["lname"] + " - " + data[i]["name_dot_num"],
-                    value: {fname: data[i]["fname"], name_dot_num: data[i]["name_dot_num"], student_id: data[i]["id"]}
+                    value: data[i]["id"]
                 });
             }
             setSearchOptions(tempList)
-            props.selectStudent(tempList.length > 0 && tempList[0]) //use templist bc async
+            if (tempList.length > 0) {
+              props.selectStudent({fname: data[0]["fname"], name_dot_num: data[0]["name_dot_num"], student_id: data[0]["id"]}) // autoselects the first student in the list
+            }
         })
+    }
+
+    const handleSelectStudent = (e) => {
+      let id = e.value;
+      const studentInfo = {fname: "Cornelius", name_dot_num: "Doge.420", student_id: id} // we don't want corn dog
+      for (var i in searchOptions) {
+        if (searchOptions[i].value === id) {
+          studentInfo.fname = searchOptions[i].label.split(" ")[0]
+          studentInfo.name_dot_num = searchOptions[i].label.split(" - ")[1]
+          break
+        }
+      }
+      props.selectStudent(studentInfo)
     }
 
     const createQuery = () => {
@@ -97,7 +112,7 @@ const StudentSearch = (props) => {
             <h3>Student Search</h3>
             <TextField label='First Name' onChange={fNameSearch} error={fNameError}/>
             <TextField label='Last Name (.# Optional)' onChange={lNameSearch} error={lNameError}/>
-            {searchOptions.length > 0 && <SelectInput label='Choose Student' options={searchOptions} onChange={props.selectStudent}/>}
+            {searchOptions.length > 0 && <SelectInput label='Choose Student' options={searchOptions} onChange={handleSelectStudent}/>}
             {searchOptions.length <= 0 && hasText && <p>Unable to find student</p>}
         </div>
     )
