@@ -21,9 +21,7 @@ function MyApp({ Component, pageProps }) {
     setUser(storedUser === "undefined" ? null : storedUser);
     const pageName = Component.name.toLowerCase();
     setCurrentPage(pageName);
-    if(currentPage) {
-      checkBlocked(pageName, storedUser === "undefined" ? null : storedUser)
-    }
+    checkBlocked(pageName, storedUser === "undefined" ? null : storedUser)
   });
 
   // check if user is unauthorized
