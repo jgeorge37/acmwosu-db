@@ -109,6 +109,13 @@ export default async (req, res) => {
                     throw("Missing student id in query.");
                 }
                 result = await studentAttendance(req.query.id);
+            } else if (pid == 'meeting-list') {
+                result = await meetingList();
+            } else if (pid == 'meeting-attendance') {
+                if(!req.query || (!req.query.meetingId)) {
+                    throw("Missing meeting id in query.")
+                }
+                result = await meetingAttendance(req.query.meetingId);
             } else {
                 throw("Invalid pid");
             }
