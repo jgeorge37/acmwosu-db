@@ -44,6 +44,7 @@
   padding: 0.3em 0.5em;
   border: 1px solid rgba(256,256,256,0.5);
   border-radius: 4px;
+  transition: 0.2s background-color ease-in-out, 0.2s color ease-in-out;
 }
 .tab.account .cornerButton:hover {
   cursor: pointer;
@@ -73,8 +74,9 @@
   width: 3.45em;
   float: left;
   padding: 0.4em 0.6em;
-  background-color: #6d60e6; /* i thought an indigo accent could be fun */
+  background-color: #6e1ea0;
+  transition: 0.2s background-color ease-in-out, 0.2s color ease-in-out;
 }
 .bar .navlogo:hover {
-  background-color: #988ff0; 
+  background-color: #d29bf5;
 }
