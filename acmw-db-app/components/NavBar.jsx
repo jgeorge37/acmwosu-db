@@ -58,6 +58,7 @@ const NavBar = (props) => {
     <Fragment>
       <li className={styles.tab}><a className={props.current === "execdashboard" ? styles.current : null} href="/execdashboard">Exec Dashboard</a></li>
       <li className={styles.tab}><a className={props.current === "companycontacts" ? styles.current : null} href="/companycontacts">Company Contacts</a></li>
+      <li className={styles.tab}><a className={props.current === "statistics" ? styles.current : null} href="/statistics">Statistics</a></li>
     </Fragment>
   );
   
