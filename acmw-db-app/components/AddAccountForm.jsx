@@ -129,7 +129,7 @@ const AddAccountForm = (props) => {
                         <TextField label="First Name" value={fname} error={fNameError} onChange={(event) => setFname(event.target.value)} disabled={searchFound} />
                         <TextField label="Last Name.#" value={lnamedotnum} error={lNameDotNumError} onChange={(event) => handleLastNameChange(event)} disabled={searchFound} />
                         <TextField label="OSU Email Address" value={osuEmail} disabled={true} />
-                        <TextField label="Password" error={passwordError} onChange={setPassword}/>
+                        <TextField label="Password" type="password" error={passwordError} onChange={setPassword}/>
                         <SelectInput label='Account Type' options={accountTypes} onChange={setAccountType}/>
                     </div>
                 </form>

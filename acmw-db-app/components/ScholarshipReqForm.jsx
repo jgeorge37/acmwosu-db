@@ -6,7 +6,7 @@ import styles from '../styles/components/CompanyForm.module.css'
 import {useState, useRef} from 'react'
 
 const ScholarshipReqForm = (props) => {
-    
+
     const [fNameError, setfNameError] = useState("")
     const [lNameError, setlNameError] = useState("")
 
@@ -73,4 +73,4 @@ const ScholarshipReqForm = (props) => {
     )
 }
 
-export default ScholarshipReqForm
+export default ScholarshipReqForm 
