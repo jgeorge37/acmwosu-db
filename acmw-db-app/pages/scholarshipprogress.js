@@ -49,7 +49,9 @@ const ScholarshipProgress = () => {
             const api = '/api/ghc/check-external-scholarship?email=' + currentUserEmail;
             const res = await fetch(api, requestOptions);
             const result = await res.json();
-            setExternalScholarship(result);
+            if (typeof result === 'boolean') { // so error message doesn't count
+                setExternalScholarship(result);
+            }
         }
         fetchMeetingData()
         fetchExternalScholarshipData()
