@@ -28,6 +28,7 @@ function MyApp({ Component, pageProps }) {
   const checkBlocked = (pageName, user) => {
     let blocked = null;
     console.log("user: " + user);
+    console.log(user ? "true user" : "false user");
     if(accountOnly.includes(pageName)) {
       blocked = user ? false : true;
     } else if(execOnly.includes(pageName)) {
@@ -35,6 +36,8 @@ function MyApp({ Component, pageProps }) {
     } else {
       blocked = false;
     }
+    console.log("page: " + pageName);
+    console.log("blocked: " + blocked);
     setBlocked(blocked);
   }
 
