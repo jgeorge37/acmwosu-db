@@ -1,11 +1,11 @@
-  #popup_inner {  
-    position: fixed; 
-    margin: 10px 450px;
+  #popup_inner {
     width: 700px;
     border-radius: 20px;  
     background: white;  
     color: black;
     overflow: auto;
+    margin: auto;
+    margin-top: 2em;
   }
 
   .container_styles {
@@ -26,9 +26,8 @@
   .list_scroll {
     padding-top: 13%;
     padding-bottom: 15px;
-    height: 100px; 
     overflow: hidden; 
-    overflow-y: scroll;
+    overflow-y: auto;
   }
 
   #table_rows {
