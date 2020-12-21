@@ -1,11 +1,11 @@
-import {useState, useRef} from 'react'
+import {useState, useRef, useEffect} from 'react'
 import styles from '../../styles/components/FormComponents.module.css'
 import MultiSelectInput from './MultiSelectInput'
 import SelectInput from './SelectInput'
 import TextField from './TextField'
 
 const StudentSearch = (props) => {
-
+    const subscribed = useRef(false);
     const isDotNum = useRef(false);
 
     const fName = useRef("");
@@ -16,7 +16,11 @@ const StudentSearch = (props) => {
     const [hasText, setHasText] = useState(false);
     const [searchOptions, setSearchOptions] = useState([]);
 
+    // prevent async update if unmounted
+    useEffect(() => {return () => {subscribed.current = false}}, []);
+
     const getStudentInfo = async () => {
+        subscribed.current = true;
         var query = createQuery()
         const url = '/api/student/search?' + query
         const response = await fetch(url, {method: 'GET'})
@@ -28,10 +32,12 @@ const StudentSearch = (props) => {
                     value: data[i]["id"]
                 });
             }
+            if(!subscribed.current) return;
             setSearchOptions(tempList)
             if (tempList.length > 0) {
               props.selectStudent({fname: data[0]["fname"], name_dot_num: data[0]["name_dot_num"], student_id: data[0]["id"]}) // autoselects the first student in the list
             }
+            subscribed.current = false;
         })
     }
 

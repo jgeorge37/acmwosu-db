@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import styles from '../styles/Reset.module.css'
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 const ForgotPassword = (props) => {
   const [view, setView] = useState("");
@@ -26,8 +26,13 @@ export default ForgotPassword;
 const PasswordForm = (props) => {
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
+  const subscribed = useRef(false);
+
+  // prevent async update if unmounted
+  useEffect(() => {return () => {subscribed.current = false}}, []);
      
   const handleSubmit = async () => {
+    subscribed.current = true;
     if(validate()){
       // Generate password reset token
       const email = input.slice(0);  // copy string value to not make an alias
@@ -39,14 +44,17 @@ const PasswordForm = (props) => {
       if(data.rowCount !== 0) {
         requestOpts.body = JSON.stringify({token: data.token, email: email});
         await fetch('/api/mailer/reset-pw', requestOpts);
+        if(!subscribed.current) return;
         props.changeEmail(email);
         props.changeView("submitted");
       } else {
         // email does not belong to an account
+        if(!subscribed.current) return;
         setError(`No account found for ${email}`);
         setInput("");
       }
     }
+    subscribed.current = false;
   }
   
   const validate = () => {
