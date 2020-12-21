@@ -3,7 +3,6 @@ import styles from '../styles/Database.module.css'
 import progress_styles from '../styles/components/ScholarshipProgressBar.module.css'
 import {useState, useEffect} from 'react'
 import ScholarshipProgressBar from '../components/ScholarshipProgressBar'
-import NavBar from '../components/NavBar'
 
 const ScholarshipProgress = () => {
 
@@ -24,25 +23,38 @@ const ScholarshipProgress = () => {
     const currentUserEmail = 'miskus.1@osu.edu';
     const [fallMeetings, setFallMeetings] = useState(0);
     const [springMeetings, setSpringMeetings] = useState(0);
+    const [hasExternalScholarship, setExternalScholarship] = useState(false);
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchMeetingData = async () => {
             const requestOptions = {
                 method: 'GET',
             };
-            console.log("here")
             const api = '/api/meeting/account-attendance?email=' + currentUserEmail;
             const res = await fetch(api, requestOptions);
-            const result = await res.json();           
+            const result = await res.json();
             for (var i = 0; i < result.length; i++) {
                 if (result[i].semester.indexOf("AU") >= 0) {
-                    setFallMeetings(result[i].count)    
+                    setFallMeetings(result[i].count)
                 } else {
                     setSpringMeetings(result[i].count)
                 }
             }
         }
-        fetchData()
+        const fetchExternalScholarshipData = async () => {
+            const requestOptions = {
+                method: 'GET',
+            };
+            console.log("fetching scholarship data")
+            const api = '/api/ghc/check-external-scholarship?email=' + currentUserEmail;
+            const res = await fetch(api, requestOptions);
+            const result = await res.json();
+            if (typeof result === 'boolean') { // so error message doesn't count
+                setExternalScholarship(result);
+            }
+        }
+        fetchMeetingData()
+        fetchExternalScholarshipData()
     }, [])
 
     // pass in string of details, added to list
@@ -54,7 +66,7 @@ const ScholarshipProgress = () => {
     // pass in string of details, added to list
     const testMeetingList = ['ACM-W Meeting 9/2','ACM-W Meeting 9/9','ACM-W Meeting 9/16','ACM-W Meeting 9/23','ACM-W Meeting 9/30','ACM-W Meeting 10/7'];
 
-    
+
     function calculateExternalScholarshipProgress(testScholarshipList, requiredAmountForExternalScholarship) {
         let percentExternScholarship = (testScholarshipList.length / requiredAmountForExternalScholarship) * 100;
         return percentExternScholarship;
@@ -93,7 +105,6 @@ const ScholarshipProgress = () => {
             <Head>
                 <title>GHC Scholarship Progress</title>
             </Head>
-            <NavBar current="scholarshipprogress"/>
             <h1 className={styles.header}>GHC Scholarship Progress Page</h1>
             <main className={styles.main}>
                 <div>
@@ -107,7 +118,8 @@ const ScholarshipProgress = () => {
                                 </tr>
                                 <tr>
                                     <td>Other Scholarship</td>
-                                    <td><ScholarshipProgressBar completed={calculateExternalScholarshipProgress(testScholarshipList, requiredAmountForExternalScholarship)}/></td>
+                                    {/* <td><ScholarshipProgressBar completed={calculateExternalScholarshipProgress(testScholarshipList, requiredAmountForExternalScholarship)}/></td> */}
+                                    <td><ScholarshipProgressBar completed={hasExternalScholarship ? 100 : 0}/></td>
                                     <td>
                                         <div className={progress_styles.list_scroll}>{testScholarshipItems}</div>
                                     </td>
