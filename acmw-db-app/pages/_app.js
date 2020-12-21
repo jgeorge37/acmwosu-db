@@ -16,27 +16,26 @@ function MyApp({ Component, pageProps }) {
   const [blocked, setBlocked] = useState(null);
 
   useEffect(() => {
-    setBlocked(null);
-    const userFromStorage = localStorage.getItem('user');
-    setUser(userFromStorage);
-    const pageName = Component.name.toLowerCase();
+    const storedUser = localStorage.getItem('user');
+    // occasionally it's the literal string "undefined"
+    setUser(storedUser === "undefined" ? null : storedUser);
+    const pageName = window.location.pathname.substring(1);
     setCurrentPage(pageName);
-  }, [Component]);
+    checkBlocked(pageName, storedUser === "undefined" ? null : storedUser)
+  });
 
   // check if user is unauthorized
-  const checkBlocked = async () => {
-    const pageName = Component.name.toLowerCase();
+  const checkBlocked = (pageName, user) => {
     let blocked = null;
     if(accountOnly.includes(pageName)) {
-      blocked = !!user ? false : true;
+      blocked = user ? false : true;
     } else if(execOnly.includes(pageName)) {
-      blocked = !!user && JSON.parse(user).is_exec ? false : true;
+      blocked = user && JSON.parse(user).is_exec ? false : true;
     } else {
       blocked = false;
     }
-    return blocked;
+    setBlocked(blocked);
   }
-  checkBlocked().then(val => setBlocked(val));
 
   return ( 
     <div>
