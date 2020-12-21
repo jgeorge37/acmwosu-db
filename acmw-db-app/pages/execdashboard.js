@@ -1,5 +1,4 @@
 import styles from '../styles/Database.module.css'
-import NavBar from '../components/NavBar'
 import Head from 'next/head'
 import {useState} from 'react'
 import SubmitButton from '../components/FormComponents/SubmitButton'

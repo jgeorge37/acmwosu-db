@@ -3,7 +3,6 @@ import styles from '../styles/Database.module.css'
 import progress_styles from '../styles/components/ScholarshipProgressBar.module.css'
 import {useState, useEffect} from 'react'
 import ScholarshipProgressBar from '../components/ScholarshipProgressBar'
-import NavBar from '../components/NavBar'
 
 const ScholarshipProgress = () => {
 
@@ -30,7 +29,6 @@ const ScholarshipProgress = () => {
             const requestOptions = {
                 method: 'GET',
             };
-            console.log("here")
             const api = '/api/meeting/account-attendance?email=' + currentUserEmail;
             const res = await fetch(api, requestOptions);
             const result = await res.json();           
@@ -93,7 +91,6 @@ const ScholarshipProgress = () => {
             <Head>
                 <title>GHC Scholarship Progress</title>
             </Head>
-            <NavBar current="scholarshipprogress"/>
             <h1 className={styles.header}>GHC Scholarship Progress Page</h1>
             <main className={styles.main}>
                 <div>
