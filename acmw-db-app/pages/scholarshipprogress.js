@@ -35,9 +35,9 @@ const ScholarshipProgress = () => {
             const result = await res.json();
             for (var i = 0; i < result.length; i++) {
                 if (result[i].semester.indexOf("AU") >= 0) {
-                    setFallMeetings(result[i].count)
+                    if(subscribed) setFallMeetings(result[i].count)
                 } else {
-                    setSpringMeetings(result[i].count)
+                    if(subscribed) setSpringMeetings(result[i].count)
                 }
             }
         }
@@ -50,11 +50,15 @@ const ScholarshipProgress = () => {
             const res = await fetch(api, requestOptions);
             const result = await res.json();
             if (typeof result === 'boolean') { // so error message doesn't count
-                setExternalScholarship(result);
+                if(subscribed) setExternalScholarship(result);
             }
         }
+        let subscribed = true;
         fetchMeetingData()
         fetchExternalScholarshipData()
+        subscribed = false;
+
+        return () => {subscribed = false};
     }, [])
 
     // pass in string of details, added to list
