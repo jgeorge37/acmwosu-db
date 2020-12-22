@@ -23,12 +23,51 @@
   border-bottom: 0px;
 }
 
-.main {
-  padding: 0px 10px;
-  border-top: 0px;
+.content {
+  display: flex;
+  flex-direction: row;
+  flex: 1 1 auto;
+}
+
+.left {
+  float: left;
+  width: 300px;
+  background-color: #e6e1ec;
+  display: flex;
   flex-direction: column;
-  justify-content: left;
-  align-items: left;
+  flex: 0 0 20em;
+  color: black;
+}
+
+.left > ul {
+  list-style-type: none;
+  background-color:whitesmoke;
+  padding: 0;
+  margin: 0;
+}
+
+.left .section, .left .cur_section {
+  font-size: 1.2rem;
+  padding: 0.8em 0.8em;
+  border-bottom: 1px solid rgba(0,0,0,0.4);
+  transition: 0.2s background-color ease-in-out, 0.2s color ease-in-out;
+}
+.left .cur_section {
+  background-color:#e7d4ff;
+}
+
+.left .section:hover, .left .cur_section:hover {
+  background-color: #c29bf3;
+  cursor: pointer;
+}
+
+.right {
+  padding: 1em;
+  flex-grow: 1;
+}
+.suboptions {
+  background-color: purple;
+  padding: 0em 0.5em 0.5em 0.5em;
 }
 
 .table {

@@ -1,4 +1,4 @@
-import styles from '../styles/components/CompanyForm.module.css'
+import styles from '../styles/components/Form.module.css'
 import SubmitButton from './FormComponents/SubmitButton'
 import TextField from './FormComponents/TextField'
 import CompanySearchInput from './FormComponents/CompanySearchInput'

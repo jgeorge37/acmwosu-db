@@ -20,13 +20,15 @@ const CompanyContacts = () => {
             </Head>
             <h1 className={styles.header}>Company Contacts Database</h1>
             <main className={styles.main}>
-                <SubmitButton label="Options" handleChange={() => {setOptionsForm(true)}}/>
+                <div className={styles.suboptions}>
+                    <SubmitButton label="Options" handleChange={() => {setOptionsForm(true)}}/>
+                    <SubmitButton label="Add Company" handleChange={() => {setAddCompanyForm(true)}}/>
+                    <SubmitButton label="Add Contact" handleChange={() => {setAddContactForm(true)}}/>
+                    <SubmitButton label="Sponsorship Options" handleChange={() => {setSponsorshipForm(true)}}/>
+                </div>
                 {showOptionsForm && <CompanyForm handleCancel={() => {setOptionsForm(false)}}/>}
-                <SubmitButton label="Add Company" handleChange={() => {setAddCompanyForm(true)}}/>
                 {showAddCompanyForm && <AddCompanyForm handleCancel={() => {setAddCompanyForm(false)}}/>}
-                <SubmitButton label="Add Contact" handleChange={() => {setAddContactForm(true)}}/>
                 {showAddContactForm && <AddContactForm handleCancel={() => {setAddContactForm(false)}}/>}
-                <SubmitButton label="Sponsorship Options" handleChange={() => {setSponsorshipForm(true)}}/>
                 {showSponsorshipForm && <SponsorshipForm handleCancel={() => {setSponsorshipForm(false)}}/>}
             </main>
         </div>
