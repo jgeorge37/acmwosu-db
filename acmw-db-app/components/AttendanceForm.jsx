@@ -145,7 +145,7 @@ const SubmitButton = (props) => {
     // If event code is valid, add a database entry, and display "Submitted successfully" message
     // Else if the event code is not valid, display "Invalid event code" message
 
-    const validateSubmitButton = async () => {
+  const validateSubmitButton = async () => {
     const regex = new RegExp(/^[a-z ,.'-]+$/i); //tests for first name
     const regexLast = new RegExp(/^[a-z ,.'-]+\.[0-9]+$/i); //tests for last name.#
 
@@ -172,7 +172,7 @@ const SubmitButton = (props) => {
         setMessage("Please enter your first name.");
       }
     }
-}
+  } 
 
   return (
     <div>
