@@ -3,6 +3,7 @@ import styles from '../../styles/components/FormComponents.module.css'
 import MultiSelectInput from './MultiSelectInput'
 import SelectInput from './SelectInput'
 import TextField from './TextField'
+import {validateLetters, validateLastNameDotNum} from '../../pages/api/utility';
 
 const StudentSearch = (props) => {
 
@@ -62,8 +63,7 @@ const StudentSearch = (props) => {
     }
 
     const fNameSearch = (event) => {
-        const regex = new RegExp(/^[a-zA-Z]+$/)
-        if (regex.test(event.target.value)) {
+        if (validateLetters(event.target.value)) {
             fName.current = event.target.value
             setfNameError("")
             getStudentInfo()
@@ -84,10 +84,8 @@ const StudentSearch = (props) => {
     }
 
     const lNameSearch = (event) => {
-        const letters = new RegExp(/^[a-zA-Z]+$/)
-        const dotNumCheck = new RegExp(/^[a-zA-Z]+\.[1-9][0-9]*$/)
-        isDotNum.current = dotNumCheck.test(event.target.value)
-        if (letters.test(event.target.value) || isDotNum.current) {
+        isDotNum.current = validateLastNameDotNum(event.target.value)
+        if (validateLetters(event.target.value) || isDotNum.current) {
             lName.current = event.target.value
             setlNameError("")
             getStudentInfo()

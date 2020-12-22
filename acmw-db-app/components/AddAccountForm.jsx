@@ -4,6 +4,7 @@ import TextField from './FormComponents/TextField'
 import StudentSearch from '../components/FormComponents/StudentSearch'
 import SelectInput from '../components/FormComponents/SelectInput'
 import {useState} from 'react'
+import {validateLetters, validateLastNameDotNum} from '../pages/api/utility';
 
 const AddAccountForm = (props) => {
 
@@ -23,10 +24,8 @@ const AddAccountForm = (props) => {
 
     const onSubmit = () => {
         // Angela: I took these from Sara's StudentSearch so we should probably make a Regex utilities file
-        const letters = new RegExp(/^[a-zA-Z]+$/) //maybe not? idk maybe needs dash or apostrophe
-        const dotNumCheck = new RegExp(/^[a-zA-Z]+\.[1-9][0-9]*$/)
-        const goodfname = letters.test(fname)
-        const goodlnamedotnum = dotNumCheck.test(lnamedotnum)
+        const goodfname = validateLetters(fname)
+        const goodlnamedotnum = validateLastNameDotNum(lnamedotnum)
 
         if (!fname || !lnamedotnum || !password || !goodfname || !goodlnamedotnum ) {
             if (!fname) {

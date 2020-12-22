@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import styles from '../styles/SignIn.module.css';
+import {validateEmail} from './api/utility';
 import React, { useEffect, useState, useRef } from 'react';
 
 const SignIn = () => {
@@ -126,9 +127,7 @@ const SignInButton = (props) => {
     subscribed.current = true;
     // Check that email and password match
 
-    //matches case insensitive letters. number w/o leading 0 @ (buckeyemail.) osu . edu
-    const regex = new RegExp(/^([a-z]+\.[1-9]([0-9]+)?@osu\.edu)$/i);
-    if (props.email && props.password && regex.test(props.email)) {
+    if (props.email && props.password && validateEmail(props.email)) {
       const requestOptions = {
         method: 'POST',
         body: JSON.stringify({ email: props.email, password: props.password })

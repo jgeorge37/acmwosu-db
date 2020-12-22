@@ -1,19 +1,20 @@
 import Head from 'next/head'
 import styles from '../styles/Reset.module.css'
+import {validatePassword} from './api/utility';
 import React, { useEffect, useState } from 'react';
 
 const ForgotPassword = (props) => {
   const [view, setView] = useState("");
   const [email, setEmail] = useState("");
-  
+
   return (
     <div className={styles.container}>
       <Head>
         <title>Forgot Password</title>
       </Head>
     <main className={styles.card}>
-      {view === "submitted" ? 
-      <h3>Password reset email sent to {email}</h3> : 
+      {view === "submitted" ?
+      <h3>Password reset email sent to {email}</h3> :
       <PasswordForm changeView={setView} changeEmail={setEmail}/>}
       <div><a className={styles.smol} href="../signin">Sign in</a></div>
     </main>
@@ -26,7 +27,7 @@ export default ForgotPassword;
 const PasswordForm = (props) => {
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
-     
+
   const handleSubmit = async () => {
     if(validate()){
       // Generate password reset token
@@ -48,36 +49,33 @@ const PasswordForm = (props) => {
       }
     }
   }
-  
+
   const validate = () => {
     var isValid = false;
     if (input.length > 0) {
-      //matches case insensitive letters. number w/o leading 0 @ (buckeyemail.) osu . edu
-      const pattern = new RegExp(/^([a-z]+\.[1-9]([0-9]+)?@(buckeyemail\.)?osu\.edu)$/i);
-      isValid = pattern.test(input);
+      isValid = validatePassword(input);
     }
     if(!isValid) setError("Enter a valid osu.edu email");
     return isValid;
   }
-     
+
   return (
         <div>
         <h1>Forgot Password</h1>
         <div className={styles.passwordChunk}>
           <label className={styles.labelStyle} htmlFor="email">Email Address:</label>
-          <input 
-            type="text" 
-            name="email" 
+          <input
+            type="text"
+            name="email"
             value={input}
             onChange={event => setInput(event.target.value)}
-            placeholder="Enter email" 
+            placeholder="Enter email"
             id="email" />
             <div className={styles.error}>{error}</div>
-        </div> 
+        </div>
         <button className={styles.button} onClick={async () => await handleSubmit()}>
-        Submit 
+        Submit
       </button>
       </div>
   );
 }
-
