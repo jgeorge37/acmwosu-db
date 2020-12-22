@@ -148,7 +148,6 @@ const SubmitButton = (props) => {
 
     const validateSubmitButton = async () => {
 
-
     // can change the 007 to actual event codes later
     // This would be changed to pull from a database of event codes and see if there is a match (maybe?)
     // Sara: Actually this form might be slightly different depending on how the website is set up.
@@ -173,7 +172,7 @@ const SubmitButton = (props) => {
         setMessage("Please enter your first name.");
       }
     }
-}
+  } 
 
   return (
     <div>

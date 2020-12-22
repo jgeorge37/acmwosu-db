@@ -1,6 +1,6 @@
 import styles from '../styles/Database.module.css'
 import Head from 'next/head'
-import {useState} from 'react'
+import {useState, useRef, useEffect} from 'react'
 import SubmitButton from '../components/FormComponents/SubmitButton'
 import GHCVolunteerForm from '../components/GHCVolunteerForm'
 import AddAccountForm from '../components/AddAccountForm'
@@ -17,7 +17,7 @@ import ScholarshipReqForm from '../components/ScholarshipReqForm'
 */
 
 const ExecDashboard = () => {
-
+    const subscribed = useRef(false)
     const [showGHCForm, setShowGHCForm] = useState(false)
     const [showAddAccountForm, setShowAddAccountForm] = useState(false)
     const [showScholarshipReqForm, setShowScholarshipReqForm] = useState(false)
@@ -25,6 +25,9 @@ const ExecDashboard = () => {
     const [time, setTime] = useState("")
     const [date, setDate] = useState("")
     const [attendees, setAttendees] = useState([])
+
+    // prevent async update if unmounted
+    useEffect(() => {return () => {subscribed.current = false}}, []);
 
     const recordTime = (hours, minutes, timeOfDay) => {
         // This is just for illustration purposes.
@@ -48,6 +51,7 @@ const ExecDashboard = () => {
 
     const getAttendees = async (meeting) => {
         if (meeting) {
+            subscribed.current = true;
             const url = '/api/meeting/meeting-attendance?meetingId=' + meeting.value
             const response = await fetch(url, {method: 'GET'})
             response.json().then((data) => {
@@ -55,7 +59,8 @@ const ExecDashboard = () => {
                 for (var i in data) {
                     tempList.push(data[i]["fname"] + " " + data[i]["lname"])
                 }
-                setAttendees(tempList)
+                if(subscribed.current) setAttendees(tempList)
+                subscribed.current = false
             })
         } else {
             const tempList = ["There were no attendees at this meeting."]

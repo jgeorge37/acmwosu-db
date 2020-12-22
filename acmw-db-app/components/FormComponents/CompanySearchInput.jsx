@@ -1,5 +1,4 @@
-import SelectInput from './SelectInput'
-import {useState} from 'react'
+import {useState, useRef, useEffect} from 'react'
 import styles from '../../styles/components/FormComponents.module.css'
 import MultiSelectInput from './MultiSelectInput'
 
@@ -18,29 +17,37 @@ const getCompanyInfo = async (input) => {
         redirect: 'follow', 
         referrerPolicy: 'no-referrer', 
     })
-    return response.json() 
+    const result = await response.json();
+    return result;
 }
 
 const CompanySearchInput = (props) => {
-
+    const subscribed = useRef(false)
     const [companyList, setCompanyList] = useState([])
     const [isText, setIsText] = useState(false) // Has the user entered text
 
     const filterFunction = (event) => {
         if (event.target.value) {
             setIsText(true)
+            subscribed.current = true;
             getCompanyInfo(event.target.value).then((data) => {
                 const tempList = []
                 for (var i in data) {
                     tempList.push(data[i]["cname"])
                 }
-                setCompanyList(tempList)
+                if(subscribed.current) setCompanyList(tempList)
+                subscribed.current = false;
             })
         } else {
             setIsText(false)
             setCompanyList([])
         }
     }
+
+    // When component unmounts, subscribed is false which stops async operation from continuing
+    useEffect(() => {
+        return () => {subscribed.current = false};
+    }, []);
 
     return (
         <div>
