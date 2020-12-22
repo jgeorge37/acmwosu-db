@@ -30,7 +30,9 @@ a {
   background-color: #BA9ADF;
 }
 .app-container .component > div {
-  height: 100%;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
 }
 
 .app-container .unauth {
