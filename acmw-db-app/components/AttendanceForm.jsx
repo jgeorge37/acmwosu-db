@@ -1,6 +1,7 @@
 import SelectInput from '../components/FormComponents/SelectInput'
 import styles from '../styles/SignIn.module.css';
 import React, { useState } from 'react';
+import {validateLetters, validateLastNameDotNum} from '../pages/api/utility';
 import Head from 'next/head'
 
 const AttendanceForm = () => {
@@ -14,16 +15,16 @@ const AttendanceForm = () => {
     const [listServ, setListServe] = useState({});
 
     const yearOptions = [
-      {label: "First", value: 1}, 
-      {label: "Second", value: 2}, 
-      {label: "Third", value: 3}, 
-      {label: "Fourth", value: 4}, 
-      {label: "Fifth+", value: 5}, 
+      {label: "First", value: 1},
+      {label: "Second", value: 2},
+      {label: "Third", value: 3},
+      {label: "Fourth", value: 4},
+      {label: "Fifth+", value: 5},
       {label: "Graduate or Phd student :)", value: 6}
     ];
     const listServOptions = [
-      {label: "I am already on the list :)", value: false}, 
-      {label: "Yes, please!", value: true}, 
+      {label: "I am already on the list :)", value: false},
+      {label: "Yes, please!", value: true},
       {label: "Nope, thank you", value: false}
     ];
 
@@ -39,20 +40,20 @@ const AttendanceForm = () => {
                 <TextInput
                     id="Event Code"
                     input type="text"
-                    label="Event Code" 
-                    predicted="007" 
+                    label="Event Code"
+                    predicted="007"
                     onChange={setEventCode}/>
                 <TextInput
                     id="First Name"
                     input type="text"
-                    label="First Name" 
-                    predicted="Brutus" 
+                    label="First Name"
+                    predicted="Brutus"
                     onChange={setFirstName}/>
                 <TextInput
                     id="Last Name"
                     input type="text"
-                    label="Last Name.#" 
-                    predicted="Buckeye.1" 
+                    label="Last Name.#"
+                    predicted="Buckeye.1"
                     onChange={setLastName}/>
                 <div>
                     <h2>What year are you in?</h2>
@@ -63,8 +64,8 @@ const AttendanceForm = () => {
                     <SelectInput options={listServOptions} onChange={setListServe}/>
                 </div>
                 <span>
-                    <SubmitButton 
-                        label="Submit" 
+                    <SubmitButton
+                        label="Submit"
                         eventCode={eventCode}
                         firstName={firstName}
                         lastName={lastName}
@@ -87,12 +88,12 @@ const TextInput = (props) => {
     const [label, setLabel] = useState(props.label);
     const [predicted, setPredicted] = useState(props.predicted);
     const [type, setType] = useState(props.type);
-  
+
     const changeValue = (event) => {
       setValue(event.target.value);
       props.onChange(event.target.value);
     }
-  
+
     const handleKeyPress = (event) => {
       if (predicted && predicted.startsWith(value) && event.key === "Enter") {
         setValue(predicted);
@@ -145,30 +146,29 @@ const SubmitButton = (props) => {
     // If event code is valid, add a database entry, and display "Submitted successfully" message
     // Else if the event code is not valid, display "Invalid event code" message
 
-  const validateSubmitButton = async () => {
-    const regex = new RegExp(/^[a-z ,.'-]+$/i); //tests for first name
-    const regexLast = new RegExp(/^[a-z ,.'-]+\.[0-9]+$/i); //tests for last name.#
+    const validateSubmitButton = async () => {
 
     // can change the 007 to actual event codes later
     // This would be changed to pull from a database of event codes and see if there is a match (maybe?)
     // Sara: Actually this form might be slightly different depending on how the website is set up.
     // If ACM-W users are able to login to their personal accounts, then we would just need the event code.
     // This is just going off of past attendance forms.
-    
-    if ((props.eventCode == "007") && regex.test(props.firstName) && regexLast.test(props.lastName)) {
+    let firstnameCheck = validateLetters(props.firstName)
+    let lastnameCheck = validateLastNameDotNum(props.lastName);
+    if ((props.eventCode == "007") && firstnameCheck && lastnameCheck) {
         props.onSubmit("Success");
         //Successful insert submit page here
         setMessage("Successfully submitted your attendance.")
     } else {
       props.onSubmit("Failure");
-      if (!regex.test(props.firstName) && !regexLast.test(props.lastName)) {
+      if (!firstnameCheck && !lastnameCheck) {
         setMessage("Please enter your first and last name.#")
       } else if (props.eventCode != "007") {
         // can change the 007 to actual event codes later
         setMessage("Please enter valid event code.")
-      } else if (!regexLast.test(props.lastName)) {
+      } else if (!lastnameCheck) {
         setMessage("Please enter your last name.#")
-      } else if (!regex.test(props.firstName)) {
+      } else if (!firstnameCheck) {
         setMessage("Please enter your first name.");
       }
     }
