@@ -1,12 +1,14 @@
 import Head from 'next/head'
 import styles from '../styles/Reset.module.css'
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 const Reset = (props) => {
   const [email, setEmail] = useState("");
   const [view, setView] = useState("");
+  const subscribed = useRef(false);
   
   const checkToken = async () => {
+    subscribed.current = true;
     // very hacky for now; setting up react router needs to be its own ticket
     const tok = window.location.href.split("?token=")[1];
     var em = -1;
@@ -14,7 +16,8 @@ const Reset = (props) => {
       const res = await (await fetch(`/api/account/check-reset?token=${tok}`)).json();
       if(res.length > 0) em = res[0].email;
     }
-    setEmail(em);
+    if(subscribed.current) setEmail(em);
+    subscribed.current = false;
   }
   
  // using useEffect to not try to look at the window on the server side
@@ -27,6 +30,9 @@ const Reset = (props) => {
           setView(<ResetForm email={email} changeView={setView}/>)
     });
   },[email]);
+
+  // prevent async update if unmounted
+  useEffect(() => {return () => {subscribed.current = false}}, []);
   
 
   return (
@@ -55,8 +61,13 @@ const ResetForm = (props) => {
   const [input1, setInput1] = useState("");
   const [input2, setInput2] = useState("");
   const [error, setError] = useState("");
+  const subscribed = useRef(false);
+
+  // prevent async update if unmounted
+  useEffect(() => {return () => {subscribed.current = false}}, []);
 
   const handleSubmit = async () => {
+    subscribed.current = true;
     if(validate()){
       // submit new password
       const requestOptions = {
@@ -65,13 +76,14 @@ const ResetForm = (props) => {
       };
       const res = await (await fetch('/api/account/reset-pw', requestOptions)).text();
       // display "submitted" view
-      props.changeView(
+      if(subscribed.current) props.changeView(
         <main className={styles.card}>
           {res}
           <div><a className={styles.smol} href="../signin">Sign in</a></div>
         </main>
       );
     }
+    subscribed.current = false;
   }
   
   const validate = () => {
