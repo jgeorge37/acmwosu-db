@@ -6,9 +6,9 @@ import Head from 'next/head'
 
 const AttendanceForm = () => {
 
-    const [eventCode, setEventCode] = useState("")
-    const [firstName, setFirstName] = useState("")
-    const [lastName, setLastName] = useState("")
+    const [eventCode, setEventCode] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
     const [status, setStatus] = useState("");
 
     const [year, setYear] = useState({});
@@ -155,7 +155,9 @@ const SubmitButton = (props) => {
     // This is just going off of past attendance forms.
     let firstnameCheck = validateLetters(props.firstName)
     let lastnameCheck = validateLastNameDotNum(props.lastName);
-    if ((props.eventCode == "007") && firstnameCheck && lastnameCheck) {
+    recordAttendance();
+
+    /*if ((props.eventCode == "007") && firstnameCheck && lastnameCheck) {
         props.onSubmit("Success");
         //Successful insert submit page here
         setMessage("Successfully submitted your attendance.")
@@ -171,8 +173,23 @@ const SubmitButton = (props) => {
       } else if (!firstnameCheck) {
         setMessage("Please enter your first name.");
       }
-    }
+    }*/
   } 
+
+  const recordAttendance = async () => {
+        const requestAttendanceRecord= {
+          method: 'POST',
+          body: JSON.stringify(
+            { event_code: eventCode,
+              f_name: props.firstName.charAt(0).toUpperCase() + props.firstName.slice(1).toLowerCase(), //capitalization convention
+              l_name_dot_num: lnamedotnum.toLowerCase(),
+              year_level: props.year //these are blank for now
+            }
+          )
+        };
+        const res1 = await fetch('/api/attendance/record', requestAttendanceRecord);
+        const result1 = await res1.json(); //returns the id
+  }
 
   return (
     <div>

@@ -2,20 +2,26 @@ import pgQuery from '../../../postgres/pg-query.js';
 
 // POST /api/attendance/record
 // Create an account: email = new user's email address, password = unencrypted new password, student_id may be null
-async function record (event_code, f_name, l_name_dot_num) {
+async function record (event_code, f_name, l_name_dot_num, year_level) {
     const curr_student_id = await pgQuery(`SELECT student_id FROM student WHERE name_dot_num = '${l_name_dot_num}'`);
     if(!curr_student_id.rowCount){
-        // how do I create new student? should it prompt for all the extra account info?
-        /*
-        const data = await pgQuery(`
-        INSERT INTO student (fname, lname, name_dot_num, personal_email, school_level, packet_sent_date)
-        VALUES ('${fname}', '${lname}', '${name_dot_num}',
-            ${personal_email ? `'${personal_email}'`: null},
-            ${school_level ? `'${school_level}'`: null},
-            ${packet_sent_date ? `'${packet_sent_date}'`: null})
-        RETURNING id;
-        `);
-        */
+       let l_name = l_name_dot_num.split(/\./)[0];
+       const reqCreateStudent = {
+         method: 'POST',
+         body: JSON.stringify(
+           { fname: f_name.charAt(0).toUpperCase() + f_name.slice(1).toLowerCase(), //capitalization convention
+             lname: l_name.charAt(0).toUpperCase() + l_name.slice(1).toLowerCase(), //capitalization convention
+             name_dot_num: l_name_dot_num.toLowerCase(),
+             personal_email: "", 
+             school_level: year_level,
+             packet_sent_date: ""
+           }
+         )
+       };
+       // using exisiting end point to create student
+       const res1 = await fetch('/api/student/create', reqCreateStudent);
+       const result1 = await res1.json(); //returns the id
+       curr_student_id = result1[0]["id"];
     }
     const data = await pgQuery(`INSERT INTO meeting_student (meeting_id, student_id)
         VALUES ('${event_code}', ${curr_student_id}')`);
