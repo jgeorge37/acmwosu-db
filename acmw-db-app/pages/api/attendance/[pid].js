@@ -3,8 +3,8 @@ import pgQuery from '../../../postgres/pg-query.js';
 // POST /api/attendance/record
 // Create an account: email = new user's email address, password = unencrypted new password, student_id may be null
 async function record (event_code, f_name, l_name_dot_num) {
-    const curr_student_id = await pgQuery(`SELECT student_id FROM student WHERE name_dot_num = '${l_name_dot_num ? `'${l_name_dot_num}'`: null}'`);
-    if(curr_student_id == null){
+    const curr_student_id = await pgQuery(`SELECT student_id FROM student WHERE name_dot_num = '${l_name_dot_num}'`);
+    if(!curr_student_id.rowCount){
         // how do I create new student? should it prompt for all the extra account info?
         /*
         const data = await pgQuery(`
