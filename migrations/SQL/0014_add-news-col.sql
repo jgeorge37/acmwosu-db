@@ -1,0 +1,2 @@
+ALTER TABLE meeting_student
+ADD COLUMN IF NOT EXISTS add_to_newsletter BOOLEAN NOT NULL DEFAULT FALSE;
