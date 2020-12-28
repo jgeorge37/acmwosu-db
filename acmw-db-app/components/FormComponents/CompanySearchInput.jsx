@@ -1,9 +1,6 @@
 import SelectInput from './SelectInput'
 import {useState} from 'react'
 import styles from '../../styles/components/FormComponents.module.css'
-import MultiSelectInput from './MultiSelectInput'
-
-// I'm so bad at understanding promises/fetch() so please point out if I'm doing something wrong
 
 const getCompanyInfo = async (input) => {
     const url = '/api/company/byString?input=' + input
@@ -21,6 +18,7 @@ const getCompanyInfo = async (input) => {
     return response.json() 
 }
 
+// props.onChange - What happens when a company is selected
 const CompanySearchInput = (props) => {
 
     const [companyList, setCompanyList] = useState([])
@@ -32,13 +30,19 @@ const CompanySearchInput = (props) => {
             getCompanyInfo(event.target.value).then((data) => {
                 const tempList = []
                 for (var i in data) {
-                    tempList.push(data[i]["cname"])
+                    tempList.push({
+                        label: data[i]["cname"],
+                        value: data[i]["id"]})
                 }
                 setCompanyList(tempList)
+                if (tempList.length > 0) {
+                    props.onChange(tempList[0])
+                }
             })
         } else {
             setIsText(false)
             setCompanyList([])
+            props.onChange({label: null, value: null})
         }
     }
 
@@ -46,7 +50,7 @@ const CompanySearchInput = (props) => {
         <div>
             <label className={styles.label}>Company Search</label>
             <input autoComplete="off" type="text" className={styles.field} placeholder="Search..." id="companySearch" onChange={filterFunction}></input>
-            {(companyList.length > 0) && <MultiSelectInput options={companyList} onChange={props.handleMultiSelect}/>}
+            {(companyList.length > 0) && <SelectInput options={companyList} onChange={props.onChange}/>}
             {(isText && companyList.length == 0) && <div><label className={styles.error}>That company does not exist!</label></div>}
         </div>
     )
