@@ -1,5 +1,6 @@
 import styles from '../../styles/components/FormComponents.module.css'
 import {useState, useRef} from 'react'
+import {validateTime} from '../../pages/api/utility';
 
 /*
     In order to properly record the time from the parent component, you'll need to pass in a recordTime function.
@@ -19,8 +20,6 @@ const TimeSelectionForm = (props) => {
     const hoursSet = useRef(false)
     const minutesSet = useRef(false)
 
-    const hoursRegExp = new RegExp(/^([1-9]|(1[0-2]))$/)
-    const minutesRegExp = new RegExp(/^[0-5][0-9]$/)
     const [hoursError, setHoursError] = useState("")
     const [minutesError, setMinutesError] = useState("")
 
@@ -33,7 +32,7 @@ const TimeSelectionForm = (props) => {
     }
 
     const checkHours = (event) => {
-        if (hoursRegExp.test(event.target.value)) {
+        if (validateTime(event.target.value, "hour")) {
             hours.current = event.target.value
             hoursSet.current = true
             setHoursError("")
@@ -47,7 +46,7 @@ const TimeSelectionForm = (props) => {
     }
 
     const checkMinutes = (event) => {
-        if (minutesRegExp.test(event.target.value)) {
+        if (validateTime(event.target.value, "minute")) {
             minutes.current = event.target.value
             minutesSet.current = true
             setMinutesError("")

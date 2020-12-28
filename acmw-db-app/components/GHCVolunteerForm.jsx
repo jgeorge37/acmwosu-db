@@ -4,17 +4,18 @@ import SelectInput from './FormComponents/SelectInput'
 import MultiSelectInput from './FormComponents/MultiSelectInput'
 import styles from '../styles/components/CompanyForm.module.css'
 import {useState} from 'react'
+import {validateNumber} from '../pages/api/utility'
 
 const GHCVolunteerForm = (props) => {
 
     // eventually connect this to actual GHC scholarship awardees from database
     // Can implement a search similar to "company search component" but for members
     const GHCNames = [
-        {label: "Milly Mason"}, 
-        {label: "Jing George"}, 
-        {label: "Angela Li"}, 
-        {label: "Morgan Zahner"}, 
-        {label: "Sara Miskus"}, 
+        {label: "Milly Mason"},
+        {label: "Jing George"},
+        {label: "Angela Li"},
+        {label: "Morgan Zahner"},
+        {label: "Sara Miskus"},
         {label: "Amy Huang"}
     ];
 
@@ -41,8 +42,7 @@ const GHCVolunteerForm = (props) => {
     }
 
     const validateHours = (value) => {
-        const regex = new RegExp("^([1-9][0-9]{0,1})$")
-        if (regex.test(value)) {
+        if (validateNumber(value)) {
             setHourError("")
             setNumHours(value)
             console.log(value)
@@ -53,16 +53,16 @@ const GHCVolunteerForm = (props) => {
 
     return (
         <div className={styles.popup}>
-            <div className={styles.popup_inner}>                
+            <div className={styles.popup_inner}>
                 <form className={styles.form}>
                     <h2>Volunteer Hour Update Form</h2>
-                    <div>                        
+                    <div>
                         <SelectInput label={"Update volunteer hours for: "} options={GHCNames} onChange={(option) => setGHCName(option.label)}/>
                     </div>
                     <div>
                         <TextField label="Volunteer Event Name" error={eventError} onChange={(event) => setVolunteerEventName(event.target.value)}/>
                         <TextField label="Number of Hours" error={hourError} onChange={(event) => validateHours(event.target.value)}/>
-                    </div>                    
+                    </div>
                 </form>
                 <span className={styles.buttons}>
                     <SubmitButton label="Apply" handleChange={onSubmit} />
