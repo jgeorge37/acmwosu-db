@@ -1,5 +1,5 @@
 import styles from '../styles/components/NavBar.module.css';
-import React, {Fragment, useEffect, useState} from 'react';
+import React, {Fragment, useEffect, useState, useRef} from 'react';
 
 
 const NavBar = (props) => {
@@ -24,12 +24,11 @@ const NavBar = (props) => {
   const cornerButton = props.user ? 
   (
     <li className={`${styles.tab} ${styles.account}`}>
-      <span className={styles.email}>{JSON.parse(props.user).email}</span>
       <span onClick={() => {
         props.setUser(null);
         localStorage.removeItem('user');
         setShowAlert(true);
-      }} className={styles.cornerButton}>Log out</span>
+      }} className={styles.cornerButton}>Log out of {JSON.parse(props.user).email}</span>
     </li>
   )
   :
@@ -63,7 +62,7 @@ const NavBar = (props) => {
   );
   
   return (
-      <ul className={styles.bar}>
+      <ul className={props.user ? (JSON.parse(props.user).is_exec ? styles.bar3 : styles.bar2) : styles.bar1}>
         <a href="/">
          <img src="/logoinvert.png" alt="ACM-W Logo" className={styles.navlogo}/>
         </a>

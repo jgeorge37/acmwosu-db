@@ -13,14 +13,16 @@
   border-radius: 4px;
 }
 
-.bar {
+.bar1, .bar2, .bar3 {
   list-style-type: none;
   margin: 0px;
   padding: 0px;
   overflow: hidden;
+  white-space: nowrap;
   justify-content: left;
   align-items: center;
   background-color: #9A49CE;
+  height: 3em;
 }
 
 .tab {
@@ -30,12 +32,6 @@
   float: right;
   color: white;
   margin-right: 0.7em;
-}
-.tab.account .email {
-  float: left;
-  margin-left: 0.5em;
-  margin-top: 0.5em;
-  padding: 0.3em 0.5em;
 }
 .tab.account .cornerButton {
   float: right;
@@ -48,14 +44,15 @@
 }
 .tab.account .cornerButton:hover {
   cursor: pointer;
-  background-color: rgba(256,256,256,0.8);
+  background-color: white;
   color: #9A49CE;
 }
 .tab a {
   display: block;
   color: #FFFFFF;
   text-align: center;
-  padding: 14px 16px;
+  padding: 14px 16px 0px 16px;
+  height: 3em;
   text-decoration: none;
   margin: 0px;
   transition: 0.2s background-color ease-in-out, 0.2s color ease-in-out;
@@ -70,13 +67,51 @@
   background-color: #FFFFFF;
   color: #9A49CE;
 }
-.bar .navlogo {
+.navlogo {
   width: 3.45em;
   float: left;
-  padding: 0.4em 0.6em;
-  background-color: #6e1ea0;
+  padding: 0.35em 0.6em 0.35em 0.6em;
+  height: 3em;
   transition: 0.2s background-color ease-in-out, 0.2s color ease-in-out;
 }
-.bar .navlogo:hover {
-  background-color: #d29bf5;
+.navlogo:hover {
+  background-color: #d9b4f0;
 }
+
+/* For the collapsing */
+.narrow {
+  list-style-type: none;
+  overflow: hidden;
+  margin: 0px;
+  padding: 0px;
+  justify-content: left;
+  align-items: center;
+  background-color: #9A49CE;
+}
+.narrow li, .narrow .tab.account, .narrow .tab.account .cornerButton {
+  float: none;
+}
+.narrow .tab.account{
+  margin: 1em 0em;
+  justify-content: center;
+}
+.narrow .tab.account .cornerButton{
+  align-self: center;
+}
+
+
+/*
+@media screen and (max-width: 1100px) {
+  .bar .pages {
+    width: 100%;
+    position: fixed;
+    top: 3em;
+    z-index: 1;
+    background-color: #9A49CE;
+  }
+  .bar .pages li {
+    float: none;
+  }
+ 
+}
+*/
