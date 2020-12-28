@@ -57,8 +57,8 @@ const AddCompanyForm = (props) => {
         };
         const res = await fetch('/api/meeting/create', requestOptionsMeeting)
         const result = await res.json()
+        if (subscribed.current) setCode(result["code"])
         subscribed.current = false;
-        setCode(result["code"])
     }
 
     const handleChange = () => {

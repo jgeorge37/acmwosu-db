@@ -36,12 +36,13 @@ const CompanySearchInput = (props) => {
                         value: data[i]["id"]})
                 }
 
-                if(subscribed.current) setCompanyList(tempList)
+                if(!subscribed.current) return;
+                
+                setCompanyList(tempList)
                 if (tempList.length > 0) {
                     props.onChange(tempList[0])
                 }
                 subscribed.current = false;
-
             })
         } else {
             setIsText(false)
