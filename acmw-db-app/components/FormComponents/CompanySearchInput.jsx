@@ -1,5 +1,4 @@
-import SelectInput from './SelectInput'
-import {useState} from 'react'
+import {useState, useRef, useEffect} from 'react'
 import styles from '../../styles/components/FormComponents.module.css'
 
 const getCompanyInfo = async (input) => {
@@ -15,18 +14,20 @@ const getCompanyInfo = async (input) => {
         redirect: 'follow', 
         referrerPolicy: 'no-referrer', 
     })
-    return response.json() 
+    const result = await response.json();
+    return result;
 }
 
 // props.onChange - What happens when a company is selected
 const CompanySearchInput = (props) => {
-
+    const subscribed = useRef(false)
     const [companyList, setCompanyList] = useState([])
     const [isText, setIsText] = useState(false) // Has the user entered text
 
     const filterFunction = (event) => {
         if (event.target.value) {
             setIsText(true)
+            subscribed.current = true;
             getCompanyInfo(event.target.value).then((data) => {
                 const tempList = []
                 for (var i in data) {
@@ -34,10 +35,13 @@ const CompanySearchInput = (props) => {
                         label: data[i]["cname"],
                         value: data[i]["id"]})
                 }
-                setCompanyList(tempList)
+
+                if(subscribed.current) setCompanyList(tempList)
                 if (tempList.length > 0) {
                     props.onChange(tempList[0])
                 }
+                subscribed.current = false;
+
             })
         } else {
             setIsText(false)
@@ -45,6 +49,11 @@ const CompanySearchInput = (props) => {
             props.onChange({label: null, value: null})
         }
     }
+
+    // When component unmounts, subscribed is false which stops async operation from continuing
+    useEffect(() => {
+        return () => {subscribed.current = false};
+    }, []);
 
     return (
         <div>
