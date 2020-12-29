@@ -58,10 +58,11 @@ async function resetPassword (email, password) {
 }
 
 // POST /api/account/create
-// Create an account: email = new user's email address, password = unencrypted new password, student_id may be null
-async function create (email, password, student_id) {
-    const data = await pgQuery(`INSERT INTO account (email, password, student_id)
-        VALUES ('${email}', crypt('${password}', gen_salt('md5')), ${student_id ? `'${student_id}'`: null});`); // Ensure that if student_id is undefined, empty, etc. it gets inserted as null
+// Create an account with randomized initial password
+async function create (email, student_id, is_exec) {
+    const randomPassword = Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2);
+    const data = await pgQuery(`INSERT INTO account (email, password, student_id, is_exec)
+        VALUES ('${email}', crypt('${randomPassword}', gen_salt('md5')), '${student_id}', ${is_exec});`); 
     return data;
 }
 
@@ -80,7 +81,10 @@ export default async (req, res) => {
                     result = await verify(body.email, body.password);
                     break;
                 case 'create':
-                    result = await create(body.email, body.password, body.student_id);
+                    if(!body.email) throw("Missing email in request body");
+                    if(!body.student_id) throw ("Missing student_id in request body");
+                    const is_exec = (typeof body.is_exec === 'undefined' || body.is_exec === null) ? false : body.is_exec;
+                    result = await create(body.email, body.student_id, is_exec);
                     break;
                 case 'generate-token':
                     if(!body.email) throw ("Missing email address in request body.");

@@ -4,17 +4,18 @@ import SelectInput from './FormComponents/SelectInput'
 import SubmitNotification from './FormComponents/SubmitNotification'
 import styles from '../styles/components/Form.module.css'
 import {useState} from 'react'
+import {validateNumber} from '../pages/api/utility'
 
 const GHCVolunteerForm = (props) => {
 
     // eventually connect this to actual GHC scholarship awardees from database
     // Can implement a search similar to "company search component" but for members
     const GHCNames = [
-        {label: "Milly Mason"}, 
-        {label: "Jing George"}, 
-        {label: "Angela Li"}, 
-        {label: "Morgan Zahner"}, 
-        {label: "Sara Miskus"}, 
+        {label: "Milly Mason"},
+        {label: "Jing George"},
+        {label: "Angela Li"},
+        {label: "Morgan Zahner"},
+        {label: "Sara Miskus"},
         {label: "Amy Huang"}
     ];
 
@@ -42,8 +43,7 @@ const GHCVolunteerForm = (props) => {
     }
 
     const validateHours = (value) => {
-        const regex = new RegExp("^([1-9][0-9]{0,1})$")
-        if (regex.test(value)) {
+        if (validateNumber(value)) {
             setHourError("")
             setNumHours(value)
             console.log(value)

@@ -1,6 +1,7 @@
 import styles from '../../styles/components/FormComponents.module.css'
 import SelectInput from '../FormComponents/SelectInput'
 import {useState, useRef} from 'react'
+import {validateTime} from '../../pages/api/utility';
 
 /*
     In order to properly record the time from the parent component, you'll need to pass in a recordDate function.
@@ -23,8 +24,6 @@ const DateSelectionForm = (props) => {
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     const thirtyMonths = ["April", "June", "September", "November"]
 
-    const dayRegExp = new RegExp(/^([1-9]|(1[0-9])|(2[0-9])|(3[0-1]))$/) 
-    const yearRegExp = new RegExp(/^[1-2][0-9][0-9][0-9]$/)
     const [dayError, setDayError] = useState("")
     const [yearError, setYearError] = useState("")
 
@@ -41,7 +40,7 @@ const DateSelectionForm = (props) => {
     }
 
     const checkDay = (event) => {
-        if (dayRegExp.test(event.target.value)) {
+        if (validateTime(event.target.value, "day")) {
             day.current = event.target.value
             if (thirtyMonths.includes(month.current) && (event.target.value > 30)) {
                 setDayError(month.current + " only has 30 days!")
@@ -65,8 +64,8 @@ const DateSelectionForm = (props) => {
     }
 
     const checkYear = (event) => {
-        
-        if (yearRegExp.test(event.target.value)) {
+
+        if (validateTime(event.target.value, "year")) {
             year.current = event.target.value
             yearSet.current = true
             setYearError("")
