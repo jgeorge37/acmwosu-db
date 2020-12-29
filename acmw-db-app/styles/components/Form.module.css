@@ -1,0 +1,16 @@
+.error {
+  color: red;
+}
+.box {
+  border-style: solid;
+  border-color: #9A49CE;
+  border-left-width: 5px;
+  padding-left: 12px;
+  width: 100%;
+  padding-top: 1px;
+  padding-bottom: 10px;
+  margin-bottom: 5px;
+}
+.popup {
+  margin: 0em 1em 1em 1em;
+}
