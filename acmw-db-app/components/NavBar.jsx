@@ -1,11 +1,15 @@
 import styles from '../styles/components/NavBar.module.css';
-import React, {Fragment, useEffect, useState, useRef} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 
 
 const NavBar = (props) => {
   const [showAlert, setShowAlert] = useState(false);
   const [hideAlert, setHideAlert] = useState(false);
+  const [narrow, setNarrow] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(null);
 
+  // Log out confirmation notification
   useEffect(() => {
     if(showAlert) {
       const timer = setTimeout(() => {
@@ -14,6 +18,23 @@ const NavBar = (props) => {
       return () => clearTimeout(timer);
     }
   }, [showAlert]);
+
+  // Determine if menu must collapse; check if window size or user changes
+  useEffect(() => {
+    const limit = props.user ? (JSON.parse(props.user).is_exec ? 1060 : 670) : 0;
+    const isNarrow = window.innerWidth <= limit;
+    setNarrow(isNarrow);
+    if(!isNarrow) setOpen(false);
+  }, [windowWidth, props.user]);
+
+  // Add event listener for window resize
+  useEffect(() => {
+    const handleResize = ()=> {
+      setWindowWidth(window.innerWidth);
+    }
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const logoutAlert = (
     <div className={styles.alert}>
@@ -60,18 +81,26 @@ const NavBar = (props) => {
       <li className={styles.tab}><a className={props.current === "statistics" ? styles.current : null} href="/statistics">Statistics</a></li>
     </Fragment>
   );
-  
+
   return (
-      <ul className={props.user ? (JSON.parse(props.user).is_exec ? styles.bar3 : styles.bar2) : styles.bar1}>
-        <a href="/">
-         <img src="/logoinvert.png" alt="ACM-W Logo" className={styles.navlogo}/>
-        </a>
+    <ul className={narrow ? `${styles.narrow} ${open ? styles.open : styles.closed}` : styles.bar}>
+      <div className={styles.mobileTopper}>
+        {open && <button onClick={() => setOpen(false)}>&#x2715;</button>}
+        {!open && <button onClick={() => setOpen(true)}>&#x2630;</button>}
+      </div>
+      <a href="/" className={styles.homelink}>
+        <img src="/logoinvert.png" alt="ACM-W Logo"/>
+        {narrow && <span>ACM-W OSU Database</span>}
+      </a>
+      <div id={styles.pages}>
         {tier1}
         {props.user && tier2}
         {props.user && JSON.parse(props.user).is_exec && tier3}
         {showAlert && !hideAlert && logoutAlert}
         {!(showAlert && !hideAlert) && cornerButton}
-      </ul>
+      </div>
+        
+    </ul>
   )
 }
 
