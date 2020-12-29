@@ -180,9 +180,9 @@ const SubmitButton = (props) => {
         const requestAttendanceRecord= {
           method: 'POST',
           body: JSON.stringify(
-            { event_code: probs.eventCode,
+            { event_code: props.eventCode,
               f_name: props.firstName.charAt(0).toUpperCase() + props.firstName.slice(1).toLowerCase(), //capitalization convention
-              l_name_dot_num: probs.lnamedotnum.toLowerCase(),
+              l_name_dot_num: props.lnamedotnum.toLowerCase(),
               year_level: props.year //these are blank for now
             }
           )
