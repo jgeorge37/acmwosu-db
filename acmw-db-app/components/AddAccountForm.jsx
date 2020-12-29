@@ -4,6 +4,7 @@ import TextField from './FormComponents/TextField'
 import StudentSearch from '../components/FormComponents/StudentSearch'
 import SelectInput from '../components/FormComponents/SelectInput'
 import {useState} from 'react'
+import {validateLetters, validateLastNameDotNum} from '../pages/api/utility';
 
 const AddAccountForm = (props) => {
 
@@ -12,23 +13,19 @@ const AddAccountForm = (props) => {
     const [fname, setFname] = useState("")
     const [lnamedotnum, setLnamedotnum] = useState("")
     const [osuEmail, setOsuEmail] = useState("@osu.edu")
-    const [password, setPassword] = useState("")
     const [studentID, setStudentID] = useState("")
     const [accountType, setAccountType] = useState(accountTypes[0].label)
     const [searchFound, setSearchFound] = useState(false)
 
     const [fNameError, setfNameError] = useState("");
     const [lNameDotNumError, setlNameDotNumError] = useState("");
-    const [passwordError, setPasswordError] = useState("")
 
     const onSubmit = () => {
         // Angela: I took these from Sara's StudentSearch so we should probably make a Regex utilities file
-        const letters = new RegExp(/^[a-zA-Z]+$/) //maybe not? idk maybe needs dash or apostrophe
-        const dotNumCheck = new RegExp(/^[a-zA-Z]+\.[1-9][0-9]*$/)
-        const goodfname = letters.test(fname)
-        const goodlnamedotnum = dotNumCheck.test(lnamedotnum)
+        const goodfname = validateLetters(fname)
+        const goodlnamedotnum = validateLastNameDotNum(lnamedotnum)
 
-        if (!fname || !lnamedotnum || !password || !goodfname || !goodlnamedotnum ) {
+        if (!fname || !lnamedotnum || !goodfname || !goodlnamedotnum ) {
             if (!fname) {
               setfNameError("Enter a first name")
             } else if (!goodfname) {
@@ -42,11 +39,6 @@ const AddAccountForm = (props) => {
               setlNameDotNumError("Last name.# is formatted incorrectly!")
             } else {
               setlNameDotNumError("")
-            }
-            if (!password) {
-              setPasswordError("Enter a password")
-            } else {
-              setPasswordError("")
             }
         } else {
             create()
@@ -75,13 +67,12 @@ const AddAccountForm = (props) => {
           id = result1[0]["id"];
       }
       // creating a new account
-      const requestOptionsAccount = { //currently account_type does not do anything; todo: make account_type col
+      const requestOptionsAccount = { 
         method: 'POST',
         body: JSON.stringify( // makes copies to prevent synthetic event error
           { email: osuEmail.toLowerCase(),
-            password: password + "",
             student_id: id,
-            account_type: accountType + "" }
+            is_exec: (accountType === "Exec") + "" }
         )
       };
       const res2 = await fetch('/api/account/create', requestOptionsAccount);
@@ -129,7 +120,6 @@ const AddAccountForm = (props) => {
                         <TextField label="First Name" value={fname} error={fNameError} onChange={(event) => setFname(event.target.value)} disabled={searchFound} />
                         <TextField label="Last Name.#" value={lnamedotnum} error={lNameDotNumError} onChange={(event) => handleLastNameChange(event)} disabled={searchFound} />
                         <TextField label="OSU Email Address" value={osuEmail} disabled={true} />
-                        <TextField label="Password" type="password" error={passwordError} onChange={setPassword}/>
                         <SelectInput label='Account Type' options={accountTypes} onChange={setAccountType}/>
                     </div>
                 </form>
