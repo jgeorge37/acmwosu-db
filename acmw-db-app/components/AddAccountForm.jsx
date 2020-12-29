@@ -1,14 +1,15 @@
-import styles from '../styles/components/AccountForm.module.css'
+import styles from '../styles/components/Form.module.css'
 import SubmitButton from './FormComponents/SubmitButton'
 import TextField from './FormComponents/TextField'
 import StudentSearch from '../components/FormComponents/StudentSearch'
 import SelectInput from '../components/FormComponents/SelectInput'
+import SubmitNotification from './FormComponents/SubmitNotification'
 import {useState} from 'react'
 import {validateLetters, validateLastNameDotNum} from '../pages/api/utility';
 
 const AddAccountForm = (props) => {
-
-    const accountTypes = [{label: "Exec"}, {label: "GHC"}]
+    const [showNotif, setShowNotif] = useState(false);
+    const accountTypes = [{label: "GHC"}, {label: "Exec"}]
 
     const [fname, setFname] = useState("")
     const [lnamedotnum, setLnamedotnum] = useState("")
@@ -42,7 +43,7 @@ const AddAccountForm = (props) => {
             }
         } else {
             create()
-            props.closeForm()
+            setShowNotif(true)
         }
     }
 
@@ -103,30 +104,28 @@ const AddAccountForm = (props) => {
     }
 
     return (
-        <div className={styles.popup}>
-            <div className={styles.popup_inner}>
-                <form className={styles.form}>
-                    <h2>Create Account</h2>
-                    <div>
-                        <div className={styles.box}>
-                          <StudentSearch
-                            fNameError={fNameError}
-                            setfNameError={setfNameError}
-                            lNameDotNumError={lNameDotNumError}
-                            setlNameDotNumError={setlNameDotNumError}
-                            selectStudent={student => selectStudent(student)}
-                          />
-                        </div>
-                        <TextField label="First Name" value={fname} error={fNameError} onChange={(event) => setFname(event.target.value)} disabled={searchFound} />
-                        <TextField label="Last Name.#" value={lnamedotnum} error={lNameDotNumError} onChange={(event) => handleLastNameChange(event)} disabled={searchFound} />
-                        <TextField label="OSU Email Address" value={osuEmail} disabled={true} />
-                        <SelectInput label='Account Type' options={accountTypes} onChange={setAccountType}/>
+        <div className={styles.popup_inner}>
+            <SubmitNotification showNotif={showNotif} setShowNotif={setShowNotif}/> 
+            <form className={styles.form}>
+                <h2>Create Account</h2>
+                <div>
+                    <div className={styles.box}>
+                      <StudentSearch
+                        fNameError={fNameError}
+                        setfNameError={setfNameError}
+                        lNameDotNumError={lNameDotNumError}
+                        setlNameDotNumError={setlNameDotNumError}
+                        selectStudent={student => selectStudent(student)}
+                      />
                     </div>
-                </form>
-                <div className={styles.buttons}>
-                    <SubmitButton label="Apply" handleChange={onSubmit} />
-                    <SubmitButton label="Cancel" handleChange={props.closeForm} />
+                    <TextField label="First Name" value={fname} error={fNameError} onChange={(event) => setFname(event.target.value)} disabled={searchFound} />
+                    <TextField label="Last Name.#" value={lnamedotnum} error={lNameDotNumError} onChange={(event) => handleLastNameChange(event)} disabled={searchFound} />
+                    <TextField label="OSU Email Address" value={osuEmail} disabled={true} />
+                    <SelectInput label='Account Type' options={accountTypes} onChange={setAccountType}/>
                 </div>
+            </form>
+            <div className={styles.buttons}>
+                <SubmitButton label="Apply" handleChange={onSubmit} />
             </div>
         </div>
     )

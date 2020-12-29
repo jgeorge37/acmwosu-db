@@ -2,11 +2,12 @@ import SubmitButton from './FormComponents/SubmitButton'
 import TextField from './FormComponents/TextField'
 import SelectInput from './FormComponents/SelectInput'
 import StudentSearch from './FormComponents/StudentSearch'
-import styles from '../styles/components/CompanyForm.module.css'
+import styles from '../styles/components/Form.module.css'
+import SubmitNotification from './FormComponents/SubmitNotification'
 import {useState, useRef} from 'react'
 
 const ScholarshipReqForm = (props) => {
-
+    const [showNotif, setShowNotif] = useState(false);
     const [fNameError, setfNameError] = useState("")
     const [lNameError, setlNameError] = useState("")
 
@@ -22,9 +23,9 @@ const ScholarshipReqForm = (props) => {
 
     const selectStudent = (student) => {
         if (student) {
-        studentFName.current = student.value.fname
-        studentLName.current = student.value.name_dot_num
-        studentId.current = student.value.student_id
+        studentFName.current = student.fname
+        studentLName.current = student.name_dot_num
+        studentId.current = student.student_id
         } else {
         studentFName.current = ""
         studentLName.current = ""
@@ -39,7 +40,7 @@ const ScholarshipReqForm = (props) => {
             // TO DO Update GHC Req here
 
             console.log(studentFName.current + " " + studentLName.current + " - " + reqType.current + ": " + reqDesc.current)
-            props.handleCancel()
+            setShowNotif(true)
         } else if (studentLName.current) {
             setFormError("Error: Must provide a description of the requirement!")
             console.log("reached here2 ")
@@ -51,23 +52,21 @@ const ScholarshipReqForm = (props) => {
     }
 
     return (
-        <div className={styles.popup}>
-            <div className={styles.popup_inner}>
-                <div className={styles.form}>
-                    <h2>Scholarship Req Form</h2>
-                    <p>Please select a student and provide the name of the requirement</p>
-                    <StudentSearch                           
-                          fNameError={fNameError}
-                          setfNameError={setfNameError}
-                          lNameError={lNameError}
-                          setlNameError={setlNameError}
-                          selectStudent={student => selectStudent(student)} />
-                    <SelectInput options={options.map((m) => ({label: m}))} label="Req Type" onChange={(type) => {reqType.current = type}}/>
-                    <TextField label="Req Description" onChange={(event) => {reqDesc.current = event.target.value}} />
-                    <SubmitButton label="Apply" handleChange={onSubmit} />
-                    <SubmitButton label="Cancel" handleChange={props.handleCancel} />
-                    <p className={styles.error}>{formError}</p>
-                </div>
+        <div className={styles.popup_inner}>
+            <SubmitNotification showNotif={showNotif} setShowNotif={setShowNotif}/> 
+            <div className={styles.form}>
+                <h2>Scholarship Req Form</h2>
+                <p>Please select a student and provide the name of the requirement</p>
+                <StudentSearch                           
+                        fNameError={fNameError}
+                        setfNameError={setfNameError}
+                        lNameError={lNameError}
+                        setlNameError={setlNameError}
+                        selectStudent={student => selectStudent(student)} />
+                <SelectInput options={options.map((m) => ({label: m}))} label="Req Type" onChange={(type) => {reqType.current = type}}/>
+                <TextField label="Req Description" onChange={(event) => {reqDesc.current = event.target.value}} />
+                <SubmitButton label="Apply" handleChange={onSubmit} />
+                <p className={styles.error}>{formError}</p>
             </div>
         </div>
     )
