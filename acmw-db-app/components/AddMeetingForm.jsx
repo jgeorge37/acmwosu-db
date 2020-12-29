@@ -1,4 +1,4 @@
-import styles from '../styles/components/CompanyForm.module.css'
+import styles from '../styles/components/Form.module.css'
 import DateSelectionForm from './FormComponents/DateSelectionForm'
 import SelectInput from './FormComponents/SelectInput'
 import SubmitButton from './FormComponents/SubmitButton'
@@ -6,6 +6,7 @@ import TextField from './FormComponents/TextField'
 import TimeSelectionForm from './FormComponents/TimeSelectionForm'
 import {useEffect, useRef, useState} from 'react'
 import CompanySearchInput from './FormComponents/CompanySearchInput'
+import SubmitNotification from './FormComponents/SubmitNotification'
 
 const AddCompanyForm = (props) => {
 
@@ -36,6 +37,7 @@ const AddCompanyForm = (props) => {
     const [timeError, setTimeError] = useState("")
     const [companyError, setCompanyError] = useState("")
     const [code, setCode] = useState("")
+    const [showNotif, setShowNotif] = useState(false)
 
     useEffect(() => {return () => {subscribed.current = false}}, [])
 
@@ -69,6 +71,7 @@ const AddCompanyForm = (props) => {
                 setCompanyError("Must select a valid company or have the meeting not be associated with a company.")
             } else {
                 createMeeting()
+                setShowNotif(true)
             }
         }
         if (!meetingName.current) {
@@ -157,11 +160,10 @@ const AddCompanyForm = (props) => {
 
     return (
         <div>
-            <div className={styles.popup}>
+            <SubmitNotification showNotif={showNotif} setShowNotif={setShowNotif}/> 
             {!code ? 
                 // If there is no code then show meeting form
                 <div className={styles.popup_inner}>
-                    <h2>Add Meeting</h2>
                     <div>
                         <TextField label="Meeting Name" onChange={(event) => {meetingName.current = event.target.value}} error={meetingError}/>
                         <TextField label="Semester" onChange={checkSemester} error={semesterError}/>
@@ -175,15 +177,12 @@ const AddCompanyForm = (props) => {
                     </div>
                     <div>
                         <SubmitButton label="Apply" handleChange={handleChange}/>
-                        <SubmitButton label="Cancel" handleChange={props.closeForm}/>
                     </div>                
                 </div>        
                 : // If there is a code then show code
                 <div className={styles.popup_inner}>
                     <h2>The meeting code is: {code}</h2>
-                    <SubmitButton label="Okay" handleChange={props.closeForm}/>
                 </div>}
-            </div>
         </div>
     )
 }

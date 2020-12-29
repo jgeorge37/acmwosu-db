@@ -1,5 +1,6 @@
 import {useState, useRef, useEffect} from 'react'
 import styles from '../../styles/components/FormComponents.module.css'
+import SelectInput from './SelectInput'
 
 const getCompanyInfo = async (input) => {
     const url = '/api/company/byString?input=' + input
