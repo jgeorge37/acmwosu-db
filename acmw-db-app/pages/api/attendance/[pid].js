@@ -25,6 +25,7 @@ async function record (event_code, f_name, l_name_dot_num, year_level) {
     }
     const data = await pgQuery(`INSERT INTO meeting_student (meeting_id, student_id)
         VALUES ('${event_code}', ${curr_student_id}')`);
+    console.log(data);
     return data;
 }
 
