@@ -12,6 +12,19 @@
   padding: 0.3em 0.5em;
   border-radius: 4px;
 }
+.alert > button {
+  background-color: black;
+  color: white;
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+
+.alert > button:hover {
+  border: 1px solid rgba(256,256,256,0.5);
+  border-radius: 4px;
+  background-color: rgba(256,256,256,0.1);
+}
 
 .alert > button {
   background-color: black;
@@ -121,11 +134,9 @@
   z-index: 1;
 }
 .narrow.open #pages {
- /* height: 18.5em; */
  width: 18em;
 }
 .narrow.closed #pages {
-  /*height: 0em; */
   width: 0em;
 }
 .narrow .mobileTopper {
