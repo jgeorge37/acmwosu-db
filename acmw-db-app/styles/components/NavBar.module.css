@@ -8,9 +8,23 @@
   float: right;
   margin: 0.5em 0.7em;
   color: white;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0,0,0,0.75);
   padding: 0.3em 0.5em;
   border-radius: 4px;
+}
+
+.alert > button {
+  background-color: black;
+  color: white;
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+
+.alert > button:hover {
+  border: 1px solid rgba(256,256,256,0.5);
+  border-radius: 4px;
+  background-color: rgba(256,256,256,0.1);
 }
 
 .bar, .narrow {

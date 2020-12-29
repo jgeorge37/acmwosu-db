@@ -2,7 +2,7 @@ import SubmitButton from './FormComponents/SubmitButton'
 import TextField from './FormComponents/TextField'
 import SelectInput from './FormComponents/SelectInput'
 import MultiSelectInput from './FormComponents/MultiSelectInput'
-import styles from '../styles/components/CompanyForm.module.css'
+import styles from '../styles/components/Form.module.css'
 import CompanySearchInput from './FormComponents/CompanySearchInput'
 
 const CompanyForm = (props) => {

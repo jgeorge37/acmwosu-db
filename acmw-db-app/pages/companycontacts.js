@@ -8,10 +8,13 @@ import AddContactForm from '../components/AddContactForm'
 import SponsorshipForm from '../components/SponsorshipForm'
 
 const CompanyContacts = () => {
-    const [showOptionsForm, setOptionsForm] = useState(false)
-    const [showAddCompanyForm, setAddCompanyForm] = useState(false)
-    const [showAddContactForm, setAddContactForm] = useState(false)
-    const [showSponsorshipForm, setSponsorshipForm] = useState(false)
+    const [formName, setFormName] = useState(null);
+    const forms = {
+        options: <CompanyForm handleCancel={() => setFormName(null)}/>,
+        addCompany: <AddCompanyForm handleCancel={() => setFormName(null)}/>,
+        addContact: <AddContactForm handleCancel={() => {setFormName(null)}}/>,
+        sponsorship: <SponsorshipForm handleCancel={() => {setSponsorshipForm(null)}}/>
+    }
 
     return (
         <div className={styles.container}>
@@ -20,14 +23,13 @@ const CompanyContacts = () => {
             </Head>
             <h1 className={styles.header}>Company Contacts Database</h1>
             <main className={styles.main}>
-                <SubmitButton label="Options" handleChange={() => {setOptionsForm(true)}}/>
-                {showOptionsForm && <CompanyForm handleCancel={() => {setOptionsForm(false)}}/>}
-                <SubmitButton label="Add Company" handleChange={() => {setAddCompanyForm(true)}}/>
-                {showAddCompanyForm && <AddCompanyForm handleCancel={() => {setAddCompanyForm(false)}}/>}
-                <SubmitButton label="Add Contact" handleChange={() => {setAddContactForm(true)}}/>
-                {showAddContactForm && <AddContactForm handleCancel={() => {setAddContactForm(false)}}/>}
-                <SubmitButton label="Sponsorship Options" handleChange={() => {setSponsorshipForm(true)}}/>
-                {showSponsorshipForm && <SponsorshipForm handleCancel={() => {setSponsorshipForm(false)}}/>}
+                <div className={styles.suboptions}>
+                    <SubmitButton label="Options" handleChange={() => setFormName("options")}/>
+                    <SubmitButton label="Add Company" handleChange={() => setFormName("addCompany")}/>
+                    <SubmitButton label="Add Contact" handleChange={() => setFormName("addContact")}/>
+                    <SubmitButton label="Sponsorship Options" handleChange={() => setFormName("sponsorship")}/>
+                </div>
+                {formName && forms[formName]}
             </main>
         </div>
     )
