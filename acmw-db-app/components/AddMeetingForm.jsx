@@ -60,6 +60,7 @@ const AddCompanyForm = (props) => {
         const res = await fetch('/api/meeting/create', requestOptionsMeeting)
         const result = await res.json()
         if (subscribed.current) setCode(result["code"])
+        if (subscribed.current) setShowNotif(true)
         subscribed.current = false;
     }
 
@@ -71,7 +72,6 @@ const AddCompanyForm = (props) => {
                 setCompanyError("Must select a valid company or have the meeting not be associated with a company.")
             } else {
                 createMeeting()
-                setShowNotif(true)
             }
         }
         if (!meetingName.current) {
