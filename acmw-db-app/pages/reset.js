@@ -7,7 +7,7 @@ const Reset = (props) => {
   const [email, setEmail] = useState("");
   const [view, setView] = useState("");
   const subscribed = useRef(false);
-  
+
   const checkToken = async () => {
     subscribed.current = true;
     // very hacky for now; setting up react router needs to be its own ticket
@@ -67,7 +67,8 @@ const ResetForm = (props) => {
   // prevent async update if unmounted
   useEffect(() => {return () => {subscribed.current = false}}, []);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event) => {
+    event.preventDefault(); // prevents auto-refresh of page
     subscribed.current = true;
     if(validate()){
       // submit new password
@@ -127,20 +128,22 @@ const ResetForm = (props) => {
           id="password" />
       </div>
 
-      <div className={styles.passwordChunk}>
-        <label className={styles.labelStyle} htmlFor="password">Confirm Password:</label>
-        <input
-          type="password"
-          name="confirm_password"
-          value={input2}
-          onChange={event => setInput2(event.target.value)}
-          placeholder="Enter confirm password"
-          id="confirm_password" />
-      </div>
-      <div className={styles.error}>{error}</div>
-      <button className={styles.button} onClick={async () => await handleSubmit()}>
-        Submit
-      </button>
+      <form onSubmit={async (event) => await handleSubmit(event)>
+        <div className={styles.passwordChunk}>
+          <label className={styles.labelStyle} htmlFor="password">Confirm Password:</label>
+          <input
+            type="password"
+            name="confirm_password"
+            value={input2}
+            onChange={event => setInput2(event.target.value)}
+            placeholder="Enter confirm password"
+            id="confirm_password" />
+        </div>
+        <div className={styles.error}>{error}</div>
+        <button type="submit" className={styles.button}}>
+          Submit
+        </button>
+      </form>
 
       <div><a className={styles.smol} href="../signin">Sign in</a></div>
 
