@@ -19,7 +19,7 @@ function currentAcademicYear() {
 
 function validatePassword(input) {
   //at least one number, one uppercase letter, one lowercase letter, one special character
-  const regex = new RegExp(/^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/i);
+  const regex = new RegExp(/^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/);
   return regex.test(input);
 }
 
