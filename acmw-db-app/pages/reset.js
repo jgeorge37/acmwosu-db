@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import styles from '../styles/Reset.module.css'
 import {validatePassword} from './api/utility';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 const Reset = (props) => {
   const [email, setEmail] = useState("");
@@ -105,48 +105,48 @@ const ResetForm = (props) => {
   }
 
   return (
-    <main className={styles.card}>
-      <h1>Password Reset</h1>
+      <main className={styles.card}>
+        <h1>Password Reset</h1>
 
-      <div className={styles.passwordRequirements}>
-        <ul>Enter a password with at least
-          <li>one uppercase letter</li>
-          <li>one lowercase letter</li>
-          <li>one special character</li>
-          <li>8 characters</li>
-        </ul>
-      </div>
+        <div className={styles.passwordRequirements}>
+          <ul>Enter a password with at least
+            <li>one uppercase letter</li>
+            <li>one lowercase letter</li>
+            <li>one special character</li>
+            <li>8 characters</li>
+          </ul>
+        </div>
 
-      <div className={styles.password1Chunk}>
-        <label className={styles.labelStyle} htmlFor="password">Password:</label>
-        <input
-          type="password"
-          name="password"
-          value={input1}
-          onChange={event => setInput1(event.target.value)}
-          placeholder="Enter password"
-          id="password" />
-      </div>
-
-      <form onSubmit={async (event) => await handleSubmit(event)>
-        <div className={styles.passwordChunk}>
-          <label className={styles.labelStyle} htmlFor="password">Confirm Password:</label>
+        <div className={styles.password1Chunk}>
+          <label className={styles.labelStyle} htmlFor="password">Password:</label>
           <input
             type="password"
-            name="confirm_password"
-            value={input2}
-            onChange={event => setInput2(event.target.value)}
-            placeholder="Enter confirm password"
-            id="confirm_password" />
+            name="password"
+            value={input1}
+            onChange={event => setInput1(event.target.value)}
+            placeholder="Enter password"
+            id="password" />
         </div>
-        <div className={styles.error}>{error}</div>
-        <button type="submit" className={styles.button}}>
-          Submit
-        </button>
-      </form>
 
-      <div><a className={styles.smol} href="../signin">Sign in</a></div>
+        <form onSubmit={async (event) => await handleSubmit(event)}>
+          <div className={styles.passwordChunk}>
+            <label className={styles.labelStyle} htmlFor="password">Confirm Password:</label>
+            <input
+              type="password"
+              name="confirm_password"
+              value={input2}
+              onChange={event => setInput2(event.target.value)}
+              placeholder="Enter confirm password"
+              id="confirm_password" />
+          </div>
+          <div className={styles.error}>{error}</div>
+          <button type="submit" className={styles.button}>
+            Submit
+          </button>
+        </form>
 
-    </main>
+        <div><a className={styles.smol} href="../signin">Sign in</a></div>
+
+      </main>
   )
 }
