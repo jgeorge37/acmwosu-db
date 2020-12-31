@@ -37,7 +37,7 @@ function validateLetters(input) {
 
 function validateLastNameDotNum(input) {
   //letters.number (case insensitive)
-  const regex = new RegExp(/^[a-z]+\.[0-9]+$/i);
+  const regex = new RegExp(/^[a-z]+\.[1-9]([0-9]+)?$/i);
   return regex.test(input);
 }
 

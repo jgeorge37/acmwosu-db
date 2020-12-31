@@ -6,7 +6,60 @@ import React, { useEffect, useState, useRef } from 'react';
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState(""); // submit fail/success
+  const [message, setMessage] = useState(""); // if fail, error message
+  const subscribed = useRef(false);
+
+  const redirect = (userInfo) => {
+    let page = "scholarshipprogress";
+    // check if page to go to is given in URL
+    const to = window.location.href.split("?to=")[1];
+    if((to && to === "exec") || (!to && userInfo.is_exec)) page = "execdashboard";
+    // redirect to new page
+    window.location = `/${page}`;
+  }
+
+  const validateSignIn = async () => {
+    event.preventDefault(); // prevents auto-refresh of page
+    subscribed.current = true;
+
+    if (email && password && validateEmail(email)) {
+      const requestOptions = {
+        method: 'POST',
+        body: JSON.stringify({ email: email, password: password })
+      };
+      const res = await fetch('/api/account/verify', requestOptions);
+      const result = await res.json();
+
+      if(!subscribed.current) return;
+
+      if(!result || result.length === 0) {
+        setStatus("Failure");
+        setMessage("Incorrect email or password.");
+      } else {
+        localStorage.setItem("user", JSON.stringify(result[0]));
+        setStatus("Success");
+        redirect(result[0]);
+      }
+    } else {
+      setStatus("Failure");
+      if (!email && !password) {
+        setMessage("Please enter your email and password.")
+      } else if (!email) {
+        setMessage("Please enter your OSU email.")
+      } else if (!password) {
+        setMessage("Please enter your password.")
+      } else {
+        setMessage("Invalid OSU email address.");
+      }
+    }
+    subscribed.current = false;
+  }
+
+  // prevent state update on unmounted components
+  useEffect(() => {
+    return () => {subscribed.current = false};
+  }, [])
 
   return (
     <div className={styles.container}>
@@ -27,22 +80,27 @@ const SignIn = () => {
             status={status}
             type="text"
           />
-          <div className={styles.passwordChunk}>
-            <TextInput
-              id="password"
-              label="Password"
-              status={status}
-              onChange={setPassword}
-              type="password"
-            />
-            <a className={styles.smol} href="/forgotPassword">Forgot password?</a>
-          </div>
-          <SignInButton
-            email={email}
-            password={password}
-            onSubmit={setStatus}
-            status={status}
-          />
+          <form onSubmit={async (event) => await validateSignIn(event)}>
+            <div className={styles.passwordChunk}>
+              <TextInput
+                id="password"
+                label="Password"
+                status={status}
+                onChange={setPassword}
+                type="password"
+              />
+              <a className={styles.smol} href="/forgotPassword">Forgot password?</a>
+            </div>
+            <div> {/* button */}
+              {status === "Failure" &&
+              <div><label className={styles.error}>
+                {message}
+              </label></div>}
+              <button type="submit" className={styles.button}>
+                Submit
+              </button>
+            </div>
+          </form>
         </div>
       </main>
     </div>
@@ -106,74 +164,6 @@ const TextInput = (props) => {
       <label htmlFor={id}>
         {label}
       </label>
-    </div>
-  );
-}
-
-const SignInButton = (props) => {
-  const [message, setMessage] = useState("");
-  const subscribed = useRef(false);
-
-  const redirect = (userInfo) => {
-    let page = "scholarshipprogress";
-    // check if page to go to is given in URL
-    const to = window.location.href.split("?to=")[1];
-    if((to && to === "exec") || (!to && userInfo.is_exec)) page = "execdashboard";
-    // redirect to new page
-    window.location = `/${page}`;
-  }
-
-  const validateSignIn = async () => {
-    subscribed.current = true;
-    // Check that email and password match
-
-    if (props.email && props.password && validateEmail(props.email)) {
-      const requestOptions = {
-        method: 'POST',
-        body: JSON.stringify({ email: props.email, password: props.password })
-      };
-      const res = await fetch('/api/account/verify', requestOptions);
-      const result = await res.json();
-
-      if(!subscribed.current) return;
-
-      if(!result || result.length === 0) {
-        props.onSubmit("Failure");
-        setMessage("Incorrect email or password.");
-      } else {
-        localStorage.setItem("user", JSON.stringify(result[0]));
-        props.onSubmit("Success");
-        redirect(result[0]);
-      }
-    } else {
-      props.onSubmit("Failure");
-      if (!props.email && !props.password) {
-        setMessage("Please enter your email and password.")
-      } else if (!props.email) {
-        setMessage("Please enter your OSU email.")
-      } else if (!props.password) {
-        setMessage("Please enter your password.")
-      } else {
-        setMessage("Invalid OSU email address.");
-      }
-    }
-    subscribed.current = false;
-  }
-
-  // prevent state update on unmounted components
-  useEffect(() => {
-    return () =>{subscribed.current = false};
-  }, [])
-
-  return (
-    <div>
-      {props.status === "Failure" &&
-      <div><label className={styles.error}>
-        {message}
-      </label></div>}
-      <button className={styles.button} onClick={async () => await validateSignIn()}>
-        Submit
-      </button>
     </div>
   );
 }
