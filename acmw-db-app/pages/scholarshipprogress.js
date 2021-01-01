@@ -26,7 +26,7 @@ const ScholarshipProgress = () => {
     const [hasExternalScholarship, setExternalScholarship] = useState(false);
 
     useEffect(() => {
-        const fetchMeetingData = async () => {
+        const fetchMeetingData = async (subscribed) => {
             const requestOptions = {
                 method: 'GET',
             };
@@ -35,13 +35,14 @@ const ScholarshipProgress = () => {
             const result = await res.json();
             for (var i = 0; i < result.length; i++) {
                 if (result[i].semester.indexOf("AU") >= 0) {
-                    if(subscribed) setFallMeetings(result[i].count)
+                    if(subscribed.current) setFallMeetings(result[i].count)
                 } else {
-                    if(subscribed) setSpringMeetings(result[i].count)
+                    if(subscribed.current) setSpringMeetings(result[i].count)
                 }
             }
+            subscribed.current = false;
         }
-        const fetchExternalScholarshipData = async () => {
+        const fetchExternalScholarshipData = async (subscribed) => {
             const requestOptions = {
                 method: 'GET',
             };
@@ -50,15 +51,19 @@ const ScholarshipProgress = () => {
             const res = await fetch(api, requestOptions);
             const result = await res.json();
             if (typeof result === 'boolean') { // so error message doesn't count
-                if(subscribed) setExternalScholarship(result);
+                if(subscribed.current) setExternalScholarship(result);
             }
+            subscribed.current = false;
         }
-        let subscribed = true;
-        fetchMeetingData()
-        fetchExternalScholarshipData()
-        subscribed = false;
+        const subscribedMeeting = {current: true}
+        const subscribedExternal = {current: true}
+        fetchMeetingData(subscribedMeeting);
+        fetchExternalScholarshipData(subscribedExternal);
 
-        return () => {subscribed = false};
+        return () => {
+            subscribedMeeting.current = false;
+            subscribedExternal.current = false;
+        };
     }, [])
 
     // pass in string of details, added to list
@@ -109,7 +114,7 @@ const ScholarshipProgress = () => {
             <Head>
                 <title>GHC Scholarship Progress</title>
             </Head>
-            <h1 className={styles.header}>GHC Scholarship Progress Page</h1>
+            <h1 className={styles.header}>GHC Scholarship Requirements Progress</h1>
             <main className={styles.main}>
                 <div>
                     <div id={progress_styles.popup_inner}>

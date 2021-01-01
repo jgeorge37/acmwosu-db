@@ -29,6 +29,11 @@ function validateEmail(input) {
   return regex.test(input);
 }
 
+function validateGeneralEmail(input) {
+  const regex = new RegExp(/\S+@\S+\.\S+/);
+  return regex.test(input);
+}
+
 function validateLetters(input) {
   //letters (case insensitive)
   const regex = new RegExp(/^[a-z]+$/i);
@@ -64,9 +69,8 @@ function validateTime(input, unit) {
       break;
     default:
       throw("Not a valid unit of time.")
-      break;
   }
   return regex.test(input);
 }
 
-export {currentAcademicYear, validatePassword, validateEmail, validateLetters, validateLastNameDotNum, validateNumber, validateTime}
+export {currentAcademicYear, validatePassword, validateEmail, validateGeneralEmail, validateLetters, validateLastNameDotNum, validateNumber, validateTime}
