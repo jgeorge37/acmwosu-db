@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import styles from '../styles/Reset.module.css'
-import {validatePassword} from './api/utility';
+import {validateEmail} from './api/utility';
 import React, { useEffect, useState, useRef } from 'react';
 
 const ForgotPassword = (props) => {
@@ -63,7 +63,7 @@ const PasswordForm = (props) => {
   const validate = () => {
     var isValid = false;
     if (input.length > 0) {
-      isValid = validatePassword(input);
+      isValid = validateEmail(input);
     }
     if(!isValid) setError("Enter a valid osu.edu email");
     return isValid;
