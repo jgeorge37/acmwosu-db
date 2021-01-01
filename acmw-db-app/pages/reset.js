@@ -1,13 +1,13 @@
 import Head from 'next/head'
 import styles from '../styles/Reset.module.css'
 import {validatePassword} from './api/utility';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 const Reset = (props) => {
   const [email, setEmail] = useState("");
   const [view, setView] = useState("");
   const subscribed = useRef(false);
-  
+
   const checkToken = async () => {
     subscribed.current = true;
     // very hacky for now; setting up react router needs to be its own ticket
@@ -67,7 +67,8 @@ const ResetForm = (props) => {
   // prevent async update if unmounted
   useEffect(() => {return () => {subscribed.current = false}}, []);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event) => {
+    event.preventDefault(); // prevents auto-refresh of page
     subscribed.current = true;
     if(validate()){
       // submit new password
@@ -92,7 +93,7 @@ const ResetForm = (props) => {
 
       var err = "";
 
-      if (validatePassword(input1)) {
+      if (!validatePassword(input1)) {
         err = "Password must have: 1 digit, 1 uppercase letter, 1 lowercase letter, 1 special character, length of 8+";
       } else if(!input1 || !input2) {
         err = "Please enter and confirm a password";
@@ -104,46 +105,48 @@ const ResetForm = (props) => {
   }
 
   return (
-    <main className={styles.card}>
-      <h1>Password Reset</h1>
+      <main className={styles.card}>
+        <h1>Password Reset</h1>
 
-      <div className={styles.passwordRequirements}>
-        <ul>Enter a password with at least
-          <li>one uppercase letter</li>
-          <li>one lowercase letter</li>
-          <li>one special character</li>
-          <li>8 characters</li>
-        </ul>
-      </div>
+        <div className={styles.passwordRequirements}>
+          <ul>Enter a password with at least
+            <li>one uppercase letter</li>
+            <li>one lowercase letter</li>
+            <li>one special character</li>
+            <li>8 characters</li>
+          </ul>
+        </div>
 
-      <div className={styles.password1Chunk}>
-        <label className={styles.labelStyle} htmlFor="password">Password:</label>
-        <input
-          type="password"
-          name="password"
-          value={input1}
-          onChange={event => setInput1(event.target.value)}
-          placeholder="Enter password"
-          id="password" />
-      </div>
+        <div className={styles.password1Chunk}>
+          <label className={styles.labelStyle} htmlFor="password">Password:</label>
+          <input
+            type="password"
+            name="password"
+            value={input1}
+            onChange={event => setInput1(event.target.value)}
+            placeholder="Enter password"
+            id="password" />
+        </div>
 
-      <div className={styles.passwordChunk}>
-        <label className={styles.labelStyle} htmlFor="password">Confirm Password:</label>
-        <input
-          type="password"
-          name="confirm_password"
-          value={input2}
-          onChange={event => setInput2(event.target.value)}
-          placeholder="Enter confirm password"
-          id="confirm_password" />
-      </div>
-      <div className={styles.error}>{error}</div>
-      <button className={styles.button} onClick={async () => await handleSubmit()}>
-        Submit
-      </button>
+        <form onSubmit={async (event) => await handleSubmit(event)}>
+          <div className={styles.passwordChunk}>
+            <label className={styles.labelStyle} htmlFor="password">Confirm Password:</label>
+            <input
+              type="password"
+              name="confirm_password"
+              value={input2}
+              onChange={event => setInput2(event.target.value)}
+              placeholder="Enter confirm password"
+              id="confirm_password" />
+          </div>
+          <div className={styles.error}>{error}</div>
+          <button type="submit" className={styles.button}>
+            Submit
+          </button>
+        </form>
 
-      <div><a className={styles.smol} href="../signin">Sign in</a></div>
+        <div><a className={styles.smol} href="../signin">Sign in</a></div>
 
-    </main>
+      </main>
   )
 }

@@ -19,7 +19,7 @@ function currentAcademicYear() {
 
 function validatePassword(input) {
   //at least one number, one uppercase letter, one lowercase letter, one special character
-  const regex = new RegExp(/^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/i);
+  const regex = new RegExp(/^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/);
   return regex.test(input);
 }
 
@@ -42,7 +42,7 @@ function validateLetters(input) {
 
 function validateLastNameDotNum(input) {
   //letters.number (case insensitive)
-  const regex = new RegExp(/^[a-z]+\.[0-9]+$/i);
+  const regex = new RegExp(/^[a-z]+\.[1-9]([0-9]+)?$/i);
   return regex.test(input);
 }
 
