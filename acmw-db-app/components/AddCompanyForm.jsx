@@ -1,13 +1,35 @@
 import styles from '../styles/components/Form.module.css'
 import SubmitButton from './FormComponents/SubmitButton'
 import TextField from './FormComponents/TextField'
-import SelectInput from './FormComponents/SelectInput'
+import {useState} from 'react';
+import {validateGeneralEmail} from '../pages/api/utility'
 
 const AddCompanyForm = (props) => {
+    const [company, setCompany] = useState("");
+    const [fname, setFname] = useState("");
+    const [lname, setLname] = useState("");
+    const [email, setEmail] = useState("");
+    const [address, setAddress] = useState("");
+    const [error, setError] = useState("");
 
-    const handleChange = () => {
-        console.log("Added company successfully!")
+    const validateContact = () => {
+        // all empty - fine
+        if(!fname && !lname && !email && !address) return true;
+        // else - any contact info needs email at minimum
+        return email && validateGeneralEmail(email);
     }
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        if(!company) {
+            setError("Error - company name is required");
+        } else if(!validateContact()) {
+            setError("Error - to create a contact, a valid email is required");
+        } else {
+            setError("");
+            location.reload();
+        }
+    } 
 
     return (
         <div className={styles.popup}>
@@ -15,17 +37,18 @@ const AddCompanyForm = (props) => {
                 <form className={styles.form}>
                     <h2>Add Company Information</h2>
                     <div>
-                        <TextField label="Company Name"/>
+                        <TextField label="Company Name *" value={company} onChange={(event) => setCompany(event.target.value)}/>
                     </div>
-                    <h2>Add Contact Information</h2>
+                    <h2>Add Contact Information - optional</h2>
                     <div>
-                        <TextField label="First Name"/>
-                        <TextField label="Last Name"/>
-                        <TextField label="Email"/>
-                        <TextField label="Mailing Address"/>
+                        <TextField label="First Name" value={fname} onChange={(event) => setFname(event.target.value)}/>
+                        <TextField label="Last Name" value={lname} onChange={(event) => setLname(event.target.value)}/>
+                        <TextField label="Email *" value={email} onChange={(event) => setEmail(event.target.value)}/>
+                        <TextField label="Mailing Address" value={address} onChange={(event) => setAddress(event.target.value)}/>
                     </div>
                     <div>
-                        <SubmitButton label="Apply" handleChange={handleChange} />
+                        {error && <p className={styles.error}>{error}</p>}
+                        <SubmitButton label="Apply" handleChange={handleSubmit} />
                         <SubmitButton label="Cancel" handleChange={props.closeForm} />
                     </div>
                 </form>
