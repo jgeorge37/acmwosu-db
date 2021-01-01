@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import styles from '../styles/Reset.module.css'
-import {validatePassword} from './api/utility';
-import React, { useEffect, useState } from 'react';
+import {validateEmail} from './api/utility';
+import React, { useEffect, useState, useRef } from 'react';
 
 const ForgotPassword = (props) => {
   const [view, setView] = useState("");
@@ -32,8 +32,9 @@ const PasswordForm = (props) => {
 
   // prevent async update if unmounted
   useEffect(() => {return () => {subscribed.current = false}}, []);
-     
-  const handleSubmit = async () => {
+
+  const handleSubmit = async (event) => {
+    event.preventDefault(); // prevents auto-refresh of page
     subscribed.current = true;
     if(validate()){
       // Generate password reset token
@@ -62,7 +63,7 @@ const PasswordForm = (props) => {
   const validate = () => {
     var isValid = false;
     if (input.length > 0) {
-      isValid = validatePassword(input);
+      isValid = validateEmail(input);
     }
     if(!isValid) setError("Enter a valid osu.edu email");
     return isValid;
@@ -70,21 +71,21 @@ const PasswordForm = (props) => {
 
   return (
         <div>
-        <h1>Forgot Password</h1>
-        <div className={styles.passwordChunk}>
-          <label className={styles.labelStyle} htmlFor="email">Email Address:</label>
-          <input
-            type="text"
-            name="email"
-            value={input}
-            onChange={event => setInput(event.target.value)}
-            placeholder="Enter email"
-            id="email" />
-            <div className={styles.error}>{error}</div>
-        </div>
-        <button className={styles.button} onClick={async () => await handleSubmit()}>
-        Submit
-      </button>
+          <h1>Forgot Password</h1>
+          <form onSubmit={async (event) => await handleSubmit(event)}>
+            <div className={styles.passwordChunk}>
+              <label className={styles.labelStyle} htmlFor="email">Email Address:</label>
+              <input
+                type="text"
+                name="email"
+                value={input}
+                onChange={event => setInput(event.target.value)}
+                placeholder="Enter email"
+                id="email" />
+                <div className={styles.error}>{error}</div>
+            </div>
+            <button type="submit" className={styles.button}>Submit</button>
+          </form>
       </div>
   );
 }
