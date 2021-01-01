@@ -93,7 +93,7 @@ const ResetForm = (props) => {
 
       var err = "";
 
-      if (validatePassword(input1)) {
+      if (!validatePassword(input1)) {
         err = "Password must have: 1 digit, 1 uppercase letter, 1 lowercase letter, 1 special character, length of 8+";
       } else if(!input1 || !input2) {
         err = "Please enter and confirm a password";
