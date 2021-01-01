@@ -25,6 +25,11 @@ If working on database-related features where testing on a local instance is nec
 ## Usage
 To start the application locally, run ```npm run dev``` from the root directory.
 
+## Unit testing
+This application uses [Jest](https://jestjs.io/en/) for unit testing.   
+
+To run unit tests, run the command ```npm run dev``` from either the root directory or the acmw-db-app directory - tests for the entire repository will be run for either option.
+
 ## Heroku Dev database visualization
 To view the contents of the development database, install pgAdmin. Once your account is set up, add a server. In the pop up, fill out the name field in the first tab. Then go to the connection tab and fill out the host, port, database, username, and password with data from the **dev-ada app (NOT acmwosu-db)** in Heroku. Next go to the SSL tab, and set SSL to "required", then click save. The new connection should appear under servers. You will need to expand the Databases section, and search for the database name that you got from Heroku using command/control f. From here you can go to the public schema to view the tables and their contents.
 

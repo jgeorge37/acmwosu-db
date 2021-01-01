@@ -46,8 +46,8 @@ function validateLastNameDotNum(input) {
   return regex.test(input);
 }
 
-function validateNumber(input) {
-  //two digit number
+function validateNumVolHours(input) {
+  //integer between 1 and 99, inclusive
   const regex = new RegExp("^([1-9][0-9]{0,1})$");
   return regex.test(input);
 }
@@ -73,4 +73,4 @@ function validateTime(input, unit) {
   return regex.test(input);
 }
 
-export {currentAcademicYear, validatePassword, validateEmail, validateGeneralEmail, validateLetters, validateLastNameDotNum, validateNumber, validateTime}
+export {currentAcademicYear, validatePassword, validateEmail, validateGeneralEmail, validateLetters, validateLastNameDotNum, validateNumVolHours, validateTime}

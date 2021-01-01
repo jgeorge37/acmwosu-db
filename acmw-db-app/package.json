@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "test": "npm run test --prefix ../",
     "heroku-start": "next start -p $PORT"
   },
   "dependencies": {
