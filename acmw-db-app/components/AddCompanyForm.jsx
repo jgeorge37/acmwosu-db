@@ -1,7 +1,7 @@
 import styles from '../styles/components/Form.module.css'
 import SubmitButton from './FormComponents/SubmitButton'
 import TextField from './FormComponents/TextField'
-import {useState} from 'react';
+import {useState, useRef, useEffect} from 'react';
 import {validateGeneralEmail} from '../pages/api/utility'
 
 const AddCompanyForm = (props) => {
@@ -11,6 +11,35 @@ const AddCompanyForm = (props) => {
     const [email, setEmail] = useState("");
     const [address, setAddress] = useState("");
     const [error, setError] = useState("");
+    const subscribed = useRef(false);
+
+    // prevent async update if unmounted
+    useEffect(() => {return () => {subscribed.current = false}}, []);
+
+    const sendRequest = async () => {
+        subscribed.current = true;
+        const requestOptions = {
+            method: 'POST',
+            body: JSON.stringify({
+                company_name: company,
+                email: email,
+                fname: fname,
+                lname: lname,
+                mailing_address: address
+            })
+        };
+        fetch('/api/company/create', requestOptions)
+            .then((res) => res.json())
+            .then((data) => {
+                if(!subscribed.current) return;
+                if(data.error) {  // inform of duplicate company name
+                    setError("Error - " + data.error.detail)
+                } else {
+                    location.reload();
+                }
+                subscribed.current = false;
+            });
+    }
 
     const validateContact = () => {
         // all empty - fine
@@ -27,7 +56,7 @@ const AddCompanyForm = (props) => {
             setError("Error - to create a contact, a valid email is required");
         } else {
             setError("");
-            location.reload();
+            sendRequest();
         }
     } 
 
