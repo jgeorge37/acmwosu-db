@@ -15,6 +15,7 @@
     "scripts": {
         "dev": "npm run dev --prefix acmw-db-app",
         "build": "npm run build --prefix acmw-db-app",
+        "test": "jest",
         "start": "npm run start --prefix acmw-db-app",
         "heroku-start": "npm run heroku-start --prefix acmw-db-app",
         "migrate": "node migrations/migrate.js"
@@ -26,5 +27,11 @@
     },
     "engines": {
         "node": "13.x"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.12.10",
+        "@babel/preset-env": "^7.12.11",
+        "babel-jest": "^26.6.3",
+        "jest": "^26.6.3"
     }
 }

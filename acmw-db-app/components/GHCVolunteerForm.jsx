@@ -4,7 +4,7 @@ import SelectInput from './FormComponents/SelectInput'
 import SubmitNotification from './FormComponents/SubmitNotification'
 import styles from '../styles/components/Form.module.css'
 import {useState} from 'react'
-import {validateNumber} from '../pages/api/utility'
+import {validateNumVolHours} from '../pages/api/utility'
 
 const GHCVolunteerForm = (props) => {
 
@@ -43,12 +43,12 @@ const GHCVolunteerForm = (props) => {
     }
 
     const validateHours = (value) => {
-        if (validateNumber(value)) {
+        if (validateNumVolHours(value)) {
             setHourError("")
             setNumHours(value)
             console.log(value)
         } else {
-            setHourError("Must be a number!")
+            setHourError("Must be a number between 1-99")
         }
     }
 
