@@ -66,6 +66,9 @@ async function create (email, student_id, is_exec) {
     return data;
 }
 
+// GET /api/account/list
+// List account information - paginated
+
 export default async (req, res) => {
     const {
       query: { pid },

@@ -1,0 +1,46 @@
+.listContainer {
+  background-color: rgb(234, 226, 241);
+  height: 35rem;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  color: black;
+}
+
+.listContainer .pageButtons {
+  position: absolute;
+  width: 100%;
+  bottom: 0.5rem;
+}
+
+.listContainer .pageButtons > button {
+  background-color: rgba(0,0,0,0);
+  border: 1px solid rgba(0,0,0,0.5);
+  border-radius: 4px;
+  color: black;
+  outline: none;
+  transition: background-color, 0.2s
+}
+
+.listContainer .pageButtons > button:hover {
+  background-color: rgba(0,0,0,0.2);
+}
+
+.listContainer > table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.listContainer > table > thead {
+  height: 2rem;
+  line-height: 2rem;
+}
+
+.listContainer .listRow {
+  background-color: white;
+  border-bottom: 1px solid rgb(199, 199, 199);
+  border-collapse: collapse;
+  height: 3rem;
+}
