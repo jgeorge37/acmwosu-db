@@ -41,6 +41,10 @@ export default async (req, res) => {
             const body = typeof(req.body) === 'object' ? req.body : JSON.parse(req.body);
             switch(pid) {
                 case 'record':
+                    if (!body.event_code) throw ("Must provide a meeting code!");
+                    if (!body.f_name) throw ("Must provide a first name!");
+                    if (!body.l_name_dot_num) throw ("Must provide a last name dot number!");
+                    if (!body.year_level) throw ("Must provide a school level!");
                     result = await record(body.event_code, body.f_name, body.l_name_dot_num, body.year_level);
                     break;
                 // probs need to add more error checks in future
