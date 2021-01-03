@@ -5,7 +5,8 @@ import {
     validateLetters, 
     validateNumVolHours,
     validateLastNameDotNum, 
-    validateTime
+    validateTime,
+    validateName
 } from '../../../pages/api/utility';
 
 describe('validatePassword tests', () => {
@@ -116,37 +117,38 @@ describe('validateLetters tests, for the use of letters-only', () => {
     });
 });
 
-/* TODO: use a regex for names, not just letters
-describe('validateLetters tests, for the use of names', () => {
+describe('validateName tests, for the use of names', () => {
     test('all letters, mixed case', () => {
-        expect(validateLetters("abcABCabcZZ")).toBe(true);
+        expect(validateName("abcABCabcZZ")).toBe(true);
     });
     test('one uppercase', () => {
-        expect(validateLetters("Z")).toBe(true);
+        expect(validateName("Z")).toBe(true);
     });
     test('one lowercase', () => {
-        expect(validateLetters("i")).toBe(true);
+        expect(validateName("i")).toBe(true);
     });
     test('empty string', () => {
-        expect(validateLetters("")).toBe(false);
+        expect(validateName("")).toBe(false);
     });
+    test('space characters', () => {
+        expect(validateName("      ")).toBe(false);
+    })
     test('letters with numbers', () => {
-        expect(validateLetters("abc3xyz9")).toBe(false);
+        expect(validateName("abc3xyz9")).toBe(true);
     });
     test('name with apostrophe', () => {
-        expect(validateLetters("O'Neal")).toBe(true);
+        expect(validateName("O'Neal")).toBe(true);
     });
     test('name with hypen', () => {
-        expect(validateLetters("John-Paul")).toBe(true);
+        expect(validateName("John-Paul")).toBe(true);
     });
     test('name with accent', () => {
-        expect(validateLetters("Noël")).toBe(true);
+        expect(validateName("Noël")).toBe(true);
     });
     test('name with space', () => {
-        expect(validateLetters("Ann Marie")).toBe(true);
+        expect(validateName("Ann Marie")).toBe(true);
     });
 });
-*/
 
 describe('validateNumVolHours tests', () => {
     test('0', () => {
