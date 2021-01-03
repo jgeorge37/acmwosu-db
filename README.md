@@ -1,5 +1,7 @@
+![master](https://github.com/jgeorge37/acmwosu-db/workflows/Node.js%20CI/badge.svg?branch=master)
+
 # acmwosu-db
-Interface for ACM-W Exec Board members to query database of contacts and members.
+Interface for ACM-W Exec Board members to query database of contacts and members.   
 
 ## Installation for local development
 1. Clone the repository
