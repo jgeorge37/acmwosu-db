@@ -6,6 +6,7 @@ import GHCVolunteerForm from '../components/GHCVolunteerForm'
 import AddAccountForm from '../components/AddAccountForm'
 import TimeSelectionForm from '../components/FormComponents/TimeSelectionForm'
 import DateSelectionForm from '../components/FormComponents/DateSelectionForm'
+import ManageAccounts from '../components/ManageAccounts'
 
 import SelectMeeting from '../components/SelectMeeting'
 import ScholarshipReqForm from '../components/ScholarshipReqForm'
@@ -19,12 +20,7 @@ import AddMeetingForm from '../components/AddMeetingForm'
 
 const ExecDashboard = () => {
     const [rightPanel, setRightPanel] = useState("")
-
     const subscribed = useRef(false)
-    const [showGHCForm, setShowGHCForm] = useState(false)
-    const [showAddAccountForm, setShowAddAccountForm] = useState(false)
-    const [showScholarshipReqForm, setShowScholarshipReqForm] = useState(false)
-    const [showMeetingForm, setShowMeetingForm] = useState(false)
 
     const [time, setTime] = useState("")
     const [date, setDate] = useState("")
@@ -74,8 +70,9 @@ const ExecDashboard = () => {
 
     const menuLabels = [
         {label: "Create account", val: "accountCreate", check: () => { return rightPanel === "" || rightPanel === "accountCreate"}},
+        {label: "Manage accounts", val: "manageAccounts"},
         {label: "Input GHC volunteer hours", val: "volunteer"},
-        {label: "Submit scholarship completion", val: "scholarship"},
+        {label: "Input scholarship completion", val: "scholarship"},
         {label: "Meetings", val: "meetings"},
         {label: "Other", val: "other"}
     ]
@@ -104,6 +101,7 @@ const ExecDashboard = () => {
                 </div>
                 <div className={styles.right}>
                     { (rightPanel === "" || rightPanel === "accountCreate") && <AddAccountForm/> }
+                    { rightPanel === "manageAccounts" && <ManageAccounts/>}
                     { rightPanel === "volunteer" &&  <GHCVolunteerForm/>}
                     { rightPanel === "scholarship" &&  <ScholarshipReqForm/>}
                     { rightPanel === "meetings" && 
