@@ -40,6 +40,12 @@ function validateLetters(input) {
   return regex.test(input);
 }
 
+function validateName(input) {
+  // checks that string is not empty & contains at least one non-space character
+  const regex = new RegExp(/^(?!\s*$).+/);
+  return regex.test(input);
+}
+
 function validateLastNameDotNum(input) {
   //letters.number (case insensitive)
   const regex = new RegExp(/^[a-z]+\.[1-9]([0-9]+)?$/i);
@@ -73,4 +79,4 @@ function validateTime(input, unit) {
   return regex.test(input);
 }
 
-export {currentAcademicYear, validatePassword, validateEmail, validateGeneralEmail, validateLetters, validateLastNameDotNum, validateNumVolHours, validateTime}
+export {currentAcademicYear, validatePassword, validateEmail, validateGeneralEmail, validateLetters, validateLastNameDotNum, validateNumVolHours, validateTime, validateName}

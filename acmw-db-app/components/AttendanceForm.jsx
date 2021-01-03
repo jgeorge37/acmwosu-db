@@ -1,7 +1,7 @@
 import SelectInput from '../components/FormComponents/SelectInput'
 import styles from '../styles/SignIn.module.css';
 import React, { useState } from 'react';
-import {validateLetters, validateLastNameDotNum} from '../pages/api/utility';
+import {validateName, validateLastNameDotNum} from '../pages/api/utility';
 import Head from 'next/head'
 
 const AttendanceForm = () => {
@@ -153,7 +153,7 @@ const SubmitButton = (props) => {
     // Sara: Actually this form might be slightly different depending on how the website is set up.
     // If ACM-W users are able to login to their personal accounts, then we would just need the event code.
     // This is just going off of past attendance forms.
-    let firstnameCheck = validateLetters(props.firstName)
+    let firstnameCheck = validateName(props.firstName)
     let lastnameCheck = validateLastNameDotNum(props.lastName);
     if ((props.eventCode == "007") && firstnameCheck && lastnameCheck) {
         props.onSubmit("Success");
