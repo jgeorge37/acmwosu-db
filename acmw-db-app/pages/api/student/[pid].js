@@ -1,5 +1,5 @@
 import pgQuery from '../../../postgres/pg-query.js';
-import {currentAcademicYear} from '../utility';
+import {currentAcademicYear} from '../../../utility/utility';
 
 // GET /api/student/meeting-attendees
 async function getMeetingAttendees(meeting_id) {

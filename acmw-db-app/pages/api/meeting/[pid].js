@@ -1,9 +1,11 @@
 import pgQuery from '../../../postgres/pg-query.js';
-import {currentAcademicYear} from '../utility';
+import {currentAcademicYear} from '../../../utility/utility';
 
 // GET /api/meeting/average-attendance
 async function averageAttendance () {
     const [fall, spring] = currentAcademicYear();
+    console.log(fall);
+    console.log(spring);
     const data = await pgQuery(
       `SELECT AVG(COUNT) FROM
       ( SELECT COUNT(student_id)

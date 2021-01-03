@@ -1,7 +1,7 @@
 import styles from '../../styles/components/FormComponents.module.css'
 import SelectInput from '../FormComponents/SelectInput'
 import {useState, useRef} from 'react'
-import {validateTime} from '../../pages/api/utility';
+import {validateTime} from '../../utility/utility';
 
 /*
     In order to properly record the time from the parent component, you'll need to pass in a recordDate function.

@@ -3,7 +3,7 @@ import styles from '../../styles/components/FormComponents.module.css'
 import MultiSelectInput from './MultiSelectInput'
 import SelectInput from './SelectInput'
 import TextField from './TextField'
-import {validateLetters, validateLastNameDotNum} from '../../pages/api/utility';
+import {validateLetters, validateLastNameDotNum} from '../../utility/utility';
 
 const StudentSearch = (props) => {
     const subscribed = useRef(false);
