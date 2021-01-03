@@ -67,7 +67,24 @@ async function create (email, student_id, is_exec) {
 }
 
 // GET /api/account/list
-// List account information - paginated
+// List accounts (id, email, is_exec, student_id) and student (fname, lname, school_level) information
+// Paginated - uses args for limit and offset
+async function list(limit, offset) {
+    const data = {accountRows: [], totalCount: null};
+    // Get data for 10 accounts
+    const accounts = await pgQuery(`
+        SELECT a.id, a.email, a.is_exec, a.student_id, s.fname, s.lname, s.school_level
+        FROM account a INNER JOIN student s ON a.student_id=s.id
+        ORDER BY LOWER(s.lname) ASC
+        LIMIT ${limit}
+        OFFSET ${offset}
+    ;`);
+
+    if(accounts.rowCount != 0) data.accountRows = accounts.rows;
+    // Get total number of accounts
+    data.totalCount = (await pgQuery(`SELECT COUNT(*) FROM account a INNER JOIN student s ON a.student_id=s.id;`)).rows[0].count;
+    return data;
+}
 
 export default async (req, res) => {
     const {
@@ -103,7 +120,12 @@ export default async (req, res) => {
         } else if(req.method === 'GET') {
             switch(pid) {
                 case 'check-reset':
+                    if(!req.query.token) throw("Missing token in query");
                     result = await checkReset(req.query.token);
+                    break;
+                case 'list':
+                    if(!req.query.offset || !req.query.limit) throw("Missing limit and/or offset in query");
+                    result = await list(req.query.limit, req.query.offset);
                     break;
                 default:
                     throw("Invalid pid");

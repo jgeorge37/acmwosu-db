@@ -72,7 +72,7 @@ const ExecDashboard = () => {
         {label: "Create account", val: "accountCreate", check: () => { return rightPanel === "" || rightPanel === "accountCreate"}},
         {label: "Manage accounts", val: "manageAccounts"},
         {label: "Input GHC volunteer hours", val: "volunteer"},
-        {label: "Submit scholarship completion", val: "scholarship"},
+        {label: "Input scholarship completion", val: "scholarship"},
         {label: "Meetings", val: "meetings"},
         {label: "Other", val: "other"}
     ]

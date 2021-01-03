@@ -1,6 +1,6 @@
 .listContainer {
   background-color: rgb(234, 226, 241);
-  height: 35rem;
+  min-height: 34.5rem;
   border-radius: 10px;
   justify-content: center;
   align-items: center;
@@ -8,36 +8,35 @@
   position: relative;
   color: black;
 }
-
 .listContainer .pageButtons {
   position: absolute;
   width: 100%;
   bottom: 0.5rem;
 }
-
 .listContainer .pageButtons > button {
   background-color: rgba(0,0,0,0);
-  border: 1px solid rgba(0,0,0,0.5);
+  border: 1px solid rgba(0,0,0,0.4);
   border-radius: 4px;
   color: black;
   outline: none;
-  transition: background-color, 0.2s
+  transition: background-color, 0.2s;
+  margin: 0px 7px;
 }
-
 .listContainer .pageButtons > button:hover {
-  background-color: rgba(0,0,0,0.2);
+  background-color: rgba(0, 0, 0, 0.2);
+  cursor: pointer;
 }
-
+.listContainer .pageButtons > button:disabled {
+  visibility: hidden;
+}
 .listContainer > table {
   width: 100%;
   border-collapse: collapse;
 }
-
 .listContainer > table > thead {
   height: 2rem;
   line-height: 2rem;
 }
-
 .listContainer .listRow {
   background-color: white;
   border-bottom: 1px solid rgb(199, 199, 199);
