@@ -6,7 +6,7 @@ import {
     validateNumVolHours,
     validateLastNameDotNum, 
     validateTime
-} from '../../../pages/api/utility';
+} from '../../utility/utility';
 
 describe('validatePassword tests', () => {
     test('len 8, 1 digit, 1 uppercase, 1 special', () => {
