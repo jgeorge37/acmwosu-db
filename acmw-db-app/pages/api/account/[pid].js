@@ -1,10 +1,27 @@
 import pgQuery from '../../../postgres/pg-query.js';
+import {encryptWithAES, decryptWithAES} from '../../../utility/apiAuth';
+
+// Generate auth token and expire time. Returns encrypted token.
+async function generateAuth(account_id) {
+    const tok = Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2);
+    const data = await pgQuery(`
+        UPDATE account SET 
+        auth_token = '${tok}', 
+        auth_expire_time = current_timestamp + INTERVAL '1 hour'
+        WHERE id = ${account_id}
+    ;`);
+    return encryptWithAES(tok);
+}
 
 // POST /api/account/verify
 // Check for matching email and password
 async function verify (email, password) {
-    const data = await pgQuery(`SELECT email, is_exec, id FROM account WHERE email = '${email}' AND password = crypt('${password}', password);`);
-    return data.rows;
+    let data = await pgQuery(`SELECT email, is_exec, id FROM account WHERE email = '${email}' AND password = crypt('${password}', password);`);
+    if(data.rows && data.rows.length > 0) {
+        const encryptedTok = await generateAuth(data.rows[0].id);
+        data.rows[0].encrypted_auth = encryptedTok;
+    }
+    return data.rows; 
 }
 
 // POST /api/account/generate-token
@@ -20,7 +37,7 @@ async function generateToken (email) {
     // save token and set expiration time 2 days in the future
     const data = await pgQuery(`
         UPDATE account
-        SET reset_token = '${token}', token_expire_time = current_timestamp + INTERVAL '1 hour'
+        SET reset_token = '${token}', reset_expire_time = current_timestamp + INTERVAL '1 hour'
         WHERE email = '${email}';
     `);
 
@@ -33,7 +50,7 @@ async function checkReset (token) {
     // Get the email address associated with a token if token is not expired
     const validResetWindow = await pgQuery(`
         SELECT email FROM account
-        WHERE current_timestamp <= token_expire_time AND reset_token = '${token}';
+        WHERE current_timestamp <= reset_expire_time AND reset_token = '${token}';
     `);
 
     return validResetWindow.rows;
@@ -47,7 +64,7 @@ async function resetPassword (email, password) {
         await pgQuery(`
             UPDATE account SET
                 reset_token = null,
-                token_expire_time = null,
+                reset_expire_time = null,
                 password = crypt('${password}', gen_salt('md5'))
             WHERE email = '${email}';
         `);
