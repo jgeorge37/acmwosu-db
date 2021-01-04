@@ -5,7 +5,7 @@ function currentAcademicYear() {
   const year = d.getFullYear() - 2000;
   const month = d.getMonth();
   let fall = "AU", spring = "SP";
-  if (8 <= month <= 12) {
+  if (month >= 8 && month <= 12) {
     // it's currrently fall semester
     fall += year;
     spring += (year + 1);
