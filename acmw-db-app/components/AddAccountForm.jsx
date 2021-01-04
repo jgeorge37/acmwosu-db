@@ -5,7 +5,7 @@ import StudentSearch from '../components/FormComponents/StudentSearch'
 import SelectInput from '../components/FormComponents/SelectInput'
 import SubmitNotification from './FormComponents/SubmitNotification'
 import {useState} from 'react'
-import {validateLetters, validateLastNameDotNum} from '../utility/utility';
+import {validateName, validateLastNameDotNum} from '../utility/utility';
 
 const AddAccountForm = (props) => {
     const [showNotif, setShowNotif] = useState(false);
@@ -23,14 +23,14 @@ const AddAccountForm = (props) => {
 
     const onSubmit = () => {
         // Angela: I took these from Sara's StudentSearch so we should probably make a Regex utilities file
-        const goodfname = validateLetters(fname)
+        const goodfname = validateName(fname)
         const goodlnamedotnum = validateLastNameDotNum(lnamedotnum)
 
         if (!fname || !lnamedotnum || !goodfname || !goodlnamedotnum ) {
             if (!fname) {
               setfNameError("Enter a first name")
             } else if (!goodfname) {
-              setfNameError("First name must only contain letters!")
+              setfNameError("First name must have at least one character!")
             } else {
               setfNameError("")
             }

@@ -20,7 +20,7 @@ async function generateToken (email) {
     // save token and set expiration time 2 days in the future
     const data = await pgQuery(`
         UPDATE account
-        SET reset_token = '${token}', token_expire_time = current_timestamp + INTERVAL '2 days'
+        SET reset_token = '${token}', token_expire_time = current_timestamp + INTERVAL '1 hour'
         WHERE email = '${email}';
     `);
 
