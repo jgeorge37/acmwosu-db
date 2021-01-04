@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import styles from '../styles/Reset.module.css'
-import {validatePassword} from './api/utility';
+import {validatePassword} from '../utility/utility';
 import React, { useEffect, useState, useRef } from 'react';
 
 const Reset = (props) => {

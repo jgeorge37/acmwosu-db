@@ -1,7 +1,7 @@
 import SelectInput from '../components/FormComponents/SelectInput'
 import styles from '../styles/SignIn.module.css';
 import React, { useState } from 'react';
-import {validateName, validateLastNameDotNum} from '../pages/api/utility';
+import {validateName, validateLastNameDotNum} from '../utility/utility';
 import Head from 'next/head'
 
 const AttendanceForm = () => {

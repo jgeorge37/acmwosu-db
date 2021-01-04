@@ -5,7 +5,7 @@ import StudentSearch from '../components/FormComponents/StudentSearch'
 import SelectInput from '../components/FormComponents/SelectInput'
 import SubmitNotification from './FormComponents/SubmitNotification'
 import {useState} from 'react'
-import {validateName, validateLastNameDotNum} from '../pages/api/utility';
+import {validateName, validateLastNameDotNum} from '../utility/utility';
 
 const AddAccountForm = (props) => {
     const [showNotif, setShowNotif] = useState(false);
