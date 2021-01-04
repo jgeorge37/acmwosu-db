@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import styles from '../styles/Reset.module.css'
-import {validateEmail} from './api/utility';
+import {validateEmail} from '../utility/utility';
 import React, { useEffect, useState, useRef } from 'react';
 
 const ForgotPassword = (props) => {
