@@ -20,6 +20,7 @@ const AddAccountForm = (props) => {
 
     const [fNameError, setfNameError] = useState("");
     const [lNameDotNumError, setlNameDotNumError] = useState("");
+    const [accountExistsError, setAccountExistsError] = useState("");
 
     const onSubmit = () => {
         // Angela: I took these from Sara's StudentSearch so we should probably make a Regex utilities file
@@ -43,7 +44,6 @@ const AddAccountForm = (props) => {
             }
         } else {
             create()
-            setShowNotif(true)
         }
     }
 
@@ -67,17 +67,29 @@ const AddAccountForm = (props) => {
           const result1 = await res1.json(); //returns the id
           id = result1[0]["id"];
       }
+
       // creating a new account
-      const requestOptionsAccount = { 
-        method: 'POST',
-        body: JSON.stringify( // makes copies to prevent synthetic event error
-          { email: osuEmail.toLowerCase(),
-            student_id: id,
-            is_exec: (accountType === "Exec") + "" }
-        )
-      };
-      const res2 = await fetch('/api/account/create', requestOptionsAccount);
-      // const result2 = await res2.json();
+      // first check that there is not an existing account
+      const url = '/api/account/exists?email=' + osuEmail.toLowerCase();
+      const res = await fetch(url, {method: 'GET'});
+      const results = await res.json();
+      if (results.rows.length == 0) {
+        // account does not exist, make one
+        const requestOptionsAccount = { 
+          method: 'POST',
+          body: JSON.stringify( // makes copies to prevent synthetic event error
+            { email: osuEmail.toLowerCase(),
+              student_id: id,
+              is_exec: (accountType === "Exec") + "" }
+          )
+        };
+        const res2 = await fetch('/api/account/create', requestOptionsAccount);
+        setShowNotif(true)
+        // const result2 = await res2.json();
+      } else {
+        // account does exist, give notification
+        setAccountExistsError("An account for " + osuEmail.toLowerCase() + " already exists!");
+      }
     }
 
     const selectStudent = (student) => {
@@ -126,6 +138,7 @@ const AddAccountForm = (props) => {
             </form>
             <div className={styles.buttons}>
                 <SubmitButton label="Apply" handleChange={onSubmit} />
+                <h3 className={styles.error}>{accountExistsError}</h3>
             </div>
         </div>
     )
