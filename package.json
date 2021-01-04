@@ -4,13 +4,14 @@
     "description": "Interface for Exec Board members to perform CRUD operations on contact database.",
     "version": "0.0.1",
     "dependencies": {
+        "@sendgrid/mail": "^7.2.4",
+        "crypto-js": "^4.0.0",
         "dotenv": "^8.2.0",
+        "next": "9.5.4",
         "pg": "^8.3.0",
         "postgres-migrations": "^4.0.3",
-        "next": "9.5.4",
         "react": "16.13.1",
-        "react-dom": "16.13.1",
-        "@sendgrid/mail": "^7.2.4"
+        "react-dom": "16.13.1"
     },
     "scripts": {
         "dev": "npm run dev --prefix acmw-db-app",

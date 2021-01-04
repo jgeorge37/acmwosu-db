@@ -18,6 +18,9 @@ SENDGRID_API_KEY={the API key from passwords spreadsheet}
 
 # App URL
 APP_URL=http://localhost:3000
+
+# Encryption passphrase
+ENCRYPTION_PHRASE={a string of your choice}
 ~~~~
 The Heroku info may expire at some point; just go get the info again if things stop working.
 
