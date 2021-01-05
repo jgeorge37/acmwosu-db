@@ -23,9 +23,10 @@ async function record (event_code, f_name, l_name_dot_num, year_level) {
     }
 
     // assuming meeting id is present for now, so not adding it to meeting table, just straight to meeting student
+    const curr_meeting_id = await pgQuery(`SELECT id FROM meeting WHERE code = '${event_code}'`);
+    
     const data = await pgQuery(`INSERT INTO meeting_student (meeting_id, student_id)
-        VALUES ('${event_code}', '${curr_student_id.rows[0].id}')`);
-    console.log(data);
+        VALUES ('${curr_meeting_id.rows[0].id}', '${curr_student_id.rows[0].id}')`);
     return data;
 }
 
@@ -49,7 +50,7 @@ export default async (req, res) => {
                     break;
                 // probs need to add more error checks in future
                 default:
-                    throw("Invalid meeting_id");
+                    throw("Invalid pid");
             }
         } else {
             throw("Invalid request type for attendance form");
