@@ -21,7 +21,7 @@ const NavBar = (props) => {
 
   // Determine if menu must collapse; check if window size or user changes
   useEffect(() => {
-    const limit = props.user ? (JSON.parse(props.user).is_exec ? 1060 : 670) : 0;
+    const limit = props.user ? (props.user.is_exec ? 1060 : 670) : 0;
     const isNarrow = window.innerWidth <= limit;
     setNarrow(isNarrow);
     if(!isNarrow) setOpen(false);
@@ -48,8 +48,10 @@ const NavBar = (props) => {
       <span onClick={() => {
         props.setUser(null);
         localStorage.removeItem('user');
+        localStorage.removeItem('email');
+        localStorage.removeItem('auth_token');
         setShowAlert(true);
-      }} className={styles.cornerButton}>Log out of {JSON.parse(props.user).email}</span>
+      }} className={styles.cornerButton}>Log out of {props.user.email}</span>
     </li>
   )
   :
@@ -95,7 +97,7 @@ const NavBar = (props) => {
       <div id={styles.pages}>
         {tier1}
         {props.user && tier2}
-        {props.user && JSON.parse(props.user).is_exec && tier3}
+        {props.user && props.user.is_exec && tier3}
         {showAlert && !hideAlert && logoutAlert}
         {!(showAlert && !hideAlert) && cornerButton}
       </div>

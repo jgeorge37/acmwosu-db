@@ -1,27 +1,16 @@
 import pgQuery from '../../../postgres/pg-query.js';
-import {encryptWithAES, decryptWithAES} from '../../../utility/apiAuth';
-
-// Generate auth token and expire time. Returns encrypted token.
-async function generateAuth(account_id) {
-    const tok = Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2);
-    const data = await pgQuery(`
-        UPDATE account SET 
-        auth_token = '${tok}', 
-        auth_expire_time = current_timestamp + INTERVAL '1 hour'
-        WHERE id = ${account_id}
-    ;`);
-    return encryptWithAES(tok);
-}
+import {generateAuth, checkAuth} from '../auth/[pid]';
 
 // POST /api/account/verify
 // Check for matching email and password
 async function verify (email, password) {
-    let data = await pgQuery(`SELECT email, is_exec, id FROM account WHERE email = '${email}' AND password = crypt('${password}', password);`);
+    let auth_tok = null;
+    const data = await pgQuery(`SELECT email, is_exec FROM account WHERE email = '${email}' AND password = crypt('${password}', password);`);
     if(data.rows && data.rows.length > 0) {
-        const encryptedTok = await generateAuth(data.rows[0].id);
-        data.rows[0].encrypted_auth = encryptedTok;
+        const encryptedTok = await generateAuth(data.rows[0].email);
+        auth_tok = encryptedTok;
     }
-    return data.rows; 
+    return [auth_tok, data.rows]; 
 }
 
 // POST /api/account/generate-token
@@ -109,13 +98,14 @@ export default async (req, res) => {
     } = req
 
     let result = {};
+    let auth_token = null;
 
     try {
         if(req.method === 'POST'){
             const body = typeof(req.body) === 'object' ? req.body : JSON.parse(req.body);
             switch(pid) {
                 case 'verify':
-                    result = await verify(body.email, body.password);
+                    [auth_token, result] = await verify(body.email, body.password);
                     break;
                 case 'create':
                     if(!body.email) throw("Missing email in request body");
@@ -151,6 +141,7 @@ export default async (req, res) => {
             throw("Invalid request type for account");
         }
         res.statusCode = 200;
+        result = {data: result, auth_token: auth_token}
     } catch(err) {
         res.statusCode = 500;
         result.error = err;

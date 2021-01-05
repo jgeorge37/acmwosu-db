@@ -1,7 +1,8 @@
 import '../styles/globals.css';
 import Head from 'next/head';
 import NavBar from '../components/NavBar';
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useEffect, useState, Fragment, useRef } from 'react';
+import {clientCheckAuth} from '../utility/fetch';
 
 const loadingWheel = (
   <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
@@ -14,23 +15,36 @@ function MyApp({ Component, pageProps }) {
   const [user, setUser] = useState(null);
   const [currentPage, setCurrentPage] = useState('');
   const [blocked, setBlocked] = useState(null);
+  const subscribed = useRef(false);
 
+  // prevent updates when unmounted
+  useEffect(() => { return () => {subscribed.current = false}}, []);
+
+  // get user data
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    // occasionally it's the literal string "undefined"
-    setUser(storedUser === "undefined" ? null : storedUser);
-    const pageName = window.location.pathname.substring(1);
-    setCurrentPage(pageName);
-    checkBlocked(pageName, storedUser === "undefined" ? null : storedUser)
+    subscribed.current = true;
+    clientCheckAuth().then((result) => {
+      if(!subscribed.current) return;
+
+      const storedEmail = localStorage.getItem('email');
+      const userCopy = result.is_exec === null ? null : {is_exec: result.is_exec, email: storedEmail, auth_token: result.auth_token};
+      setUser(userCopy);
+
+      const pageName = window.location.pathname.substring(1);
+      setCurrentPage(pageName);
+      checkBlocked(pageName, userCopy);
+
+      subscribed.current = false;
+    });
   });
 
   // check if user is unauthorized
   const checkBlocked = (pageName, user) => {
     let blocked = null;
     if(accountOnly.includes(pageName)) {
-      blocked = user ? false : true;
+      blocked = !user
     } else if(execOnly.includes(pageName)) {
-      blocked = user && JSON.parse(user).is_exec ? false : true;
+      blocked = !(user && user.is_exec);
     } else {
       blocked = false;
     }
@@ -53,7 +67,7 @@ function MyApp({ Component, pageProps }) {
           }
           { blocked === true &&
             <div className="unauth">You are not authorized to access this page. 
-            { !(user && !JSON.parse(user).is_exec) &&
+            { !(user && user.is_exec) &&
               <Fragment>
                 <br/><a href="/signin">Sign in</a>
               </Fragment>
