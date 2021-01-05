@@ -6,6 +6,7 @@ import SelectInput from '../components/FormComponents/SelectInput'
 import SubmitNotification from './FormComponents/SubmitNotification'
 import {useState} from 'react'
 import {validateName, validateLastNameDotNum} from '../utility/utility';
+import {adaFetch} from '../utility/fetch';
 
 const AddAccountForm = (props) => {
     const [showNotif, setShowNotif] = useState(false);
@@ -63,8 +64,7 @@ const AddAccountForm = (props) => {
               }
             )
           };
-          const res1 = await fetch('/api/student/create', requestOptionsStudent);
-          const result1 = await res1.json(); //returns the id
+          const result1 = await adaFetch('/api/student/create', requestOptionsStudent);
           id = result1[0]["id"];
       }
       // creating a new account

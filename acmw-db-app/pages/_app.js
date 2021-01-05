@@ -27,7 +27,7 @@ function MyApp({ Component, pageProps }) {
       if(!subscribed.current) return;
 
       const storedEmail = localStorage.getItem('email');
-      const userCopy = result.is_exec === null ? null : {is_exec: result.is_exec, email: storedEmail, auth_token: result.auth_token};
+      const userCopy = result.is_exec === null ? null : {is_exec: result.is_exec, email: storedEmail};
       setUser(userCopy);
 
       const pageName = window.location.pathname.substring(1);
@@ -35,7 +35,7 @@ function MyApp({ Component, pageProps }) {
       checkBlocked(pageName, userCopy);
 
       subscribed.current = false;
-    });
+    }, [user, currentPage]);
   });
 
   // check if user is unauthorized

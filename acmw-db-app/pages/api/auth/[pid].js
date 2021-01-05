@@ -44,7 +44,7 @@ async function checkAuth(req, res, exec_only) {
         throw("Missing or bad auth header");
     }
     // get authorization level
-    const data = await getAuth(authInfo.email, authInfo.enc_tok);
+    const data = await getAuth(req);
     // no account found for email and token combo
     if(data.is_exec === null) {
         res.statusCode = 401;
@@ -59,7 +59,7 @@ async function checkAuth(req, res, exec_only) {
 
 // GET /api/auth/level
 // Get the authorization level and auth token of an account.
-// email = account email, enc_tok = encrypted authorization token
+// req = request
 async function getAuth(req) {
     const result = {is_exec: null, auth_token: null};
     const authInfo = readHeader(req);

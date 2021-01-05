@@ -46,10 +46,10 @@ const NavBar = (props) => {
   (
     <li className={`${styles.tab} ${styles.account}`}>
       <span onClick={() => {
-        props.setUser(null);
         localStorage.removeItem('user');
         localStorage.removeItem('email');
         localStorage.removeItem('auth_token');
+        props.setUser(null);
         setShowAlert(true);
       }} className={styles.cornerButton}>Log out of {props.user.email}</span>
     </li>

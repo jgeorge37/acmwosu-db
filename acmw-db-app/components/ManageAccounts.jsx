@@ -1,5 +1,6 @@
 import styles from '../styles/components/ManageAccounts.module.css';
 import {useEffect, useRef, useState} from 'react';
+import {adaFetch} from '../utility/fetch';
 
 const LIMIT = 10;
 
@@ -22,8 +23,7 @@ const ManageAccounts = (props) => {
   const getAccounts = async () => {
     subscribed.current = true;
     const url = `/api/account/list?limit=${LIMIT}&offset=${offset}`;
-    const res = await fetch(url, {method: 'GET'});
-    const response = await res.json();
+    const response = await adaFetch(url, {method: 'GET'});
     if(!subscribed.current) return;
     totalCount.current = response.totalCount;
     setAccounts(response.accountRows);

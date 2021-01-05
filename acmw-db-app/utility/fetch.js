@@ -2,6 +2,7 @@
 async function clientCheckAuth() {
     const email = localStorage.getItem('email');
     const auth_token = localStorage.getItem('auth_token');
+
     if(email === null || auth_token === null) {
         return {is_exec: null, auth_token: null};
     } else {

@@ -63,7 +63,7 @@ async function resetPassword (email, password) {
     return "Changed password for " + email;
 }
 
-// POST /api/account/create
+// POST /api/account/create - requires exec permission
 // Create an account with randomized initial password
 async function create (email, student_id, is_exec) {
     const randomPassword = Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2);
@@ -72,7 +72,7 @@ async function create (email, student_id, is_exec) {
     return data;
 }
 
-// GET /api/account/list
+// GET /api/account/list - requires exec permission
 // List accounts (id, email, is_exec, student_id) and student (fname, lname, school_level) information
 // Paginated - uses args for limit and offset
 async function list(limit, offset) {
@@ -108,6 +108,8 @@ export default async (req, res) => {
                     [auth_token, result] = await verify(body.email, body.password);
                     break;
                 case 'create':
+                    // Throw error if unauthorized or forbidden, otherwise update auth token if needed
+                    auth_token = await checkAuth(req, res, true);
                     if(!body.email) throw("Missing email in request body");
                     if(!body.student_id) throw ("Missing student_id in request body");
                     const is_exec = (typeof body.is_exec === 'undefined' || body.is_exec === null) ? false : body.is_exec;
@@ -131,6 +133,8 @@ export default async (req, res) => {
                     result = await checkReset(req.query.token);
                     break;
                 case 'list':
+                    // Throw error if unauthorized or forbidden, otherwise update auth token if needed
+                    auth_token = await checkAuth(req, res, true);
                     if(!req.query.offset || !req.query.limit) throw("Missing limit and/or offset in query");
                     result = await list(req.query.limit, req.query.offset);
                     break;
@@ -143,7 +147,8 @@ export default async (req, res) => {
         res.statusCode = 200;
         result = {data: result, auth_token: auth_token}
     } catch(err) {
-        res.statusCode = 500;
+        if(!res.statusCode || res.statusCode === 200 ) res.statusCode = 500;
+        console.log(err)
         result.error = err;
     } finally {
         res.json(result);
