@@ -7,7 +7,7 @@ import pgQuery from '../../../postgres/pg-query.js';
 // event_code: code for meeting, f_name: first name of student, 
 // l_name_dot_num: last name and dot number of student, year_level: school level of student
 async function record (event_code, f_name, l_name_dot_num, year_level) {
-    const curr_student_id = await pgQuery(`SELECT id FROM student WHERE name_dot_num = '${l_name_dot_num}'`);
+    const curr_student_id = await pgQuery(`SELECT id FROM student WHERE name_dot_num = '${l_name_dot_num.toLowerCase()}'`);
     //if the student doesn't exist 
     if(!curr_student_id.rowCount){
        let l_name = l_name_dot_num.split(/\./)[0];
