@@ -71,11 +71,15 @@ const AddAccountForm = (props) => {
             const result1 = await res1.json(); //returns the id
             id = result1[0]["id"];
           } catch (err) {
-            // duplicate; selects student instead
-            const url = '/api/student/search?fname=' + fname + '&name_dot_num=' + lnamedotnum;
-            const resp = await fetch(url, {method: 'GET'})
-            const response = await resp.json();
-            id = response[0]["id"]
+            // hopefully duplicate; selects student instead
+            try {
+              const url = '/api/student/search?fname=' + fname + '&name_dot_num=' + lnamedotnum;
+              const resp = await fetch(url, {method: 'GET'});
+              const response = await resp.json();
+              id = response[0]["id"];
+            } catch (err2) {
+              throw("Schrödinger's student (or our API doesn't work): " + err2);
+            }
           }
       }
       // creating a new account
