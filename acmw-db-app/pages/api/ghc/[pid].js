@@ -21,12 +21,12 @@ async function enterExternalScholarship(name_dot_num, id, type, description) {
   }
 
   try {
-    await pqQuery(`
+    await pgQuery(`
       UPDATE ghc SET
-        req_description=${prefix + description},
+        req_description='${prefix + description}',
         external_sch=True
       WHERE student_id=${id};
-    `)
+    `);
   } catch(err) {
     throw("Yikes, could not update external scholarship requirement for " + name_dot_num + "!\n" + err)
   }
@@ -51,13 +51,13 @@ export default async (req, res) => {
                 throw("Invalid pid");
             }
         } else if (req.method === 'POST') {
+          const body = typeof(req.body) === 'object' ? req.body : JSON.parse(req.body);
           if (pid === 'enter-external-scholarship') {
-            const body = typeof(req.body) === 'object' ? req.body : JSON.parse(req.body);
             if (!body.name_dot_num) throw("Missing name_dot_num");
             if (!body.student_id) throw("Missing student_id");
             if (!body.req_type) throw("Missing req_type");
             if (!body.req_desc) throw("Missing req_desc");
-            result = await enterExternalScholarship(body.student_id, body.req_type, body.req_desc);
+            result = await enterExternalScholarship(body.name_dot_num, body.student_id, body.req_type, body.req_desc);
           } else {
               throw("Invalid pid")
           }

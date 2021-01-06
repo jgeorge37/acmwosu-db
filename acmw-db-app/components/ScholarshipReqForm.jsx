@@ -47,7 +47,7 @@ const ScholarshipReqForm = (props) => {
               body: JSON.stringify(
                 { name_dot_num: studentLName.current,
                   student_id: studentId.current,
-                  req_type: reqType.current,
+                  req_type: reqType.current["label"],
                   req_desc: reqDesc.current
                 }
               )
