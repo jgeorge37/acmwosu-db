@@ -67,7 +67,7 @@ function MyApp({ Component, pageProps }) {
           }
           { blocked === true &&
             <div className="unauth">You are not authorized to access this page. 
-            { !(user && user.is_exec) &&
+            { !(user && user.is_exec !== null) &&
               <Fragment>
                 <br/><a href="/signin">Sign in</a>
               </Fragment>
