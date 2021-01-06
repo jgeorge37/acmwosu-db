@@ -64,7 +64,8 @@ const AddAccountForm = (props) => {
               }
             )
           };
-          const result1 = await adaFetch('/api/student/create', requestOptionsStudent);
+          const res1 = await fetch('/api/student/create', requestOptionsStudent);
+          const result1 = await res1.json(); //returns the id
           id = result1[0]["id"];
       }
       // creating a new account
@@ -76,8 +77,7 @@ const AddAccountForm = (props) => {
             is_exec: (accountType === "Exec") + "" }
         )
       };
-      const res2 = await fetch('/api/account/create', requestOptionsAccount);
-      // const result2 = await res2.json();
+      await adaFetch('/api/account/create', requestOptionsAccount);
     }
 
     const selectStudent = (student) => {

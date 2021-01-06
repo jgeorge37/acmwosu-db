@@ -145,12 +145,11 @@ export default async (req, res) => {
             throw("Invalid request type for account");
         }
         res.statusCode = 200;
-        result = {data: result, auth_token: auth_token}
     } catch(err) {
         if(!res.statusCode || res.statusCode === 200 ) res.statusCode = 500;
-        console.log(err)
         result.error = err;
     } finally {
+        result = {data: result, auth_token: auth_token}
         res.json(result);
     }
   }
