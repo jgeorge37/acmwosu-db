@@ -156,7 +156,6 @@ const SubmitButton = (props) => {
     // This is just going off of past attendance forms.
     let firstnameCheck = validateName(props.firstName)
     let lastnameCheck = validateLastNameDotNum(props.lastName);
-    console.log("about to record attendance");
     recordAttendance();
 
     /*if ((props.eventCode == "007") && firstnameCheck && lastnameCheck) {
