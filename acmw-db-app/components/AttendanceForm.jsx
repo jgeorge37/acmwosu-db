@@ -1,14 +1,14 @@
 import SelectInput from '../components/FormComponents/SelectInput'
 import styles from '../styles/SignIn.module.css';
 import React, { useState } from 'react';
-import {validateLetters, validateLastNameDotNum} from '../pages/api/utility';
+import {validateName, validateLastNameDotNum} from '../utility/utility';
 import Head from 'next/head'
 
 const AttendanceForm = () => {
 
-    const [eventCode, setEventCode] = useState("")
-    const [firstName, setFirstName] = useState("")
-    const [lastName, setLastName] = useState("")
+    const [eventCode, setEventCode] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
     const [status, setStatus] = useState("");
 
     const [year, setYear] = useState({});
@@ -69,6 +69,7 @@ const AttendanceForm = () => {
                         eventCode={eventCode}
                         firstName={firstName}
                         lastName={lastName}
+                        year={year}
                         onSubmit={setStatus}
                         status={status}
                     />
@@ -153,9 +154,11 @@ const SubmitButton = (props) => {
     // Sara: Actually this form might be slightly different depending on how the website is set up.
     // If ACM-W users are able to login to their personal accounts, then we would just need the event code.
     // This is just going off of past attendance forms.
-    let firstnameCheck = validateLetters(props.firstName)
+    let firstnameCheck = validateName(props.firstName)
     let lastnameCheck = validateLastNameDotNum(props.lastName);
-    if ((props.eventCode == "007") && firstnameCheck && lastnameCheck) {
+    recordAttendance();
+
+    /*if ((props.eventCode == "007") && firstnameCheck && lastnameCheck) {
         props.onSubmit("Success");
         //Successful insert submit page here
         setMessage("Successfully submitted your attendance.")
@@ -171,8 +174,23 @@ const SubmitButton = (props) => {
       } else if (!firstnameCheck) {
         setMessage("Please enter your first name.");
       }
-    }
+    }*/
   } 
+
+  const recordAttendance = async () => {
+        const requestAttendanceRecord= {
+          method: 'POST',
+          body: JSON.stringify(
+            { event_code: props.eventCode,
+              f_name: props.firstName,
+              l_name_dot_num: props.lastName, //lastName is last name . num
+              year_level: props.year.label // this will push the string ex:"Fourth"
+            }
+          )
+        };
+        const res1 = await fetch('/api/attendance/record', requestAttendanceRecord);
+        const result1 = await res1.json(); //returns the id
+  }
 
   return (
     <div>

@@ -2,7 +2,7 @@ import styles from '../styles/components/Form.module.css'
 import SubmitButton from './FormComponents/SubmitButton'
 import TextField from './FormComponents/TextField'
 import {useState, useRef, useEffect} from 'react';
-import {validateGeneralEmail} from '../pages/api/utility'
+import {validateGeneralEmail} from '../utility/utility'
 
 const AddCompanyForm = (props) => {
     const [company, setCompany] = useState("");

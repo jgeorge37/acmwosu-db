@@ -1,9 +1,11 @@
 import pgQuery from '../../../postgres/pg-query.js';
-import {currentAcademicYear} from '../utility';
+import {currentAcademicYear} from '../../../utility/utility';
 
 // GET /api/meeting/average-attendance
 async function averageAttendance () {
     const [fall, spring] = currentAcademicYear();
+    console.log(fall);
+    console.log(spring);
     const data = await pgQuery(
       `SELECT AVG(COUNT) FROM
       ( SELECT COUNT(student_id)
@@ -88,6 +90,23 @@ async function create(meeting_name, meeting_date, semester, company_id) {
     return data;  
 }
 
+// POST /api/meeting/delete
+// delete a meeting given meeting_id
+async function delete_(id) {
+    const data = await pgQuery(`SELECT meeting_name, semester FROM meeting WHERE id=${id};`);
+    if(data.rowCount === 0) throw(`Meeting with id ${id} not found.`);
+    
+    const meetingInfo = data.rows[0].meeting_name + " - " + data.rows[0].semester;
+    // delete attendance records
+    await pgQuery(`DELETE FROM meeting_student WHERE meeting_id=${id};`); 
+    // delete company partnership
+    await pgQuery(`DELETE FROM meeting_company WHERE meeting_id=${id};`);
+    // delete meeting
+    await pgQuery(`DELETE FROM meeting WHERE id=${id};`);
+    
+    return "Successfully deleted " + meetingInfo;
+}
+
 export default async (req, res) => {
     const {
       query: { pid },
@@ -127,6 +146,10 @@ export default async (req, res) => {
                     if (!body.meeting_date) throw ("Must provide meeting date!");
                     if (!body.semester) throw ("Must provide semester!");
                     result = await create(body.meeting_name, body.meeting_date, body.semester, body.company_id);
+                    break;
+                case 'delete':
+                    if(!body.meeting_id) throw("Must provide a meeting_id");
+                    result = await delete_(body.meeting_id);
                     break;
                 default:
                     throw("Invalid pid");

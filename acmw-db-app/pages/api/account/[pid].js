@@ -20,7 +20,7 @@ async function generateToken (email) {
     // save token and set expiration time 2 days in the future
     const data = await pgQuery(`
         UPDATE account
-        SET reset_token = '${token}', token_expire_time = current_timestamp + INTERVAL '2 days'
+        SET reset_token = '${token}', token_expire_time = current_timestamp + INTERVAL '1 hour'
         WHERE email = '${email}';
     `);
 
@@ -57,12 +57,38 @@ async function resetPassword (email, password) {
     return "Changed password for " + email;
 }
 
+// GET /api/account/exists
+async function exists(email) {
+    const data = await pgQuery(`SELECT * FROM account WHERE email = '${email}';`);
+    return data;
+}
+
 // POST /api/account/create
 // Create an account with randomized initial password
 async function create (email, student_id, is_exec) {
     const randomPassword = Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2);
     const data = await pgQuery(`INSERT INTO account (email, password, student_id, is_exec)
         VALUES ('${email}', crypt('${randomPassword}', gen_salt('md5')), '${student_id}', ${is_exec});`); 
+    return data;
+}
+
+// GET /api/account/list
+// List accounts (id, email, is_exec, student_id) and student (fname, lname, school_level) information
+// Paginated - uses args for limit and offset
+async function list(limit, offset) {
+    const data = {accountRows: [], totalCount: null};
+    // Get data for 10 accounts
+    const accounts = await pgQuery(`
+        SELECT a.id, a.email, a.is_exec, a.student_id, s.fname, s.lname, s.school_level
+        FROM account a INNER JOIN student s ON a.student_id=s.id
+        ORDER BY LOWER(s.lname) ASC
+        LIMIT ${limit}
+        OFFSET ${offset}
+    ;`);
+
+    if(accounts.rowCount != 0) data.accountRows = accounts.rows;
+    // Get total number of accounts
+    data.totalCount = (await pgQuery(`SELECT COUNT(*) FROM account a INNER JOIN student s ON a.student_id=s.id;`)).rows[0].count;
     return data;
 }
 
@@ -100,7 +126,16 @@ export default async (req, res) => {
         } else if(req.method === 'GET') {
             switch(pid) {
                 case 'check-reset':
+                    if(!req.query.token) throw("Missing token in query");
                     result = await checkReset(req.query.token);
+                    break;
+                case 'list':
+                    if(!req.query.offset || !req.query.limit) throw("Missing limit and/or offset in query");
+                    result = await list(req.query.limit, req.query.offset);
+                    break;
+                case 'exists':
+                    if(!req.query.email) throw("Missing email in query");
+                    result = await exists(req.query.email);
                     break;
                 default:
                     throw("Invalid pid");

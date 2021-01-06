@@ -5,7 +5,7 @@ function currentAcademicYear() {
   const year = d.getFullYear() - 2000;
   const month = d.getMonth();
   let fall = "AU", spring = "SP";
-  if (8 <= month <= 12) {
+  if (month >= 8 && month <= 12) {
     // it's currrently fall semester
     fall += year;
     spring += (year + 1);
@@ -37,6 +37,12 @@ function validateGeneralEmail(input) {
 function validateLetters(input) {
   //letters (case insensitive)
   const regex = new RegExp(/^[a-z]+$/i);
+  return regex.test(input);
+}
+
+function validateName(input) {
+  // checks that string is not empty & contains at least one non-space character
+  const regex = new RegExp(/^(?!\s*$).+/);
   return regex.test(input);
 }
 
@@ -73,4 +79,4 @@ function validateTime(input, unit) {
   return regex.test(input);
 }
 
-export {currentAcademicYear, validatePassword, validateEmail, validateGeneralEmail, validateLetters, validateLastNameDotNum, validateNumVolHours, validateTime}
+export {currentAcademicYear, validatePassword, validateEmail, validateGeneralEmail, validateLetters, validateLastNameDotNum, validateNumVolHours, validateTime, validateName}
