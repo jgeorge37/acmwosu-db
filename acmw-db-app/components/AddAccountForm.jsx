@@ -54,7 +54,7 @@ const AddAccountForm = (props) => {
       let id = studentID; // for async protection
       if (!id) { // creating a new student
           let lname = lnamedotnum.split(/\./)[0];
-          const requestOptionsCreateStudent = {
+          const requestOptionsStudent = {
             method: 'POST',
             body: JSON.stringify(
               { fname: fname,
@@ -67,7 +67,7 @@ const AddAccountForm = (props) => {
             )
           };
           try {
-            const res1 = await fetch('/api/student/create', requestOptionsCreateStudent);
+            const res1 = await fetch('/api/student/create', requestOptionsStudent);
             const result1 = await res1.json(); //returns the id
             id = result1[0]["id"];
           } catch (err) {
