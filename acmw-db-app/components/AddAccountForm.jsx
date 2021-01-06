@@ -45,7 +45,6 @@ const AddAccountForm = (props) => {
             create()
             setfNameError("")
             setlNameDotNumError("")
-            setError("")
             setShowNotif(true)
         }
     }
@@ -66,20 +65,20 @@ const AddAccountForm = (props) => {
               }
             )
           };
-          try {
-            const res1 = await fetch('/api/student/create', requestOptionsStudent);
-            const result1 = await res1.json(); //returns the id
-            id = result1[0]["id"];
-          } catch (err) {
-            // hopefully duplicate; selects student instead
-            try {
+          const res1 = await fetch('/api/student/create', requestOptionsStudent);
+          const result1 = await res1.json(); //returns the id
+          if (result1.error) {
+            if (result1.error.routine === "_bt_check_unique") {
+              // uniqueness error / duplicate student
               const url = '/api/student/search?fname=' + fname + '&name_dot_num=' + lnamedotnum;
               const resp = await fetch(url, {method: 'GET'});
               const response = await resp.json();
               id = response[0]["id"];
-            } catch (err2) {
-              throw("Schrödinger's student (or our API doesn't work): " + err2);
+            } else {
+              throw("Schrödinger's student (or our API doesn't work): " + result1.error.detail);
             }
+          } else {
+            id = result1[0]["id"];
           }
       }
       // creating a new account
