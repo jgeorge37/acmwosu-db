@@ -99,6 +99,7 @@ export default async (req, res) => {
 
     let result = {};
     let auth_token = null;
+    let user_email = null;
 
     try {
         if(req.method === 'POST'){
@@ -109,7 +110,7 @@ export default async (req, res) => {
                     break;
                 case 'create': //requires exec permission
                     // Throw error if unauthorized or forbidden, otherwise update auth token if needed
-                    auth_token = await checkAuth(req, res, true);
+                    [auth_token, user_email] = await checkAuth(req, res, true);
                     if(!body.email) throw("Missing email in request body");
                     if(!body.student_id) throw ("Missing student_id in request body");
                     const is_exec = (typeof body.is_exec === 'undefined' || body.is_exec === null) ? false : body.is_exec;
@@ -134,7 +135,7 @@ export default async (req, res) => {
                     break;
                 case 'list': //requires exec permission
                     // Throw error if unauthorized or forbidden, otherwise update auth token if needed
-                    auth_token = await checkAuth(req, res, true);
+                    [auth_token, user_email] = await checkAuth(req, res, true);
                     if(!req.query.offset || !req.query.limit) throw("Missing limit and/or offset in query");
                     result = await list(req.query.limit, req.query.offset);
                     break;

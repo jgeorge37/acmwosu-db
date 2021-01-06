@@ -30,11 +30,12 @@ export default async (req, res) => {
 
     let result = {};
     let auth_token = null;
+    let user_email = null;
 
     try {
         if(req.method === 'GET'){
             if(pid === 'byString') { //requires exec permission
-                auth_token = await checkAuth(req, res, true);
+                [auth_token, user_email] = await checkAuth(req, res, true);
                 if(!req.query.input) throw ("Missing input query");
                 result = await companiesByString(req.query.input);
             } else {
@@ -44,7 +45,7 @@ export default async (req, res) => {
             const body = typeof(req.body) === 'object' ? req.body : JSON.parse(req.body);
             switch(pid) {
                 case 'create': //requires exec permission
-                    auth_token = await checkAuth(req, res, true);
+                    [auth_token, user_email] = await checkAuth(req, res, true);
                     if(!body.company_name) throw("Missing company name in request body");
                     result = await create(body.company_name, body.email, body.fname, body.lname, body.mailing_address);
                     break;

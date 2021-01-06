@@ -54,7 +54,7 @@ async function checkAuth(req, res, exec_only) {
         throw("Forbidden");
     }
     // possibly get new token
-    return (await handleToken(authInfo.email, authInfo.enc_tok));
+    return [(await handleToken(authInfo.email, authInfo.enc_tok)), authInfo.email];
 }
 
 // GET /api/auth/level
