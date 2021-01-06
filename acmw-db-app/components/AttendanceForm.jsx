@@ -69,6 +69,7 @@ const AttendanceForm = () => {
                         eventCode={eventCode}
                         firstName={firstName}
                         lastName={lastName}
+                        year={year}
                         onSubmit={setStatus}
                         status={status}
                     />
@@ -155,6 +156,7 @@ const SubmitButton = (props) => {
     // This is just going off of past attendance forms.
     let firstnameCheck = validateName(props.firstName)
     let lastnameCheck = validateLastNameDotNum(props.lastName);
+    console.log("about to record attendance");
     recordAttendance();
 
     /*if ((props.eventCode == "007") && firstnameCheck && lastnameCheck) {
@@ -183,7 +185,7 @@ const SubmitButton = (props) => {
             { event_code: props.eventCode,
               f_name: props.firstName,
               l_name_dot_num: props.lastName, //lastName is last name . num
-              year_level: props.year
+              year_level: props.year.label // this will push the string ex:"Fourth"
             }
           )
         };
