@@ -2,6 +2,18 @@ import pgQuery from '../../../postgres/pg-query.js';
 //idk I wanna do this somehow but need to export it from student? thots?
 //import {createStudent} from '../student/[pid].js'; 
 
+async function createStudent(fname, lname, name_dot_num, personal_email, school_level, packet_sent_date) {
+    const data = await pgQuery(`
+      INSERT INTO student (fname, lname, name_dot_num, personal_email, school_level, packet_sent_date)
+      VALUES ('${fname}', '${lname}', '${name_dot_num}',
+              ${personal_email ? `'${personal_email}'`: null},
+              ${school_level ? `'${school_level}'`: null},
+              ${packet_sent_date ? `'${packet_sent_date}'`: null})
+      RETURNING id;
+    `);
+    return data.rows
+  }
+
 // POST /api/attendance/record
 // Record a specific student attendance
 // event_code: code for meeting, f_name: first name of student, 
@@ -9,22 +21,35 @@ import pgQuery from '../../../postgres/pg-query.js';
 async function record (event_code, f_name, l_name_dot_num, year_level) {
     const curr_student_id = await pgQuery(`SELECT id FROM student WHERE name_dot_num = '${l_name_dot_num.toLowerCase()}'`);
     //if the student doesn't exist 
+    console.log(curr_student_id);
+    
     if(!curr_student_id.rowCount){
        let l_name = l_name_dot_num.split(/\./)[0];
+       console.log("No student!!");
        // creating new student if it didn't exist
-       curr_student_id = await pgQuery(`
-            INSERT INTO student (fname, lname, name_dot_num, school_level)
-                VALUES ('${f_name}', '${l_name}', '${l_name_dot_num}',
-                 '${year_level}')
-         RETURNING id;
-         `);
+    //    curr_student_id = await pgQuery(`
+    //         INSERT INTO student (fname, lname, name_dot_num, school_level)
+    //             VALUES ('${f_name}', '${l_name}', '${l_name_dot_num}',
+    //              '${year_level}')
+    //      RETURNING id;
+    //      `);
+         curr_student_id = createStudent(f_name, l_name, l_name_dot_num, "", year_level, "");
+         console.log(curr_student_id);
+         console.log("made student!!");
+
     }
 
+    console.log(curr_student_id);
     // assuming meeting id is present for now 
     const curr_meeting_id = await pgQuery(`SELECT id FROM meeting WHERE code = '${event_code}'`);
+    console.log("got meeting id!!");
+    console.log(curr_meeting_id);
     // so not adding it to meeting table, just straight to meeting student
     const data = await pgQuery(`INSERT INTO meeting_student (meeting_id, student_id)
         VALUES ('${curr_meeting_id.rows[0].id}', '${curr_student_id.rows[0].id}')`);
+    
+    console.log(data);
+    console.log("inserted id!!");
     return data;
 }
 
