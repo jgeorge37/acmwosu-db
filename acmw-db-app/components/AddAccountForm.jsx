@@ -43,8 +43,9 @@ const AddAccountForm = (props) => {
               setlNameDotNumError("")
             }
         } else {
-            create()
-            setShowNotif(true)
+          // temporary fix for bug with account type
+            create().then(location.reload);
+            //setShowNotif(true)
         }
     }
 
