@@ -37,13 +37,20 @@ const ScholarshipReqForm = (props) => {
         if (studentLName.current != "" && reqDesc.current != "") {
             setFormError("")
 
-            // TO DO Update GHC Req here
-
-            console.log(studentFName.current + " " + studentLName.current + " - " + reqType.current + ": " + reqDesc.current)
+            const requestOptions = {
+              method: 'POST',
+              body: JSON.stringify(
+                { name_dot_num: studentLName.current,
+                  student_id: studentId.current,
+                  req_type: reqType.current,
+                  req_desc: reqDesc.current
+                }
+              )
+            };
+            const res = await fetch('/api/ghc/enter-external-scholarship', requestOptions);
             setShowNotif(true)
         } else if (studentLName.current) {
             setFormError("Error: Must provide a description of the requirement!")
-            console.log("reached here2 ")
         } else if (reqDesc.current) {
             setFormError("Error: Must select a student!")
         } else {
@@ -53,11 +60,11 @@ const ScholarshipReqForm = (props) => {
 
     return (
         <div className={styles.popup_inner}>
-            <SubmitNotification showNotif={showNotif} setShowNotif={setShowNotif}/> 
+            <SubmitNotification showNotif={showNotif} setShowNotif={setShowNotif}/>
             <div className={styles.form}>
                 <h2>Scholarship Req Form</h2>
                 <p>Please select a student and provide the name of the requirement</p>
-                <StudentSearch                           
+                <StudentSearch
                         fNameError={fNameError}
                         setfNameError={setfNameError}
                         lNameError={lNameError}
@@ -72,4 +79,4 @@ const ScholarshipReqForm = (props) => {
     )
 }
 
-export default ScholarshipReqForm 
+export default ScholarshipReqForm
