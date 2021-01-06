@@ -181,9 +181,9 @@ const SubmitButton = (props) => {
           method: 'POST',
           body: JSON.stringify(
             { event_code: props.eventCode,
-              f_name: props.firstName.charAt(0).toUpperCase() + props.firstName.slice(1).toLowerCase(), //capitalization convention
-              l_name_dot_num: props.lastName.toLowerCase(), //lastName is last name . num
-              year_level: props.year //these are blank for now
+              f_name: props.firstName,
+              l_name_dot_num: props.lastName, //lastName is last name . num
+              year_level: props.year
             }
           )
         };

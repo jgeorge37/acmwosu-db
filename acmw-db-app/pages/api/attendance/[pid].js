@@ -7,13 +7,11 @@ import pgQuery from '../../../postgres/pg-query.js';
 // event_code: code for meeting, f_name: first name of student, 
 // l_name_dot_num: last name and dot number of student, year_level: school level of student
 async function record (event_code, f_name, l_name_dot_num, year_level) {
-    const curr_student_id = await pgQuery(`SELECT id FROM student WHERE name_dot_num = '${l_name_dot_num}'`);
+    const curr_student_id = await pgQuery(`SELECT id FROM student WHERE name_dot_num = '${l_name_dot_num.toLowerCase()}'`);
     //if the student doesn't exist 
     if(!curr_student_id.rowCount){
        let l_name = l_name_dot_num.split(/\./)[0];
        // creating new student if it didn't exist
-       // so, right now (1/3/2021) should get
-       //  error: insert or update on table "meeting_student" violates foreign key constraint "meeting_student_meeting_id_fkey"
        curr_student_id = await pgQuery(`
             INSERT INTO student (fname, lname, name_dot_num, school_level)
                 VALUES ('${f_name}', '${l_name}', '${l_name_dot_num}',
@@ -22,10 +20,11 @@ async function record (event_code, f_name, l_name_dot_num, year_level) {
          `);
     }
 
-    // assuming meeting id is present for now, so not adding it to meeting table, just straight to meeting student
+    // assuming meeting id is present for now 
+    const curr_meeting_id = await pgQuery(`SELECT id FROM meeting WHERE code = '${event_code}'`);
+    // so not adding it to meeting table, just straight to meeting student
     const data = await pgQuery(`INSERT INTO meeting_student (meeting_id, student_id)
-        VALUES ('${event_code}', '${curr_student_id.rows[0].id}')`);
-    console.log(data);
+        VALUES ('${curr_meeting_id.rows[0].id}', '${curr_student_id.rows[0].id}')`);
     return data;
 }
 
@@ -49,7 +48,7 @@ export default async (req, res) => {
                     break;
                 // probs need to add more error checks in future
                 default:
-                    throw("Invalid meeting_id");
+                    throw("Invalid pid");
             }
         } else {
             throw("Invalid request type for attendance form");
