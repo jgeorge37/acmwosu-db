@@ -52,7 +52,6 @@ export default async (req, res) => {
             }
         } else if (req.method === 'POST') {
           const body = typeof(req.body) === 'object' ? req.body : JSON.parse(req.body);
-          console.log(body);
           if (pid === 'enter-external-scholarship') {
             if (!body.name_dot_num) throw("Missing name_dot_num");
             if (!body.student_id) throw("Missing student_id");
