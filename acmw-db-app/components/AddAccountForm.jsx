@@ -64,8 +64,7 @@ const AddAccountForm = (props) => {
               }
             )
           };
-          const res1 = await fetch('/api/student/create', requestOptionsStudent);
-          const result1 = await res1.json(); //returns the id
+          const result1 = await adaFetch('/api/student/create', requestOptionsStudent);
           id = result1[0]["id"];
       }
       // creating a new account

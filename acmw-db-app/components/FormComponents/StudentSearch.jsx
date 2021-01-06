@@ -4,6 +4,7 @@ import MultiSelectInput from './MultiSelectInput'
 import SelectInput from './SelectInput'
 import TextField from './TextField'
 import {validateName, validateLastNameDotNum} from '../../utility/utility';
+import {adaFetch} from '../../utility/fetch';
 
 const StudentSearch = (props) => {
     const subscribed = useRef(false);
@@ -24,8 +25,7 @@ const StudentSearch = (props) => {
         subscribed.current = true;
         var query = createQuery()
         const url = '/api/student/search?' + query
-        const response = await fetch(url, {method: 'GET'})
-        response.json().then((data) => {
+        adaFetch(url, {method: 'GET'}).then((data) => {
             const tempList = []
             for (var i in data) {
                 tempList.push({

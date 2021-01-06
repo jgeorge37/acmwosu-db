@@ -1,5 +1,6 @@
 import pgQuery from '../../../postgres/pg-query.js';
 import {currentAcademicYear} from '../../../utility/utility';
+import {checkAuth} from '../auth/[pid]';
 
 // GET /api/student/meeting-attendees
 async function getMeetingAttendees(meeting_id) {
@@ -75,18 +76,23 @@ export default async (req, res) => {
     } = req
 
     let result = {};
+    let auth_token = null;
+    let user_email = null;
 
     try {
         if (req.method === 'GET') {
-            if (pid === 'total-unique-members') {
+            if (pid === 'total-unique-members') { // requires exec permission
+                [auth_token, user_email] = await checkAuth(req, res, true);
                 result = await totalUniqueMembers();
-            } else if (pid === 'search') {
+            } else if (pid === 'search') { // requires exec permission
+                [auth_token, user_email] = await checkAuth(req, res, true);
                 // Throw error if no valid search criteria is provided
                 if(!req.query || (!req.query.name_dot_num && !req.query.lname && !req.query.fname)) {
                     throw("Missing search criteria: query must include name_dot_num, lname, and/or fname.");
                 }
                 result = await searchStudents(req.query);
-            } else if (pid === 'meeting-attendees') {
+            } else if (pid === 'meeting-attendees') { // requires exec permission
+              [auth_token, user_email] = await checkAuth(req, res, true);
               if (!req.query || !req.query.meeting_id) {
                 throw("Missing search criteria: query must include meeting_id");
               }
@@ -94,7 +100,8 @@ export default async (req, res) => {
             } else {
                 throw("Invalid pid");
             }
-        } else if (req.method === 'POST') {
+        } else if (req.method === 'POST') { // requires exec permission
+          [auth_token, user_email] = await checkAuth(req, res, true);
           const body = typeof(req.body) === 'object' ? req.body : JSON.parse(req.body);
           if (pid === 'create') {
             if (!body || !body.fname || !body.lname || !body.name_dot_num) {
@@ -107,10 +114,10 @@ export default async (req, res) => {
         }
         res.statusCode = 200;
     } catch(err) {
-        console.log(err)
-        res.statusCode = 500;
-        result.error = err;
+      if(!res.statusCode || res.statusCode === 200 ) res.statusCode = 500;
+      result.error = err;
     } finally {
-        res.json(result);
+      result = {data: result, auth_token: auth_token};
+      res.json(result);
     }
   }
