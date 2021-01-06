@@ -33,7 +33,7 @@ const ScholarshipReqForm = (props) => {
         }
     }
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         if (studentLName.current != "" && reqDesc.current != "") {
             setFormError("")
 
