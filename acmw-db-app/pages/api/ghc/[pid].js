@@ -22,7 +22,7 @@ async function enterExternalScholarship(name_dot_num, id, type, description) {
 
   try {
     await pqQuery(`
-      UPDATE ghcSET
+      UPDATE ghc SET
         req_description=${prefix + description},
         external_sch=True
       WHERE student_id=${id};
