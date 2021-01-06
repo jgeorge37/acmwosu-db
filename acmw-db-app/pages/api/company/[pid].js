@@ -1,4 +1,5 @@
 import pgQuery from '../../../postgres/pg-query.js';
+import {checkAuth} from '../auth/[pid]';
 
 // GET /api/company/byString
 // Given a string check for potential matching companies
@@ -28,10 +29,12 @@ export default async (req, res) => {
     } = req
 
     let result = {};
+    let auth_token = null;
 
     try {
         if(req.method === 'GET'){
-            if(pid === 'byString') {
+            if(pid === 'byString') { //requires exec permission
+                auth_token = await checkAuth(req, res, true);
                 if(!req.query.input) throw ("Missing input query");
                 result = await companiesByString(req.query.input);
             } else {
@@ -40,7 +43,8 @@ export default async (req, res) => {
         } else if(req.method === "POST") {
             const body = typeof(req.body) === 'object' ? req.body : JSON.parse(req.body);
             switch(pid) {
-                case 'create':
+                case 'create': //requires exec permission
+                    auth_token = await checkAuth(req, res, true);
                     if(!body.company_name) throw("Missing company name in request body");
                     result = await create(body.company_name, body.email, body.fname, body.lname, body.mailing_address);
                     break;
@@ -52,9 +56,10 @@ export default async (req, res) => {
         }
         res.statusCode = 200;
     } catch(err) {
-        res.statusCode = 500;
+        if(!res.statusCode || res.statusCode === 200 ) res.statusCode = 500;
         result.error = err;
     } finally {
+        result = {data: result, auth_token: auth_token};
         res.json(result);
     }
   }

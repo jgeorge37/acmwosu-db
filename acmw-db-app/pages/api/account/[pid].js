@@ -63,7 +63,7 @@ async function resetPassword (email, password) {
     return "Changed password for " + email;
 }
 
-// POST /api/account/create - requires exec permission
+// POST /api/account/create
 // Create an account with randomized initial password
 async function create (email, student_id, is_exec) {
     const randomPassword = Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2);
@@ -72,7 +72,7 @@ async function create (email, student_id, is_exec) {
     return data;
 }
 
-// GET /api/account/list - requires exec permission
+// GET /api/account/list
 // List accounts (id, email, is_exec, student_id) and student (fname, lname, school_level) information
 // Paginated - uses args for limit and offset
 async function list(limit, offset) {
@@ -107,7 +107,7 @@ export default async (req, res) => {
                 case 'verify':
                     [auth_token, result] = await verify(body.email, body.password);
                     break;
-                case 'create':
+                case 'create': //requires exec permission
                     // Throw error if unauthorized or forbidden, otherwise update auth token if needed
                     auth_token = await checkAuth(req, res, true);
                     if(!body.email) throw("Missing email in request body");
@@ -132,7 +132,7 @@ export default async (req, res) => {
                     if(!req.query.token) throw("Missing token in query");
                     result = await checkReset(req.query.token);
                     break;
-                case 'list':
+                case 'list': //requires exec permission
                     // Throw error if unauthorized or forbidden, otherwise update auth token if needed
                     auth_token = await checkAuth(req, res, true);
                     if(!req.query.offset || !req.query.limit) throw("Missing limit and/or offset in query");
@@ -149,7 +149,7 @@ export default async (req, res) => {
         if(!res.statusCode || res.statusCode === 200 ) res.statusCode = 500;
         result.error = err;
     } finally {
-        result = {data: result, auth_token: auth_token}
+        result = {data: result, auth_token: auth_token};
         res.json(result);
     }
   }

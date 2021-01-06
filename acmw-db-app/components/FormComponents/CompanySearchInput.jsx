@@ -1,10 +1,11 @@
 import {useState, useRef, useEffect} from 'react'
 import styles from '../../styles/components/FormComponents.module.css'
 import SelectInput from './SelectInput'
+import {adaFetch} from '../../utility/fetch'
 
 const getCompanyInfo = async (input) => {
     const url = '/api/company/byString?input=' + input
-    const response = await fetch(url, {
+    const result = await adaFetch(url, {
         method: 'GET', 
         mode: 'cors', 
         cache: 'no-cache', 
@@ -15,7 +16,6 @@ const getCompanyInfo = async (input) => {
         redirect: 'follow', 
         referrerPolicy: 'no-referrer', 
     })
-    const result = await response.json();
     return result;
 }
 
@@ -41,14 +41,14 @@ const CompanySearchInput = (props) => {
                 
                 setCompanyList(tempList)
                 if (tempList.length > 0) {
-                    props.onChange(tempList[0])
+                    if(props.onChange) props.onChange(tempList[0])
                 }
                 subscribed.current = false;
             })
         } else {
             setIsText(false)
             setCompanyList([])
-            props.onChange({label: null, value: null})
+            if(props.onChange) props.onChange({label: null, value: null})
         }
     }
 

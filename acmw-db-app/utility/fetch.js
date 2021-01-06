@@ -22,7 +22,7 @@ async function adaFetch(url, requestOptions) {
     
     if(email && auth_token) {
         const str64 = Buffer.from(email + ":" + auth_token).toString('base64');
-        const headers = new Headers({ "Authorization": `Basic ${str64}` });
+        const headers = {...requestOptions.headers, ...{Authorization: "Basic " + str64}}
         requestOptions.headers = headers;
     }
     

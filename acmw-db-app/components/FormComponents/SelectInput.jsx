@@ -11,7 +11,7 @@ const SelectInput = (props) => {
                 }
             });
         }
-        props.onChange(selectedOption);
+        if(props.onChange) props.onChange(selectedOption);
     }
 
     return (
