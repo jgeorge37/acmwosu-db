@@ -12,6 +12,7 @@ const ScholarshipReqForm = (props) => {
     const [lNameError, setlNameError] = useState("")
 
     const [formError, setFormError] = useState("")
+    const subscribed = useRef(false);
 
     const studentLName = useRef("")
     const studentFName = useRef("")
@@ -20,6 +21,9 @@ const ScholarshipReqForm = (props) => {
     const reqDesc = useRef("")
 
     const options = ["External Scholarship", "Alternate Requirement"]
+
+    // prevent async update if unmounted
+    useEffect(() => {return () => {subscribed.current = false}}, []);
 
     const selectStudent = (student) => {
         if (student) {
@@ -34,6 +38,7 @@ const ScholarshipReqForm = (props) => {
     }
 
     const onSubmit = async () => {
+        subscribed.current = true;
         if (studentLName.current != "" && reqDesc.current != "") {
             setFormError("")
 
@@ -48,7 +53,9 @@ const ScholarshipReqForm = (props) => {
               )
             };
             const res = await fetch('/api/ghc/enter-external-scholarship', requestOptions);
+            if(!subscribed.current) return;
             setShowNotif(true)
+            subscribed.current = false;
         } else if (studentLName.current) {
             setFormError("Error: Must provide a description of the requirement!")
         } else if (reqDesc.current) {
