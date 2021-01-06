@@ -69,6 +69,7 @@ const AttendanceForm = () => {
                         eventCode={eventCode}
                         firstName={firstName}
                         lastName={lastName}
+                        year={year}
                         onSubmit={setStatus}
                         status={status}
                     />
@@ -183,7 +184,7 @@ const SubmitButton = (props) => {
             { event_code: props.eventCode,
               f_name: props.firstName,
               l_name_dot_num: props.lastName, //lastName is last name . num
-              year_level: props.year
+              year_level: props.year.label // this will push the string ex:"Fourth"
             }
           )
         };
