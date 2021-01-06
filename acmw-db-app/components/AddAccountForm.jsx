@@ -43,6 +43,9 @@ const AddAccountForm = (props) => {
             }
         } else {
             create()
+            setfNameError("")
+            setlNameDotNumError("")
+            setError("")
             setShowNotif(true)
         }
     }
@@ -51,11 +54,11 @@ const AddAccountForm = (props) => {
       let id = studentID; // for async protection
       if (!id) { // creating a new student
           let lname = lnamedotnum.split(/\./)[0];
-          const requestOptionsStudent = {
+          const requestOptionsCreateStudent = {
             method: 'POST',
             body: JSON.stringify(
-              { fname: fname.charAt(0).toUpperCase() + fname.slice(1).toLowerCase(), //capitalization convention
-                lname: lname.charAt(0).toUpperCase() + lname.slice(1).toLowerCase(), //capitalization convention
+              { fname: fname,
+                lname: lname,
                 name_dot_num: lnamedotnum.toLowerCase(),
                 personal_email: "", //these are blank for now
                 school_level: "",
@@ -63,12 +66,20 @@ const AddAccountForm = (props) => {
               }
             )
           };
-          const res1 = await fetch('/api/student/create', requestOptionsStudent);
-          const result1 = await res1.json(); //returns the id
-          id = result1[0]["id"];
+          try {
+            const res1 = await fetch('/api/student/create', requestOptionsCreateStudent);
+            const result1 = await res1.json(); //returns the id
+            id = result1[0]["id"];
+          } catch (err) {
+            // duplicate; selects student instead
+            const url = '/api/student/search?fname=' + fname + '&name_dot_num=' + lnamedotnum;
+            const resp = await fetch(url, {method: 'GET'})
+            const response = await resp.json();
+            id = response[0]["id"]
+          }
       }
       // creating a new account
-      const requestOptionsAccount = { 
+      const requestOptionsAccount = {
         method: 'POST',
         body: JSON.stringify( // makes copies to prevent synthetic event error
           { email: osuEmail.toLowerCase(),
@@ -105,7 +116,7 @@ const AddAccountForm = (props) => {
 
     return (
         <div className={styles.popup_inner}>
-            <SubmitNotification showNotif={showNotif} setShowNotif={setShowNotif}/> 
+            <SubmitNotification showNotif={showNotif} setShowNotif={setShowNotif}/>
             <form className={styles.form}>
                 <h2>Create Account</h2>
                 <div>
