@@ -7,6 +7,7 @@ import TimeSelectionForm from './FormComponents/TimeSelectionForm'
 import {useEffect, useRef, useState} from 'react'
 import CompanySearchInput from './FormComponents/CompanySearchInput'
 import SubmitNotification from './FormComponents/SubmitNotification'
+import {adaFetch} from '../utility/fetch'
 
 const AddCompanyForm = (props) => {
 
@@ -45,7 +46,6 @@ const AddCompanyForm = (props) => {
         subscribed.current = true;
         const dateAndTime = new Date(date.current.month + " " + date.current.day + ", " + date.current.year + " " +
         time.current.hours + ":" + time.current.minutes + ":00 " + time.current.timeOfDay)
-        console.log(dateAndTime)
         const requestOptionsMeeting = {
             method: 'POST',
             body: JSON.stringify(
@@ -57,8 +57,7 @@ const AddCompanyForm = (props) => {
               }
             )
         };
-        const res = await fetch('/api/meeting/create', requestOptionsMeeting)
-        const result = await res.json()
+        const result = await adaFetch('/api/meeting/create', requestOptionsMeeting)
         if (subscribed.current) setCode(result["code"])
         if (subscribed.current) setShowNotif(true)
         subscribed.current = false;

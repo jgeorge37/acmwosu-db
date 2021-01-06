@@ -1,11 +1,10 @@
 import pgQuery from '../../../postgres/pg-query.js';
 import {currentAcademicYear} from '../../../utility/utility';
+import {checkAuth} from '../auth/[pid]';
 
 // GET /api/meeting/average-attendance
 async function averageAttendance () {
     const [fall, spring] = currentAcademicYear();
-    console.log(fall);
-    console.log(spring);
     const data = await pgQuery(
       `SELECT AVG(COUNT) FROM
       ( SELECT COUNT(student_id)
@@ -113,6 +112,8 @@ export default async (req, res) => {
     } = req
 
     let result = {};
+    let auth_token = null;
+    let user_email = null;
 
     try {
         if (req.method === 'GET') {
@@ -141,13 +142,15 @@ export default async (req, res) => {
         } else if (req.method === 'POST') {
             const body = typeof(req.body) === 'object' ? req.body : JSON.parse(req.body);
             switch(pid) {
-                case 'create': 
+                case 'create': // requires exec permission
+                    [auth_token, user_email] = await checkAuth(req, res, true);
                     if (!body.meeting_name) throw ("Must provide a meeting name!");
                     if (!body.meeting_date) throw ("Must provide meeting date!");
                     if (!body.semester) throw ("Must provide semester!");
                     result = await create(body.meeting_name, body.meeting_date, body.semester, body.company_id);
                     break;
-                case 'delete':
+                case 'delete': // requires exec permission
+                    [auth_token, user_email] = await checkAuth(req, res, true);
                     if(!body.meeting_id) throw("Must provide a meeting_id");
                     result = await delete_(body.meeting_id);
                     break;
@@ -159,9 +162,10 @@ export default async (req, res) => {
         }
         res.statusCode = 200;
     } catch(err) {
-        res.statusCode = 500;
+        if(!res.statusCode || res.statusCode === 200 ) res.statusCode = 500;
         result.error = err;
     } finally {
+        result = {data: result, auth_token: auth_token};
         res.json(result);
     }
   }
