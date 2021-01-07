@@ -3,6 +3,7 @@ import {currentAcademicYear} from '../../../utility/utility';
 import {checkAuth} from '../auth/[pid]';
 
 // GET /api/meeting/average-attendance
+// Average attendance for each semester of the current academic year
 async function averageAttendance () {
     const [fall, spring] = currentAcademicYear();
     const data = await pgQuery(
@@ -18,6 +19,7 @@ async function averageAttendance () {
 }
 
 // GET /api/meeting/student-attendance
+// Get number of meetings per semester of the current academic year for a student id
 async function studentAttendance(id) {
 	const [fall, spring] = currentAcademicYear();
 	const numMeetings = await pgQuery(`
@@ -30,6 +32,7 @@ async function studentAttendance(id) {
 }
 
 // GET /api/meeting/account-attendance
+// Get number of meetings per semester of the current academic year for an email address
 async function accountAttendance(email) {
 	const data = await pgQuery(`SELECT s.id FROM student s INNER JOIN account a on s.id = a.student_id WHERE a.email = '${email}'`);
 	if(!data.rowCount) throw (`No student associated with account ${email}`);
@@ -37,12 +40,14 @@ async function accountAttendance(email) {
 }
 
 // GET /api/meeting/meeting-list
+// Return names, dates, and ids of all meetings
 async function meetingList() {
     const data = await pgQuery(`SELECT meeting_name, meeting_date, id FROM meeting`);
     return data.rows;
 }
 
 // GET /api/meeting/meeting-attendance
+// Get the attendance for a particular meeting
 async function meetingAttendance(meetingId) {
     const data = await pgQuery(`
         SELECT s.fname, s.lname
@@ -117,21 +122,30 @@ export default async (req, res) => {
 
     try {
         if (req.method === 'GET') {
-            if (pid === 'average-attendance') {
+            if (pid === 'average-attendance') { // requires exec permission
+                [auth_token, user_email] = await checkAuth(req, res, true);
                 result = await averageAttendance();
             } else if (pid === 'account-attendance') {
 				if(!req.query || (!req.query.email)) {
                     throw("Missing account email in query.");
                 }
+                // requires account permission IF querying for SELF
+                [auth_token, user_email] = await checkAuth(req, res, false);
+                if(user_email !== req.query.email) {
+                    // query is not for signed in user - requires exec permission
+                    [auth_token, user_email] = await checkAuth(req, res, true);
+                }
                 result = await accountAttendance(req.query.email);
-            } else if (pid === 'student-attendance') {
+            } else if (pid === 'student-attendance') { // no auth check - student ids are not public
 				if(!req.query || (!req.query.id)) {
                     throw("Missing student id in query.");
                 }
                 result = await studentAttendance(req.query.id);
-            } else if (pid == 'meeting-list') {
+            } else if (pid == 'meeting-list') { // requires exec permission
+                [auth_token, user_email] = await checkAuth(req, res, true);
                 result = await meetingList();
-            } else if (pid == 'meeting-attendance') {
+            } else if (pid == 'meeting-attendance') {  // requires exec permission
+                [auth_token, user_email] = await checkAuth(req, res, true);
                 if(!req.query || (!req.query.meetingId)) {
                     throw("Missing meeting id in query.")
                 }
