@@ -1,6 +1,6 @@
 import styles from '../styles/components/NavBar.module.css';
-import React, {Fragment, useEffect, useState} from 'react';
-
+import React, {Fragment, useEffect, useState, useRef} from 'react';
+import {adaFetch} from '../utility/fetch';
 
 const NavBar = (props) => {
   const [showAlert, setShowAlert] = useState(false);
@@ -8,6 +8,9 @@ const NavBar = (props) => {
   const [narrow, setNarrow] = useState(false);
   const [open, setOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState(null);
+  const subscribed = useRef(false);
+
+  useEffect(() => { return () => subscribed.current = false}, []);
 
   // Log out confirmation notification
   useEffect(() => {
@@ -46,11 +49,18 @@ const NavBar = (props) => {
   (
     <li className={`${styles.tab} ${styles.account}`}>
       <span onClick={() => {
-        localStorage.removeItem('user');
-        localStorage.removeItem('email');
-        localStorage.removeItem('auth_token');
-        props.setUser(null);
-        setShowAlert(true);
+        subscribed.current = true;
+        const requestOptions = {
+          method: 'POST',
+          body: JSON.stringify({})
+        };
+        adaFetch('/api/account/logout', requestOptions).then(() => {
+          if(!subscribed.current) return;
+          localStorage.removeItem('email');
+          props.setUser(null);
+          setShowAlert(true);
+          subscribed.current = false;
+        });
       }} className={styles.cornerButton}>Log out of {props.user.email}</span>
     </li>
   )

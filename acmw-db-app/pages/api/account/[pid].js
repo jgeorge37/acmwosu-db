@@ -1,5 +1,6 @@
 import pgQuery from '../../../postgres/pg-query.js';
 import {generateAuth, checkAuth} from '../auth/[pid]';
+import {serialize} from 'cookie';
 
 // POST /api/account/verify
 // Check for matching email and password
@@ -7,10 +8,22 @@ async function verify (email, password) {
     let auth_tok = null;
     const data = await pgQuery(`SELECT email, is_exec FROM account WHERE email = '${email}' AND password = crypt('${password}', password);`);
     if(data.rows && data.rows.length > 0) {
-        const encryptedTok = await generateAuth(data.rows[0].email);
-        auth_tok = encryptedTok;
+        const tok = await generateAuth(data.rows[0].email);
+        auth_tok = tok;
     }
-    return [auth_tok, data.rows]; 
+    return [auth_tok, email, data.rows]; 
+}
+
+// POST /api/account/logout
+async function logout(email) {
+    try {
+        const data = await pgQuery(`UPDATE account SET auth_token=null AND auth_expire_time=null WHERE email='${email}';`);
+        console.log(data);
+        return ['none', "removed auth_token in database for " + email];
+    } catch(err) {
+        console.log("bad logout - " + err);
+        return [null, err];
+    }
 }
 
 // POST /api/account/generate-token
@@ -106,7 +119,7 @@ export default async (req, res) => {
             const body = typeof(req.body) === 'object' ? req.body : JSON.parse(req.body);
             switch(pid) {
                 case 'verify':
-                    [auth_token, result] = await verify(body.email, body.password);
+                    [auth_token, user_email, result] = await verify(body.email, body.password);
                     break;
                 case 'create': //requires exec permission
                     // Throw error if unauthorized or forbidden, otherwise update auth token if needed
@@ -123,6 +136,10 @@ export default async (req, res) => {
                 case 'reset-pw':
                     if(!body.password || !body.email) throw ("Missing email and/or new password");
                     result = await resetPassword(body.email, body.password);
+                    break;
+                case 'logout':
+                    [auth_token, user_email] = await checkAuth(req, res, false);
+                    [auth_token, result] = await logout(user_email);
                     break;
                 default:
                     throw("Invalid pid");
@@ -148,9 +165,13 @@ export default async (req, res) => {
         res.statusCode = 200;
     } catch(err) {
         if(!res.statusCode || res.statusCode === 200 ) res.statusCode = 500;
+        console.log(err)
         result.error = err;
     } finally {
-        result = {data: result, auth_token: auth_token};
+        if(auth_token === 'none') {
+            // logout - make cookie expire in 4 seconds
+            res.setHeader('Set-Cookie', serialize('auth_token', 'none', { expires: new Date(Date.now() + 4 * 1000), httpOnly: true, path: '/' }))
+        } else if(auth_token) res.setHeader('Set-Cookie', serialize('auth_token', user_email+":"+auth_token, { httpOnly: true, path: '/' }));
         res.json(result);
     }
   }

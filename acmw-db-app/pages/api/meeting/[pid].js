@@ -165,7 +165,8 @@ export default async (req, res) => {
         if(!res.statusCode || res.statusCode === 200 ) res.statusCode = 500;
         result.error = err;
     } finally {
-        result = {data: result, auth_token: auth_token};
+        if(auth_token) res.setHeader('Set-Cookie', serialize('auth_token', user_email+":"+auth_token, { httpOnly: true, path: '/' }));
+       // result = {data: result, auth_token: auth_token};
         res.json(result);
     }
   }
