@@ -47,7 +47,7 @@ const ScholarshipReqForm = (props) => {
               body: JSON.stringify(
                 { name_dot_num: studentLName.current,
                   student_id: studentId.current,
-                  req_type: reqType.current["label"],
+                  req_type: reqType.current,
                   req_desc: reqDesc.current
                 }
               )
@@ -77,7 +77,7 @@ const ScholarshipReqForm = (props) => {
                         lNameError={lNameError}
                         setlNameError={setlNameError}
                         selectStudent={student => selectStudent(student)} />
-                <SelectInput options={options.map((m) => ({label: m}))} label="Req Type" onChange={(type) => {reqType.current = type}}/>
+                <SelectInput options={options.map((m) => ({label: m}))} label="Req Type" onChange={(type) => {reqType.current = type["label"]}}/>
                 <TextField label="Req Description" onChange={(event) => {reqDesc.current = event.target.value}} />
                 <SubmitButton label="Apply" handleChange={onSubmit} />
                 <p className={styles.error}>{formError}</p>
