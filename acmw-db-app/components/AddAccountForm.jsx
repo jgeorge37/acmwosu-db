@@ -86,7 +86,6 @@ const AddAccountForm = (props) => {
         };
         await adaFetch('/api/account/create', requestOptionsAccount);
         setShowNotif(true)
-        // const result2 = await res2.json();
       } else {
         // account does exist, give notification
         setAccountExistsError("An account for " + osuEmail.toLowerCase() + " already exists!");

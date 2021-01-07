@@ -166,7 +166,6 @@ export default async (req, res) => {
         result.error = err;
     } finally {
         if(auth_token) res.setHeader('Set-Cookie', serialize('auth_token', user_email+":"+auth_token, { httpOnly: true, path: '/' }));
-       // result = {data: result, auth_token: auth_token};
         res.json(result);
     }
   }

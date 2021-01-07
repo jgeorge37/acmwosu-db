@@ -18,10 +18,8 @@ async function verify (email, password) {
 async function logout(email) {
     try {
         const data = await pgQuery(`UPDATE account SET auth_token=null AND auth_expire_time=null WHERE email='${email}';`);
-        console.log(data);
         return ['none', "removed auth_token in database for " + email];
     } catch(err) {
-        console.log("bad logout - " + err);
         return [null, err];
     }
 }
