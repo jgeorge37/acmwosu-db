@@ -76,6 +76,12 @@ async function resetPassword (email, password) {
     return "Changed password for " + email;
 }
 
+// GET /api/account/exists
+async function exists(email) {
+    const data = await pgQuery(`SELECT * FROM account WHERE email = '${email}';`);
+    return data;
+}
+
 // POST /api/account/create
 // Create an account with randomized initial password
 async function create (email, student_id, is_exec) {
@@ -155,6 +161,10 @@ export default async (req, res) => {
                     [auth_token, user_email] = await checkAuth(req, res, true);
                     if(!req.query.offset || !req.query.limit) throw("Missing limit and/or offset in query");
                     result = await list(req.query.limit, req.query.offset);
+                    break;
+                case 'exists':
+                    if(!req.query.email) throw("Missing email in query");
+                    result = await exists(req.query.email);
                     break;
                 default:
                     throw("Invalid pid");
