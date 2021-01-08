@@ -30,11 +30,10 @@
 
 .left {
   float: left;
-  width: 300px;
   background-color: #e6e1ec;
   display: flex;
   flex-direction: column;
-  flex: 0 0 20em;
+  flex: 0 0 15em;
   color: black;
 }
 
@@ -46,7 +45,6 @@
 }
 
 .left .section, .left .cur_section {
-  font-size: 1.2rem;
   padding: 0.8em 0.8em;
   border-bottom: 1px solid rgba(0,0,0,0.4);
   transition: 0.2s background-color ease-in-out, 0.2s color ease-in-out;
@@ -61,7 +59,7 @@
 }
 
 .right {
-  padding: 1em;
+  padding: 1rem;
   flex-grow: 1;
 }
 .suboptions {

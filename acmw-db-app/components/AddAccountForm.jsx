@@ -5,7 +5,7 @@ import StudentSearch from '../components/FormComponents/StudentSearch'
 import SelectInput from '../components/FormComponents/SelectInput'
 import SubmitNotification from './FormComponents/SubmitNotification'
 import {useState} from 'react'
-import {validateLetters, validateLastNameDotNum} from '../pages/api/utility';
+import {validateName, validateLastNameDotNum} from '../utility/utility';
 
 const AddAccountForm = (props) => {
     const [showNotif, setShowNotif] = useState(false);
@@ -20,17 +20,18 @@ const AddAccountForm = (props) => {
 
     const [fNameError, setfNameError] = useState("");
     const [lNameDotNumError, setlNameDotNumError] = useState("");
+    const [accountExistsError, setAccountExistsError] = useState("");
 
     const onSubmit = () => {
         // Angela: I took these from Sara's StudentSearch so we should probably make a Regex utilities file
-        const goodfname = validateLetters(fname)
+        const goodfname = validateName(fname)
         const goodlnamedotnum = validateLastNameDotNum(lnamedotnum)
 
         if (!fname || !lnamedotnum || !goodfname || !goodlnamedotnum ) {
             if (!fname) {
               setfNameError("Enter a first name")
             } else if (!goodfname) {
-              setfNameError("First name must only contain letters!")
+              setfNameError("First name must have at least one character!")
             } else {
               setfNameError("")
             }
@@ -81,17 +82,29 @@ const AddAccountForm = (props) => {
             id = result1[0]["id"];
           }
       }
+
       // creating a new account
-      const requestOptionsAccount = {
-        method: 'POST',
-        body: JSON.stringify( // makes copies to prevent synthetic event error
-          { email: osuEmail.toLowerCase(),
-            student_id: id,
-            is_exec: (accountType === "Exec") + "" }
-        )
-      };
-      const res2 = await fetch('/api/account/create', requestOptionsAccount);
-      // const result2 = await res2.json();
+      // first check that there is not an existing account
+      const url = '/api/account/exists?email=' + osuEmail.toLowerCase();
+      const res = await fetch(url, {method: 'GET'});
+      const results = await res.json();
+      if (results.rows.length == 0) {
+        // account does not exist, make one
+        const requestOptionsAccount = { 
+          method: 'POST',
+          body: JSON.stringify( // makes copies to prevent synthetic event error
+            { email: osuEmail.toLowerCase(),
+              student_id: id,
+              is_exec: (accountType === "Exec") + "" }
+          )
+        };
+        const res2 = await fetch('/api/account/create', requestOptionsAccount);
+        setShowNotif(true)
+        // const result2 = await res2.json();
+      } else {
+        // account does exist, give notification
+        setAccountExistsError("An account for " + osuEmail.toLowerCase() + " already exists!");
+      }
     }
 
     const selectStudent = (student) => {
@@ -140,6 +153,7 @@ const AddAccountForm = (props) => {
             </form>
             <div className={styles.buttons}>
                 <SubmitButton label="Apply" handleChange={onSubmit} />
+                <h3 className={styles.error}>{accountExistsError}</h3>
             </div>
         </div>
     )

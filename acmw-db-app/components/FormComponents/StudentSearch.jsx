@@ -3,7 +3,7 @@ import styles from '../../styles/components/FormComponents.module.css'
 import MultiSelectInput from './MultiSelectInput'
 import SelectInput from './SelectInput'
 import TextField from './TextField'
-import {validateLetters, validateLastNameDotNum} from '../../pages/api/utility';
+import {validateName, validateLastNameDotNum} from '../../utility/utility';
 
 const StudentSearch = (props) => {
     const subscribed = useRef(false);
@@ -69,13 +69,13 @@ const StudentSearch = (props) => {
     }
 
     const fNameSearch = (event) => {
-        if (validateLetters(event.target.value)) {
+        if (validateName(event.target.value)) {
             fName.current = event.target.value
             setfNameError("")
             getStudentInfo()
         } else if (event.target.value) {
             fName.current = ""
-            setfNameError("First name must only contain letters!")
+            setfNameError("First name must have at least one character!")
         } else {
             fName.current = ""
             if (lName.current.length > 0) {
@@ -91,7 +91,7 @@ const StudentSearch = (props) => {
 
     const lNameSearch = (event) => {
         isDotNum.current = validateLastNameDotNum(event.target.value)
-        if (validateLetters(event.target.value) || isDotNum.current) {
+        if (validateName(event.target.value) || isDotNum.current) {
             lName.current = event.target.value
             setlNameError("")
             getStudentInfo()
