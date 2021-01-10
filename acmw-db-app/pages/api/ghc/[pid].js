@@ -33,6 +33,17 @@ async function enterExternalScholarship(name_dot_num, id, type, description) {
   return "Successfully updated external scholarship requirement for " + name_dot_num;
 }
 
+// POST /api/ghc/create
+async function createGHC(id) {
+  try {
+    await pgQuery(`
+      INSERT ghc (student_id) VALUES (${id})`);
+  } catch(err) {
+    throw("Failed to create GHC row for student_id: " + id + "\nerror: " + err);
+  }
+  return "Successfully created GHC row for student_id: " + id;
+}
+
 export default async (req, res) => {
     const {
       query: { pid },
@@ -58,6 +69,9 @@ export default async (req, res) => {
             if (!body.req_type) throw("Missing req_type");
             if (!body.req_desc) throw("Missing req_desc");
             result = await enterExternalScholarship(body.name_dot_num, body.student_id, body.req_type, body.req_desc);
+          } else if (pid === "create") {
+            if (!body.student_id) throw("Missing student_id");
+            result = await createGHC(body.student_id);
           } else {
               throw("Invalid pid")
           }

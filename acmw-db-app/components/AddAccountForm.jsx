@@ -90,7 +90,7 @@ const AddAccountForm = (props) => {
       const results = await res.json();
       if (results.rows.length == 0) {
         // account does not exist, make one
-        const requestOptionsAccount = { 
+        const requestOptionsAccount = {
           method: 'POST',
           body: JSON.stringify( // makes copies to prevent synthetic event error
             { email: osuEmail.toLowerCase(),
@@ -99,6 +99,7 @@ const AddAccountForm = (props) => {
           )
         };
         const res2 = await fetch('/api/account/create', requestOptionsAccount);
+        const res3 = await fetch('/api/ghc/create', requestOptionsAccount);
         setShowNotif(true)
         // const result2 = await res2.json();
       } else {
