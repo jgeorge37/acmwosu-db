@@ -7,7 +7,6 @@ import TimeSelectionForm from './FormComponents/TimeSelectionForm'
 import {useEffect, useRef, useState} from 'react'
 import CompanySearchInput from './FormComponents/CompanySearchInput'
 import SubmitNotification from './FormComponents/SubmitNotification'
-import {adaFetch} from '../utility/fetch'
 
 const AddCompanyForm = (props) => {
 
@@ -57,7 +56,8 @@ const AddCompanyForm = (props) => {
               }
             )
         };
-        const result = await adaFetch('/api/meeting/create', requestOptionsMeeting)
+        const res = await fetch('/api/meeting/create', requestOptionsMeeting)
+        const result = res.json()
         if (subscribed.current) setCode(result["code"])
         if (subscribed.current) setShowNotif(true)
         subscribed.current = false;

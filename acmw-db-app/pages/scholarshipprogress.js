@@ -3,7 +3,6 @@ import styles from '../styles/Database.module.css'
 import progress_styles from '../styles/components/ScholarshipProgressBar.module.css'
 import {useState, useEffect} from 'react'
 import ScholarshipProgressBar from '../components/ScholarshipProgressBar'
-import {adaFetch} from '../utility/fetch'
 
 const ScholarshipProgress = () => {
 
@@ -48,7 +47,8 @@ const ScholarshipProgress = () => {
                 method: 'GET',
             };
             const api = '/api/ghc/check-external-scholarship?email=' + currentUserEmail;
-            const result = await adaFetch(api, requestOptions);
+            const res = await fetch(api, requestOptions);
+            const result = res.json()
             if (typeof result === 'boolean') { // so error message doesn't count
                 if(subscribed.current) setExternalScholarship(result);
             }

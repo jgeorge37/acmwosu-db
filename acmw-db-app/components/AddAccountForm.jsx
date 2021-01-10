@@ -4,9 +4,8 @@ import TextField from './FormComponents/TextField'
 import StudentSearch from '../components/FormComponents/StudentSearch'
 import SelectInput from '../components/FormComponents/SelectInput'
 import SubmitNotification from './FormComponents/SubmitNotification'
-import {useState} from 'react'
+import {useState, useRef} from 'react'
 import {validateName, validateLastNameDotNum} from '../utility/utility';
-import {adaFetch} from '../utility/fetch';
 
 const AddAccountForm = (props) => {
     const [showNotif, setShowNotif] = useState(false);
@@ -22,6 +21,9 @@ const AddAccountForm = (props) => {
     const [fNameError, setfNameError] = useState("");
     const [lNameDotNumError, setlNameDotNumError] = useState("");
     const [accountExistsError, setAccountExistsError] = useState("");
+    const subscribed = useRef(false);
+
+    useEffect(() => {return () => {subscribed.current = false}}, []);
 
     const onSubmit = () => {
         // Angela: I took these from Sara's StudentSearch so we should probably make a Regex utilities file
@@ -51,6 +53,7 @@ const AddAccountForm = (props) => {
     }
 
     const create = async () => {
+      subscribed.current = true;
       let id = studentID; // for async protection
       if (!id) { // creating a new student
           let lname = lnamedotnum.split(/\./)[0];
@@ -66,14 +69,16 @@ const AddAccountForm = (props) => {
               }
             )
           };
-          const result1 = await adaFetch('/api/student/create', requestOptionsStudent);
+          const result = await fetch('/api/student/create', requestOptionsStudent);
+          const result1 = result.json();
           id = result1[0]["id"];
       }
 
       // creating a new account
       // first check that there is not an existing account
       const url = '/api/account/exists?email=' + osuEmail.toLowerCase();
-      const results = await adaFetch(url, {method: 'GET'});
+      const res = await fetch(url, {method: 'GET'});
+      const results = res.json();
       if (results.rows.length == 0) {
         // account does not exist, make one
         const requestOptionsAccount = { 
@@ -84,11 +89,13 @@ const AddAccountForm = (props) => {
               is_exec: (accountType === "Exec") + "" }
           )
         };
-        await adaFetch('/api/account/create', requestOptionsAccount);
-        setShowNotif(true)
+        await fetch('/api/account/create', requestOptionsAccount);
+        if(subscribed.current) setShowNotif(true)
+        subscribed.current = false;
       } else {
         // account does exist, give notification
-        setAccountExistsError("An account for " + osuEmail.toLowerCase() + " already exists!");
+        if(subscribed.current) setAccountExistsError("An account for " + osuEmail.toLowerCase() + " already exists!");
+        subscribed.current = false;
       }
     }
 

@@ -2,7 +2,6 @@ import Head from 'next/head';
 import styles from '../styles/SignIn.module.css';
 import {validateEmail} from '../utility/utility';
 import React, { useEffect, useState, useRef } from 'react';
-import { adaFetch } from '../utility/fetch';
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -29,9 +28,8 @@ const SignIn = () => {
         method: 'POST',
         body: JSON.stringify({ email: email, password: password })
       };
-     // const res = await fetch('/api/account/verify', requestOptions);
-      //const result = await res.json();
-      const result = await adaFetch('/api/account/verify', requestOptions);
+      const res = await fetch('/api/account/verify', requestOptions);
+      const result = await res.json();
 
       if(!subscribed.current) return;
 

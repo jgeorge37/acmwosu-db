@@ -5,11 +5,4 @@ async function clientCheckAuth() {
     return result;
 }
 
-// Any other request to our API
-async function adaFetch(url, requestOptions) {
-   const res = await fetch(url, requestOptions);
-   const result = res.json();
-   return result;
-}
-
-export {clientCheckAuth, adaFetch}
+export {clientCheckAuth}

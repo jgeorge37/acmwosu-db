@@ -1,11 +1,10 @@
 import {useState, useRef, useEffect} from 'react'
 import styles from '../../styles/components/FormComponents.module.css'
 import SelectInput from './SelectInput'
-import {adaFetch} from '../../utility/fetch'
 
 const getCompanyInfo = async (input) => {
     const url = '/api/company/byString?input=' + input
-    const result = await adaFetch(url, {
+    const res = await fetch(url, {
         method: 'GET', 
         mode: 'cors', 
         cache: 'no-cache', 
@@ -16,6 +15,7 @@ const getCompanyInfo = async (input) => {
         redirect: 'follow', 
         referrerPolicy: 'no-referrer', 
     })
+    const result = await res.json();
     return result;
 }
 

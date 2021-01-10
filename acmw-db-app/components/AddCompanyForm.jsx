@@ -3,7 +3,6 @@ import SubmitButton from './FormComponents/SubmitButton'
 import TextField from './FormComponents/TextField'
 import {useState, useRef, useEffect} from 'react';
 import {validateGeneralEmail} from '../utility/utility'
-import {adaFetch} from '../utility/fetch';
 
 const AddCompanyForm = (props) => {
     const [company, setCompany] = useState("");
@@ -29,7 +28,8 @@ const AddCompanyForm = (props) => {
                 mailing_address: address
             })
         };
-        adaFetch('/api/company/create', requestOptions)
+        const res = await fetch('/api/company/create', requestOptions)
+        res.json()
             .then((data) => {
                 if(!subscribed.current) return;
                 if(data.error) {  // inform of duplicate company name

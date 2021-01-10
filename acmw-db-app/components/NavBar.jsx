@@ -1,6 +1,5 @@
 import styles from '../styles/components/NavBar.module.css';
 import React, {Fragment, useEffect, useState, useRef} from 'react';
-import {adaFetch} from '../utility/fetch';
 
 const NavBar = (props) => {
   const [showAlert, setShowAlert] = useState(false);
@@ -54,7 +53,8 @@ const NavBar = (props) => {
           method: 'POST',
           body: JSON.stringify({})
         };
-        adaFetch('/api/account/logout', requestOptions).then(() => {
+        const res = await fetch('/api/account/logout', requestOptions);
+        res.json().then(() => {
           if(!subscribed.current) return;
           localStorage.removeItem('email');
           props.setUser(null);
