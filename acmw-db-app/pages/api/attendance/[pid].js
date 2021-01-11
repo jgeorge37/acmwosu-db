@@ -26,7 +26,13 @@ async function record (event_code, f_name, l_name_dot_num, year_level) {
        curr_student_id = await createStudent(f_name, l_name, l_name_dot_num, "", year_level, "");
    }
 
-    console.log(curr_student_id);
+    //school_level
+    // need to update student year level if it has changed, check for change isn't necessary
+    await pgQuery(`
+    UPDATE student SET
+        school_level = '${year_level}'
+    WHERE name_dot_num = '${l_name_dot_num.toLowerCase()}';
+    `);
     // assuming meeting id is present for now 
     const curr_meeting_id = await pgQuery(`SELECT id FROM meeting WHERE code = '${event_code}'`);
     // so not adding it to meeting table, just straight to meeting student
