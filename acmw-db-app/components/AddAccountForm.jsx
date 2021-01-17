@@ -26,7 +26,6 @@ const AddAccountForm = (props) => {
     useEffect(() => {return () => {subscribed.current = false}}, []);
 
     const onSubmit = () => {
-        // Angela: I took these from Sara's StudentSearch so we should probably make a Regex utilities file
         const goodfname = validateName(fname)
         const goodlnamedotnum = validateLastNameDotNum(lnamedotnum)
 
@@ -60,8 +59,8 @@ const AddAccountForm = (props) => {
           const requestOptionsStudent = {
             method: 'POST',
             body: JSON.stringify(
-              { fname: fname.charAt(0).toUpperCase() + fname.slice(1).toLowerCase(), //capitalization convention
-                lname: lname.charAt(0).toUpperCase() + lname.slice(1).toLowerCase(), //capitalization convention
+              { fname: fname,
+                lname: lname,
                 name_dot_num: lnamedotnum.toLowerCase(),
                 personal_email: "", //these are blank for now
                 school_level: "",
@@ -69,9 +68,21 @@ const AddAccountForm = (props) => {
               }
             )
           };
-          const result = await fetch('/api/student/create', requestOptionsStudent);
-          const result1 = result.json();
-          id = result1[0]["id"];
+          const res1 = await fetch('/api/student/create', requestOptionsStudent);
+          const result1 = await res1.json(); //returns the id
+          if (result1.error) {
+            if (result1.error.routine === "_bt_check_unique") {
+              // uniqueness error / duplicate student
+              const url = '/api/student/search?fname=' + fname + '&name_dot_num=' + lnamedotnum;
+              const resp = await fetch(url, {method: 'GET'});
+              const response = await resp.json();
+              id = response[0]["id"];
+            } else {
+              throw("Schrödinger's student (or our API doesn't work): " + result1.error.detail);
+            }
+          } else {
+            id = result1[0]["id"];
+          }
       }
 
       // creating a new account
@@ -124,7 +135,7 @@ const AddAccountForm = (props) => {
 
     return (
         <div className={styles.popup_inner}>
-            <SubmitNotification showNotif={showNotif} setShowNotif={setShowNotif}/> 
+            <SubmitNotification showNotif={showNotif} setShowNotif={setShowNotif}/>
             <form className={styles.form}>
                 <h2>Create Account</h2>
                 <div>

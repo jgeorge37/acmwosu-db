@@ -6,14 +6,6 @@ import Head from 'next/head'
 
 const AttendanceForm = () => {
 
-    const [eventCode, setEventCode] = useState("")
-    const [firstName, setFirstName] = useState("")
-    const [lastName, setLastName] = useState("")
-    const [status, setStatus] = useState("");
-
-    const [year, setYear] = useState({});
-    const [listServ, setListServe] = useState({});
-
     const yearOptions = [
       {label: "First", value: 1},
       {label: "Second", value: 2},
@@ -28,6 +20,13 @@ const AttendanceForm = () => {
       {label: "Nope, thank you", value: false}
     ];
 
+    const [eventCode, setEventCode] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [year, setYear] = useState(yearOptions[0]);
+    const [listServ, setListServe] = useState(listServOptions[0]);
+
+    
     return (
         <div className={styles.container}>
             <Head>
@@ -69,8 +68,7 @@ const AttendanceForm = () => {
                         eventCode={eventCode}
                         firstName={firstName}
                         lastName={lastName}
-                        onSubmit={setStatus}
-                        status={status}
+                        year={year}
                     />
                 </span>
             </div>
@@ -143,36 +141,35 @@ const SubmitButton = (props) => {
 
   const [message, setMessage] = useState("");
 
-    // If event code is valid, add a database entry, and display "Submitted successfully" message
-    // Else if the event code is not valid, display "Invalid event code" message
-
     const validateSubmitButton = async () => {
-
-    // can change the 007 to actual event codes later
-    // This would be changed to pull from a database of event codes and see if there is a match (maybe?)
-    // Sara: Actually this form might be slightly different depending on how the website is set up.
-    // If ACM-W users are able to login to their personal accounts, then we would just need the event code.
-    // This is just going off of past attendance forms.
-    let firstnameCheck = validateName(props.firstName)
-    let lastnameCheck = validateLastNameDotNum(props.lastName);
-    if ((props.eventCode == "007") && firstnameCheck && lastnameCheck) {
-        props.onSubmit("Success");
-        //Successful insert submit page here
-        setMessage("Successfully submitted your attendance.")
-    } else {
-      props.onSubmit("Failure");
-      if (!firstnameCheck && !lastnameCheck) {
-        setMessage("Please enter your first and last name.#")
-      } else if (props.eventCode != "007") {
-        // can change the 007 to actual event codes later
-        setMessage("Please enter valid event code.")
-      } else if (!lastnameCheck) {
-        setMessage("Please enter your last name.#")
-      } else if (!firstnameCheck) {
-        setMessage("Please enter your first name.");
+     // let firstnameCheck = validateName(props.firstName)
+     // let lastnameCheck = validateLastNameDotNum(props.lastName);
+      if(validateName(props.firstName) && validateLastNameDotNum(props.lastName)) {
+        const res = await recordAttendance();
+        if(res.ok) {
+          setMessage("Success");
+        } else {
+          setMessage("Failure");  // this could be the result of an invalid event code
+        }
+      } else {
+        setMessage("Enter a valid first name and last name dot number.");
       }
-    }
   } 
+
+  const recordAttendance = async () => {
+    const requestAttendanceRecord = {
+      method: 'POST',
+      body: JSON.stringify(
+        { event_code: props.eventCode,
+          f_name: props.firstName,
+          l_name_dot_num: props.lastName, //lastName is last name . num
+          year_level: props.year.label // this will push the string ex:"Fourth"
+        }
+      )
+    };
+    const res = await fetch('/api/attendance/record', requestAttendanceRecord);
+    return res;
+  }
 
   return (
     <div>

@@ -25,11 +25,12 @@ export default function Home() {
             <h3>Event attendance form &rarr;</h3>
             <p>Record your attendance at one of our meetings</p>
           </a>
-
+          {/*
           <a href={user ? "/scholarshipprogress" : "/signin?to=ghc"} className={styles.card}>
             <h3>GHC scholarship progress &rarr;</h3>
             <p>For GHC scholarship recipients: view your progress on the scholarship requirements</p>
           </a>
+          */}
 
           { !(user && !JSON.parse(user).is_exec) &&  // do not show to gh-only users since they can't access this anyway
             <a href={user && JSON.parse(user).is_exec ? "/execdashboard" : "/signin?to=exec"} className={styles.card}>

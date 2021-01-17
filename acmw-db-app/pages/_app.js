@@ -54,7 +54,7 @@ function MyApp({ Component, pageProps }) {
   return ( 
     <div>
       <Head>
-        <link rel="icon" href="/logo.png" />
+        <link rel="icon" href="/logorainbow.png" />
       </Head>
       <div className="app-container">
         <div className="navbar">
