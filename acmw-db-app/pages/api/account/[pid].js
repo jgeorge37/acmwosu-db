@@ -20,7 +20,7 @@ async function generateToken (email) {
     // save token and set expiration time 2 days in the future
     const data = await pgQuery(`
         UPDATE account
-        SET reset_token = '${token}', token_expire_time = current_timestamp + INTERVAL '1 hour'
+        SET reset_token = '${token}', reset_expire_time = current_timestamp + INTERVAL '1 hour'
         WHERE email = '${email}';
     `);
 
@@ -33,7 +33,7 @@ async function checkReset (token) {
     // Get the email address associated with a token if token is not expired
     const validResetWindow = await pgQuery(`
         SELECT email FROM account
-        WHERE current_timestamp <= token_expire_time AND reset_token = '${token}';
+        WHERE current_timestamp <= reset_expire_time AND reset_token = '${token}';
     `);
 
     return validResetWindow.rows;
@@ -47,7 +47,7 @@ async function resetPassword (email, password) {
         await pgQuery(`
             UPDATE account SET
                 reset_token = null,
-                token_expire_time = null,
+                reset_expire_time = null,
                 password = crypt('${password}', gen_salt('md5'))
             WHERE email = '${email}';
         `);
@@ -55,6 +55,12 @@ async function resetPassword (email, password) {
         throw("Could not update password: " + err);
     }
     return "Changed password for " + email;
+}
+
+// GET /api/account/exists
+async function exists(email) {
+    const data = await pgQuery(`SELECT * FROM account WHERE email = '${email}';`);
+    return data;
 }
 
 // POST /api/account/create
@@ -126,6 +132,10 @@ export default async (req, res) => {
                 case 'list':
                     if(!req.query.offset || !req.query.limit) throw("Missing limit and/or offset in query");
                     result = await list(req.query.limit, req.query.offset);
+                    break;
+                case 'exists':
+                    if(!req.query.email) throw("Missing email in query");
+                    result = await exists(req.query.email);
                     break;
                 default:
                     throw("Invalid pid");
