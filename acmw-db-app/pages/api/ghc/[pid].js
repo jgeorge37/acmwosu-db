@@ -61,7 +61,8 @@ export default async (req, res) => {
             }
         } else if (req.method === 'POST') {
           const body = typeof(req.body) === 'object' ? req.body : JSON.parse(req.body);
-          if (pid === 'enter-external-scholarship') {
+          if (pid === 'enter-external-scholarship') {  // requires exec permission
+            [auth_token, user_email] = await checkAuth(req, res, true);
             if (!body.name_dot_num) throw("Missing name_dot_num");
             if (!body.student_id) throw("Missing student_id");
             if (!body.req_type) throw("Missing req_type");
