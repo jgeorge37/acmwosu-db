@@ -1,10 +1,10 @@
 import styles from '../styles/components/Form.module.css'
 import SubmitButton from './FormComponents/SubmitButton'
 import TextField from './FormComponents/TextField'
-import StudentSearch from '../components/FormComponents/StudentSearch'
-import SelectInput from '../components/FormComponents/SelectInput'
+import StudentSearch from './FormComponents/StudentSearch'
+import SelectInput from './FormComponents/SelectInput'
 import SubmitNotification from './FormComponents/SubmitNotification'
-import {useState, useRef} from 'react'
+import React, {useState, useRef, useEffect} from 'react'
 import {validateName, validateLastNameDotNum} from '../utility/utility';
 
 const AddAccountForm = (props) => {

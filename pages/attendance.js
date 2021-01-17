@@ -1,4 +1,5 @@
 import AttendanceForm from '../components/AttendanceForm'
+import React from 'react'
 
 const Attendance = () => {
     return (

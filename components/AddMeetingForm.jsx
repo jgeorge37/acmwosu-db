@@ -7,6 +7,7 @@ import TimeSelectionForm from './FormComponents/TimeSelectionForm'
 import {useEffect, useRef, useState} from 'react'
 import CompanySearchInput from './FormComponents/CompanySearchInput'
 import SubmitNotification from './FormComponents/SubmitNotification'
+import React from 'react'
 
 const AddCompanyForm = (props) => {
 

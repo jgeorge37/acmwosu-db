@@ -3,6 +3,7 @@ import styles from '../styles/SignIn.module.css';
 import React, { useState } from 'react';
 import {validateName, validateLastNameDotNum} from '../utility/utility';
 import Head from 'next/head'
+import React from 'react'
 
 const AttendanceForm = () => {
 

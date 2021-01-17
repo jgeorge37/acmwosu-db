@@ -13,15 +13,15 @@
         "react": "16.13.1",
         "react-dom": "16.13.1"
     },
+    "private": true,
     "scripts": {
-        "dev": "npm run dev --prefix acmw-db-app",
-        "build": "npm run build --prefix acmw-db-app",
+        "dev": "next dev",
+        "build": "next build",
         "test": "jest",
-        "start": "npm run start --prefix acmw-db-app",
-        "heroku-start": "npm run heroku-start --prefix acmw-db-app",
+        "start": "next start",
+        "heroku-start": "next start -p $PORT",
         "migrate": "node migrations/migrate.js"
     },
-    "type": "module",
     "repository": {
         "type": "git",
         "url": "git://github.com/jgeorge37/acmwosu-db.git"

@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import styles from '../styles/Database.module.css'
 import progress_styles from '../styles/components/ScholarshipProgressBar.module.css'
-import {useState, useEffect} from 'react'
+import React, {useState, useEffect} from 'react'
 import ScholarshipProgressBar from '../components/ScholarshipProgressBar'
 
 const ScholarshipProgress = () => {

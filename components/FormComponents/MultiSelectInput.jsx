@@ -1,4 +1,5 @@
 import styles from '../../styles/components/FormComponents.module.css'
+import React from 'react'
 
 const MultiSelectInput = (props) => {
 

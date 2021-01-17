@@ -4,6 +4,7 @@ import MultiSelectInput from './MultiSelectInput'
 import SelectInput from './SelectInput'
 import TextField from './TextField'
 import {validateName, validateLastNameDotNum} from '../../utility/utility';
+import React from 'react'
 
 const StudentSearch = (props) => {
     const subscribed = useRef(false);

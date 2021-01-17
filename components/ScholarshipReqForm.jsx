@@ -5,6 +5,7 @@ import StudentSearch from './FormComponents/StudentSearch'
 import styles from '../styles/components/Form.module.css'
 import SubmitNotification from './FormComponents/SubmitNotification'
 import {useState, useRef, useEffect} from 'react'
+import React from 'react'
 
 const ScholarshipReqForm = (props) => {
     const [showNotif, setShowNotif] = useState(false);

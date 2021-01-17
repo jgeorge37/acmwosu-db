@@ -1,4 +1,5 @@
 import styles from '../styles/components/ScholarshipProgressBar.module.css'
+import React from 'react'
 
 const ScholarshipProgressBar = (props) => {
         // completed % is passed in from scholarshipprogress.js

@@ -3,6 +3,7 @@ import TextField from './FormComponents/TextField'
 import SelectInput from './FormComponents/SelectInput'
 import MultiSelectInput from './FormComponents/MultiSelectInput'
 import styles from '../styles/components/Form.module.css'
+import React from 'react'
 
 const SponsorshipForm = (props) => {
 

@@ -1,5 +1,6 @@
 import styles from '../styles/components/ManageAccounts.module.css';
 import {useEffect, useRef, useState} from 'react';
+import React from 'react'
 
 const LIMIT = 10;
 

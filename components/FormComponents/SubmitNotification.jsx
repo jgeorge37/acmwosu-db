@@ -1,5 +1,6 @@
 import styles from '../../styles/components/NavBar.module.css';
 import {Fragment, useEffect, useState} from 'react';
+import React from 'react'
 
 
 const SubmitNotification = (props) => {
