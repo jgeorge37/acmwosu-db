@@ -21,23 +21,23 @@ async function createStudent(fname, lname, name_dot_num, personal_email, school_
 async function record (event_code, f_name, l_name_dot_num, year_level) {
     let curr_student_id = await pgQuery(`SELECT id FROM student WHERE name_dot_num = '${l_name_dot_num.toLowerCase()}'`);
     //if the student doesn't exist 
-   if(!curr_student_id.rowCount){
-       let l_name = l_name_dot_num.split(/\./)[0];
-       curr_student_id = await createStudent(f_name, l_name, l_name_dot_num, "", year_level, "");
-   }
+    if(!curr_student_id.rowCount){
+        let l_name = l_name_dot_num.split(/\./)[0];
+        curr_student_id = await createStudent(f_name, l_name, l_name_dot_num.toLowerCase(), "", year_level, "");
+    }
 
     //school_level
-    // need to update student year level if it has changed, check for change isn't necessary
     await pgQuery(`
-    UPDATE student SET
-        school_level = '${year_level}'
-    WHERE name_dot_num = '${l_name_dot_num.toLowerCase()}';
+        UPDATE student SET
+            school_level = '${year_level}'
+        WHERE name_dot_num = '${l_name_dot_num.toLowerCase()}';
     `);
-    // assuming meeting id is present for now 
-    const curr_meeting_id = await pgQuery(`SELECT id FROM meeting WHERE code = '${event_code}'`);
-    // so not adding it to meeting table, just straight to meeting student
-    const data = await pgQuery(`INSERT INTO meeting_student (meeting_id, student_id)
-        VALUES ('${curr_meeting_id.rows[0].id}', '${curr_student_id.rows[0].id}')`);
+
+    const data = await pgQuery(`
+        INSERT INTO meeting_student (meeting_id, student_id)
+        SELECT
+        m.id, '${curr_student_id.rows[0].id}' FROM meeting m WHERE m.code = '${event_code}'
+    ;`);
 
     return data;
 }
