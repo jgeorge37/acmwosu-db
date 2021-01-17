@@ -1,5 +1,6 @@
 import pgQuery from '../../../postgres/pg-query.js';
 import {checkAuth} from '../auth/[pid]';
+import {serialize} from 'cookie';
 
 // GET /api/company/byString
 // Given a string check for potential matching companies

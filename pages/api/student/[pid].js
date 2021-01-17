@@ -1,6 +1,7 @@
 import pgQuery from '../../../postgres/pg-query.js';
 import {currentAcademicYear} from '../../../utility/utility';
 import {checkAuth} from '../auth/[pid]';
+import {serialize} from 'cookie';
 
 // GET /api/student/meeting-attendees
 async function getMeetingAttendees(meeting_id) {

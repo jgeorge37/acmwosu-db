@@ -1,5 +1,6 @@
 import pgQuery from '../../../postgres/pg-query.js';
 import { checkAuth } from '../auth/[pid].js';
+import {serialize} from 'cookie';
 
 // GET /api/ghc/check-external-scholarship
 async function checkExternalScholarship(email) {

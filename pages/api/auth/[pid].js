@@ -31,12 +31,24 @@ function readCookie(req) {
     return null;
 }
 
+function readHeaders(req) {
+    if(req.headers && req.headers.authorization && req.headers.authorization.indexOf("Bearer ") === 0) {
+        let authHeader = req.headers.authorization;
+        authHeader = decodeURIComponent(authHeader.split(" ")[1]);
+        const email = authHeader.split(":")[0];
+        const tok = authHeader.split(":")[1];
+        return {email: email, tok: tok}
+    }
+    return null;
+}
+
 // Throws error if unauthorized or forbidden. If authorized/allowed, check for token refresh.
 async function checkAuth(req, res, exec_only) {
-    const authInfo = readCookie(req);
+    const authInfo = readHeaders(req) || readCookie(req); // check headers if user is using Postman or similar, cookies if browser
+    //if(authInfo === null) authInfo = readCookie(req);  // check cookies if user is using browser
     if(authInfo === null) {
         res.statusCode = 401;
-        throw("Missing or bad auth header");
+        throw("Missing or bad cookie or auth header");
     }
     // get authorization level
     const data = await getAuth(req);
@@ -57,7 +69,7 @@ async function checkAuth(req, res, exec_only) {
 // req = request
 async function getAuth(req) {
     const result = {is_exec: null, auth_token: null};
-    const authInfo = readCookie(req);
+    const authInfo = readHeaders(req) || readCookie(req);
     if(authInfo === null) return result;
 
     const tok_data = await pgQuery(`SELECT is_exec FROM account WHERE email='${authInfo.email}' AND auth_token='${authInfo.tok}';`);
