@@ -68,8 +68,15 @@ async function exists(email) {
 async function create (email, student_id, is_exec) {
     const randomPassword = Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2);
     const data = await pgQuery(`INSERT INTO account (email, password, student_id, is_exec)
-        VALUES ('${email}', crypt('${randomPassword}', gen_salt('md5')), '${student_id}', ${is_exec});`); 
+        VALUES ('${email}', crypt('${randomPassword}', gen_salt('md5')), '${student_id}', ${is_exec});`);
     return data;
+}
+
+// POST /api/account/delete
+// delete an account given email
+async function delete_(email) {
+    await pgQuery(`DELETE FROM account WHERE email=${email};`);
+    return "Successfully deleted account with email: " + email;
 }
 
 // GET /api/account/list
@@ -119,6 +126,10 @@ export default async (req, res) => {
                 case 'reset-pw':
                     if(!body.password || !body.email) throw ("Missing email and/or new password");
                     result = await resetPassword(body.email, body.password);
+                    break;
+                case 'delete':
+                    if(!body.email) throw ("Missing email");
+                    result = await delete_(body.email);
                     break;
                 default:
                     throw("Invalid pid");
