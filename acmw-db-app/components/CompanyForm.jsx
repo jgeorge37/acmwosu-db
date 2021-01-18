@@ -11,14 +11,14 @@ const CompanyForm = (props) => {
         console.log("Hello!")
     }
 
-    const handleMultiSelect = (event) => {
-        console.log(event.target.value)
+    const handleMultiSelect = (selection) => {
+        console.log(selection)
     }
 
     const tempOptions = [
         {label: "Company Name A-Z"},
-        {label: "Contact Name A-Z"}, 
-        {label: "Number of Contacts"}, 
+        {label: "Contact Name A-Z"},
+        {label: "Number of Contacts"},
         {label: "Date of Sponsorship Packet"}
     ];
     const temp2Options = ["Company Name", "Contact Name", "Contact Email", "Date Sent"]
@@ -38,7 +38,7 @@ const CompanyForm = (props) => {
                     <div>
                         <h2>Search By: </h2>
                         <div className={styles.one}>
-                            <CompanySearchInput handleMultiSelect={handleMultiSelect}/>
+                            <CompanySearchInput onChange={handleMultiSelect}/>
                         </div>
                         <div className={styles.two}>
                             <TextField label="Contact Name"/>
