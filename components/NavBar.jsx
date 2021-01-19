@@ -56,7 +56,6 @@ const NavBar = (props) => {
         fetch('/api/account/logout', requestOptions)
         .then((res) => {
           if(!res.ok || !subscribed.current) return;
-          localStorage.removeItem('email');
           props.setUser(null);
           setShowAlert(true);
           subscribed.current = false;

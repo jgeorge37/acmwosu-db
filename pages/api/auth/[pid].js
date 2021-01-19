@@ -68,7 +68,7 @@ async function checkAuth(req, res, exec_only) {
 // Get the authorization level and auth token of an account.
 // req = request
 async function getAuth(req) {
-    const result = {is_exec: null, auth_token: null};
+    const result = {is_exec: null, auth_token: null, email: null};
     const authInfo = readHeaders(req) || readCookie(req);
     if(authInfo === null) return result;
 
@@ -76,6 +76,7 @@ async function getAuth(req) {
     if(tok_data.rowCount > 0) {
         result.is_exec = tok_data.rows[0].is_exec;
         result.auth_token = (await handleToken(authInfo.email, authInfo.tok));
+        result.email = authInfo.email;
     }
     return result;
 }

@@ -37,7 +37,6 @@ const SignIn = () => {
         setStatus("Failure");
         setMessage("Incorrect email or password.");
       } else {
-        localStorage.setItem("email", result[0].email);
         setStatus("Success");
         redirect(result[0]);
       }
