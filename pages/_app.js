@@ -26,8 +26,7 @@ function MyApp({ Component, pageProps }) {
     clientCheckAuth().then((result) => {
       if(!subscribed.current) return;
 
-      const storedEmail = localStorage.getItem('email');
-      const userCopy = result.is_exec === null ? null : {is_exec: result.is_exec, email: storedEmail};
+      const userCopy = result.is_exec === null ? null : {is_exec: result.is_exec, email: result.email};
       setUser(userCopy);
 
       const pageName = window.location.pathname.substring(1);
