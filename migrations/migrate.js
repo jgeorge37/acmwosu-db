@@ -1,6 +1,6 @@
-import dotenv from 'dotenv'
-import pkg from "postgres-migrations";
-import pg from "pg";
+const dotenv = require('dotenv');
+const pkg = require("postgres-migrations");
+const pg = require("pg");
 const  {migrate} = pkg;
 
 dotenv.config({ silent: process.env.NODE_ENV !== 'local' })

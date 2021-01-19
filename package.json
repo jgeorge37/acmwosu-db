@@ -4,23 +4,24 @@
     "description": "Interface for Exec Board members to perform CRUD operations on contact database.",
     "version": "0.0.1",
     "dependencies": {
+        "@sendgrid/mail": "^7.2.4",
+        "cookie": "^0.4.1",
         "dotenv": "^8.2.0",
+        "next": "9.5.4",
         "pg": "^8.3.0",
         "postgres-migrations": "^4.0.3",
-        "next": "9.5.4",
         "react": "16.13.1",
-        "react-dom": "16.13.1",
-        "@sendgrid/mail": "^7.2.4"
+        "react-dom": "16.13.1"
     },
+    "private": true,
     "scripts": {
-        "dev": "npm run dev --prefix acmw-db-app",
-        "build": "npm run build --prefix acmw-db-app",
+        "dev": "next dev",
+        "build": "next build",
         "test": "jest",
-        "start": "npm run start --prefix acmw-db-app",
-        "heroku-start": "npm run heroku-start --prefix acmw-db-app",
+        "start": "next start",
+        "heroku-start": "next start -p $PORT",
         "migrate": "node migrations/migrate.js"
     },
-    "type": "module",
     "repository": {
         "type": "git",
         "url": "git://github.com/jgeorge37/acmwosu-db.git"
