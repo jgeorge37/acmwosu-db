@@ -62,7 +62,7 @@ function MyApp({ Component, pageProps }) {
         <div className="component">
           { blocked === null && loadingWheel }
           { blocked === false &&
-            <Component {...pageProps} setUser={setUser} />
+            <Component {...pageProps} />
           }
           { blocked === true &&
             <div className="unauth">You are not authorized to access this page. 
