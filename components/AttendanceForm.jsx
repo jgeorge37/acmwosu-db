@@ -24,7 +24,7 @@ const AttendanceForm = () => {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [year, setYear] = useState(yearOptions[0]);
-    const [listServ, setListServe] = useState(listServOptions[0]);
+    const [listServ, setListServ] = useState(listServOptions[0]);
     const [success, setSuccess] = useState(false);
 
     
@@ -64,8 +64,8 @@ const AttendanceForm = () => {
                       <SelectInput options={yearOptions} onChange={setYear}/>
                   </div>
                   <div>
-                      <h2>Would you like to be included in our list-serv?</h2>
-                      <SelectInput options={listServOptions} onChange={setListServe}/>
+                      <h2>Would you like to be added to our mailing list (weekly newsletter)?</h2>
+                      <SelectInput options={listServOptions} onChange={setListServ}/>
                   </div>
                   <span>
                       <SubmitButton
@@ -74,6 +74,7 @@ const AttendanceForm = () => {
                           firstName={firstName}
                           lastName={lastName}
                           year={year}
+                          listServ={listServ}
                           setSuccess={setSuccess}
                       />
                   </span>
@@ -167,13 +168,15 @@ const SubmitButton = (props) => {
   } 
 
   const recordAttendance = async () => {
+    console.log(props.listServ)
     const requestAttendanceRecord = {
       method: 'POST',
       body: JSON.stringify(
         { event_code: props.eventCode,
           f_name: props.firstName,
           l_name_dot_num: props.lastName, //lastName is last name . num
-          year_level: props.year.label // this will push the string ex:"Fourth"
+          year_level: props.year.label, // this will push the string ex:"Fourth"
+          list_serv: props.listServ.value  // true or false
         }
       )
     };
