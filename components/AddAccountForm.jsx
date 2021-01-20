@@ -103,6 +103,7 @@ const AddAccountForm = (props) => {
           )
         };
         await fetch('/api/account/create', requestOptionsAccount);
+        await fetch('/api/ghc/create', requestOptionsAccount);
         if(subscribed.current) setShowNotif(true)
         subscribed.current = false;
       } else {
