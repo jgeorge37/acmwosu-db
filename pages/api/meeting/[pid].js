@@ -51,7 +51,7 @@ async function meetingList() {
 // Get the attendance for a particular meeting
 async function meetingAttendance(meetingId) {
     const data = await pgQuery(`
-        SELECT s.fname, s.lname
+        SELECT s.fname, s.lname, s.name_dot_num, ms.add_to_newsletter
         FROM student s INNER JOIN meeting_student ms ON s.id = ms.student_id
         WHERE ms.meeting_id = '${meetingId}'`)
     return data.rows;

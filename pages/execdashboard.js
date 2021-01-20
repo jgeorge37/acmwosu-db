@@ -13,12 +13,6 @@ import SelectMeeting from '../components/SelectMeeting'
 import ScholarshipReqForm from '../components/ScholarshipReqForm'
 import AddMeetingForm from '../components/AddMeetingForm'
 
-
-/*
-    Sara: I think this page could be used for any updates/modifications exec board members would
-    need to do regarding member data. Maybe have a link from this page to the database pages??
-*/
-
 const ExecDashboard = () => {
     const [rightPanel, setRightPanel] = useState("")
     const subscribed = useRef(false)
@@ -56,16 +50,9 @@ const ExecDashboard = () => {
             const url = '/api/meeting/meeting-attendance?meetingId=' + meeting.value
             const response = await fetch(url, {method: 'GET'})
             response.json().then((data) => {
-                const tempList = []
-                for (var i in data) {
-                    tempList.push(data[i]["fname"] + " " + data[i]["lname"])
-                }
-                if(subscribed.current) setAttendees(tempList)
+                if(subscribed.current) setAttendees(data)
                 subscribed.current = false
             })
-        } else {
-            const tempList = ["There were no attendees at this meeting."]
-            setAttendees([tempList])
         }
     }
 
@@ -116,9 +103,13 @@ const ExecDashboard = () => {
                             <tbody>
                                 <tr key={"header"}>
                                     <th>Attendance</th>
+                                    <th>Add to newsletter</th>
                                 </tr>
                                 {attendees.map((attendee, index)=> {
-                                    return (<tr key={index}><td key={index}>{attendee}</td></tr>)
+                                    return (<tr key={index}>
+                                        <td>{attendee.fname + " " + attendee.lname + "." + attendee.name_dot_num.split(".")[1]}</td>
+                                        <td>{attendee.add_to_newsletter ? "Yes" : "No"}</td>
+                                    </tr>)
                                 })}
                             </tbody>
                         </table>
