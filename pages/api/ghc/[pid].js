@@ -38,8 +38,7 @@ async function enterExternalScholarship(name_dot_num, id, type, description) {
 // POST /api/ghc/create
 async function createGHC(id) {
   try {
-    await pgQuery(`
-      INSERT ghc (student_id) VALUES (${id})`);
+    await pgQuery(`INSERT ghc (student_id) VALUES (${id})`);
   } catch(err) {
     throw("Failed to create GHC row for student_id: " + id + "\nerror: " + err);
   }
