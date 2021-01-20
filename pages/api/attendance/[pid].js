@@ -33,10 +33,11 @@ async function record (event_code, f_name, l_name_dot_num, year_level, list_serv
         curr_student_id = await createStudent(f_name, l_name, l_name_dot_num.toLowerCase(), "", year_level, "");
     }
 
-    //school_level
+    // update data if it changed
     await pgQuery(`
         UPDATE student SET
-            school_level = '${year_level}'
+        fname = '${f_name}',
+        school_level = '${year_level}'
         WHERE name_dot_num = '${l_name_dot_num.toLowerCase()}';
     `);
 
