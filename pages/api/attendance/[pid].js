@@ -19,6 +19,12 @@ async function createStudent(fname, lname, name_dot_num, personal_email, school_
 // event_code: code for meeting, f_name: first name of student, 
 // l_name_dot_num: last name and dot number of student, year_level: school level of student
 async function record (event_code, f_name, l_name_dot_num, year_level) {
+    // don't do anything if the attendance code is not valid
+    // no timezone conversion since UTC = UTC
+    let meetingId = await pgQuery(`SELECT id FROM meeting WHERE code='${event_code}' AND current_timestamp <= code_expiration`); 
+    if(meetingId.rowCount === 0) throw (`Meeting code ${event_code} invalid or expired.`);
+    meetingId = meetingId.rows[0].id;
+
     let curr_student_id = await pgQuery(`SELECT id FROM student WHERE name_dot_num = '${l_name_dot_num.toLowerCase()}'`);
     //if the student doesn't exist 
     if(!curr_student_id.rowCount){
@@ -34,9 +40,7 @@ async function record (event_code, f_name, l_name_dot_num, year_level) {
     `);
 
     const data = await pgQuery(`
-        INSERT INTO meeting_student (meeting_id, student_id)
-        SELECT
-        m.id, '${curr_student_id.rows[0].id}' FROM meeting m WHERE m.code = '${event_code}'
+        INSERT INTO meeting_student (meeting_id, student_id) VALUES (${meetingId}, ${curr_student_id.rows[0].id})
     ;`);
 
     return data;
