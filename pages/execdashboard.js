@@ -12,6 +12,7 @@ import ManageAccounts from '../components/ManageAccounts'
 import SelectMeeting from '../components/SelectMeeting'
 import ScholarshipReqForm from '../components/ScholarshipReqForm'
 import AddMeetingForm from '../components/AddMeetingForm'
+import SubmitNotification from '../components/FormComponents/SubmitNotification'
 
 
 /*
@@ -22,6 +23,10 @@ import AddMeetingForm from '../components/AddMeetingForm'
 const ExecDashboard = () => {
     const [rightPanel, setRightPanel] = useState("")
     const subscribed = useRef(false)
+    const [selectedMeetingId, setSelectedMeetingId] = useState(null)
+    const [confirmDeletion, setConfirmDeletion] = useState(false)
+    const [showNotif, setShowNotif] = useState(false)
+    const [refresh, setRefresh] = useState(1)
 
     const [time, setTime] = useState("")
     const [date, setDate] = useState("")
@@ -50,9 +55,31 @@ const ExecDashboard = () => {
         }
     }
 
+    const deleteMeeting = async (meetingId) => {
+        if (meetingId) {
+            subscribed.current = true;
+            const requestDeleteMeeting = {
+                method: 'POST',
+                body: JSON.stringify(
+                  { 
+                      meeting_id: meetingId
+                  }
+                )
+            };
+            const response = await fetch('/api/meeting/delete', requestDeleteMeeting)
+            if (subscribed.current) setShowNotif(true)
+            subscribed.current = false;
+        } 
+        setConfirmDeletion(false)
+        setSelectedMeetingId(null)
+        setRefresh(null) // This is to force a refresh
+        setRefresh(1)
+    }
+
     const getAttendees = async (meeting) => {
         if (meeting) {
             subscribed.current = true;
+            setSelectedMeetingId(meeting.value);
             const url = '/api/meeting/meeting-attendance?meetingId=' + meeting.value
             const response = await fetch(url, {method: 'GET'})
             response.json().then((data) => {
@@ -111,7 +138,16 @@ const ExecDashboard = () => {
                         <AddMeetingForm/>
                         <br></br>
                         <h2 className={styles.header}>View Meeting Attendance</h2>
-                        <SelectMeeting selectMeeting={getAttendees}/>
+                        <SubmitNotification showNotif={showNotif} setShowNotif={setShowNotif}/> 
+                        {refresh && <SelectMeeting selectMeeting={getAttendees}/>}
+                        {selectedMeetingId && <SubmitButton label="Delete Meeting" handleChange={() => setConfirmDeletion(true)}/>}
+                        {confirmDeletion && 
+                        <Fragment>
+                            <h3>Are you sure you want to delete this meeting?</h3>
+                            <SubmitButton label="No" handleChange={() => setConfirmDeletion(false)}/>
+                            <SubmitButton label="Yes" handleChange={() => deleteMeeting(selectedMeetingId)}/>
+                        </Fragment>
+                        }                        
                         {attendees.length > 0 && <table className={styles.table}>
                             <tbody>
                                 <tr key={"header"}>
