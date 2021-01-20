@@ -102,6 +102,7 @@ async function create(meeting_name, meeting_date, semester, company_id) {
     }
 
     data.code = code;
+    data.expiration = expireTime.toLocaleString("en-US", {timeZone: "America/New_York"});
     return data; 
 }
 
