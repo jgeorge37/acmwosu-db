@@ -137,7 +137,7 @@ export default async (req, res) => {
               break;
             case 'delete':
               if (!body.name_dot_num) throw("Missing delete parameter: must include name_dot_num")
-              result = await delete_(body.student_id)
+              result = await delete_(body.name_dot_num)
               break;
             default:
               throw("Invalid pid");

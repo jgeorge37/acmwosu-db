@@ -5,8 +5,8 @@ import {serialize} from 'cookie';
 async function generateAuth(email) {
     const tok = Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2);
     await pgQuery(`
-        UPDATE account SET 
-        auth_token = '${tok}', 
+        UPDATE account SET
+        auth_token = '${tok}',
         auth_expire_time = current_timestamp + INTERVAL '1 hour'
         WHERE email = '${email}'
     ;`);
@@ -15,7 +15,7 @@ async function generateAuth(email) {
 
 // Refresh token if needed
 async function handleToken(email, tok) {
-    const is_expired = !((await pgQuery(`SELECT id FROM account 
+    const is_expired = !((await pgQuery(`SELECT id FROM account
         WHERE email='${email}' AND auth_token='${tok}' AND current_timestamp < auth_expire_time;`)).rowCount > 0)
     return (is_expired ? (await generateAuth(email)) : tok);
 }
@@ -24,7 +24,7 @@ async function handleToken(email, tok) {
 function readCookie(req) {
     if(req.cookies && req.cookies.auth_token) {
         let authStr = req.cookies.auth_token;
-        // extract email and token 
+        // extract email and token
         const email = authStr.split(":")[0];
         const tok = authStr.split(":")[1];
         return {email: email, tok: tok};
@@ -103,7 +103,7 @@ export default async (req, res) => {
                     throw("Invalid pid");
             }
         } else {
-            throw("Invalid request type for account");
+            throw("Invalid request type for auth");
         }
         res.statusCode = 200;
     } catch(err) {
