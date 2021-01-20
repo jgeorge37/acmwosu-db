@@ -73,4 +73,9 @@
   margin: 10px 0px;
   background-color: white;
   color: #373738;
+  text-align: center;
+}
+
+.table th {
+  padding: 0px 8px;
 }

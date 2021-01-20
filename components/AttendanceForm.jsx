@@ -24,7 +24,8 @@ const AttendanceForm = () => {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [year, setYear] = useState(yearOptions[0]);
-    const [listServ, setListServe] = useState(listServOptions[0]);
+    const [listServ, setListServ] = useState(listServOptions[0]);
+    const [success, setSuccess] = useState(false);
 
     
     return (
@@ -34,44 +35,52 @@ const AttendanceForm = () => {
             </Head>
             <div className={styles.card}>
                 <h1>Attendance Form</h1>
-                <p>Thank you for attending an ACM-W event! Please fill out this form to record your attendance!</p>
-                <h2>Event Information</h2>
-                <TextInput
-                    id="Event Code"
-                    input type="text"
-                    label="Event Code"
-                    predicted="007"
-                    onChange={setEventCode}/>
-                <TextInput
-                    id="First Name"
-                    input type="text"
-                    label="First Name"
-                    predicted="Brutus"
-                    onChange={setFirstName}/>
-                <TextInput
-                    id="Last Name"
-                    input type="text"
-                    label="Last Name.#"
-                    predicted="Buckeye.1"
-                    onChange={setLastName}/>
-                <div>
-                    <h2>What year are you in?</h2>
-                    <SelectInput options={yearOptions} onChange={setYear}/>
-                </div>
-                <div>
-                    <h2>Would you like to be included in our list-serv?</h2>
-                    <SelectInput options={listServOptions} onChange={setListServe}/>
-                </div>
-                <span>
-                    <SubmitButton
-                        label="Submit"
-                        eventCode={eventCode}
-                        firstName={firstName}
-                        lastName={lastName}
-                        year={year}
-                    />
-                </span>
-            </div>
+                {
+                  success ?
+                  <h2>Attendance submitted successfully.</h2> :
+                  <>
+                  <p>Thank you for attending an ACM-W event! Please fill out this form to record your attendance!</p>
+                  <h2>Event Information</h2>
+                  <TextInput
+                      id="Event Code"
+                      input type="text"
+                      label="Event Code"
+                      predicted="007"
+                      onChange={setEventCode}/>
+                  <TextInput
+                      id="First Name"
+                      input type="text"
+                      label="First Name"
+                      predicted="Brutus"
+                      onChange={setFirstName}/>
+                  <TextInput
+                      id="Last Name"
+                      input type="text"
+                      label="Last Name.#"
+                      predicted="Buckeye.1"
+                      onChange={setLastName}/>
+                  <div>
+                      <h2>What year are you in?</h2>
+                      <SelectInput options={yearOptions} onChange={setYear}/>
+                  </div>
+                  <div>
+                      <h2>Would you like to be added to our mailing list (weekly newsletter)?</h2>
+                      <SelectInput options={listServOptions} onChange={setListServ}/>
+                  </div>
+                  <span>
+                      <SubmitButton
+                          label="Submit"
+                          eventCode={eventCode}
+                          firstName={firstName}
+                          lastName={lastName}
+                          year={year}
+                          listServ={listServ}
+                          setSuccess={setSuccess}
+                      />
+                  </span>
+                  </>
+                }
+            </div> 
         </div>
     )
 }
@@ -147,9 +156,11 @@ const SubmitButton = (props) => {
       if(validateName(props.firstName) && validateLastNameDotNum(props.lastName)) {
         const res = await recordAttendance();
         if(res.ok) {
-          setMessage("Success");
+          props.setSuccess(true);
         } else {
-          setMessage("Failure");  // this could be the result of an invalid event code
+          setMessage("Error")
+          const result = await res.json();
+          setMessage("Error" + (result.error ? `: ${result.error}` : ""));
         }
       } else {
         setMessage("Enter a valid first name and last name dot number.");
@@ -157,13 +168,15 @@ const SubmitButton = (props) => {
   } 
 
   const recordAttendance = async () => {
+    console.log(props.listServ)
     const requestAttendanceRecord = {
       method: 'POST',
       body: JSON.stringify(
         { event_code: props.eventCode,
           f_name: props.firstName,
           l_name_dot_num: props.lastName, //lastName is last name . num
-          year_level: props.year.label // this will push the string ex:"Fourth"
+          year_level: props.year.label, // this will push the string ex:"Fourth"
+          list_serv: props.listServ.value  // true or false
         }
       )
     };
@@ -172,7 +185,7 @@ const SubmitButton = (props) => {
   }
 
   return (
-    <div>
+    <div className={styles.attendanceButton}>
       {<div><label className={styles.error}>
         {message}
       </label></div>}

@@ -189,6 +189,10 @@ label.error {
   cursor: pointer;
 }
 
+.attendanceButton {
+  margin-top: 15px;
+}
+
 @media (max-width: 600px) {
   .card {
     width: 100%;
