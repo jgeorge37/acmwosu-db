@@ -1,4 +1,5 @@
 import pgQuery from '../../../postgres/pg-query.js';
+import {serialize} from 'cookie';
 
 // Generate (new) auth token and expire time. Returns encrypted token.
 async function generateAuth(email) {
@@ -87,12 +88,16 @@ export default async (req, res) => {
     } = req
 
     let result = {};
+    let auth_token = null;
+    let user_email = null;
 
     try {
         if(req.method === 'GET') {
             switch(pid) {
                 case 'level':
                     result = await getAuth(req);
+                    auth_token = result.auth_token;
+                    user_email = result.email;
                     break;
                 default:
                     throw("Invalid pid");
@@ -106,6 +111,7 @@ export default async (req, res) => {
         console.log(err)
         result.error = err;
     } finally {
+        if(auth_token) res.setHeader('Set-Cookie', serialize('auth_token', user_email+":"+auth_token, { httpOnly: true, path: '/' }));
         res.json(result);
     }
   }

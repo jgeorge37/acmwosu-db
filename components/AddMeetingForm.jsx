@@ -38,6 +38,7 @@ const AddCompanyForm = (props) => {
     const [timeError, setTimeError] = useState("")
     const [companyError, setCompanyError] = useState("")
     const [code, setCode] = useState("")
+    const [expiration, setExpiration] = useState("")
     const [showNotif, setShowNotif] = useState(false)
 
     useEffect(() => {return () => {subscribed.current = false}}, [])
@@ -58,8 +59,9 @@ const AddCompanyForm = (props) => {
             )
         };
         const res = await fetch('/api/meeting/create', requestOptionsMeeting)
-        const result = res.json()
+        const result = await res.json()
         if (subscribed.current) setCode(result["code"])
+        if (subscribed.current) setExpiration(result["expiration"])
         if (subscribed.current) setShowNotif(true)
         subscribed.current = false;
     }
@@ -171,6 +173,7 @@ const AddCompanyForm = (props) => {
                         <p className={styles.error}>{dateError}</p>
                         <TimeSelectionForm recordTime={recordTime}/>
                         <p className={styles.error}>{timeError}</p>
+                        <p>Meeting code will expire at 11:59pm on the day of the meeting.</p>
                         <SelectInput options={companyOptions} label={"Is this a company meeting?"} onChange={recordCompanyMeeting}/>
                         {companyMeeting && <CompanySearchInput onChange={recordCompanyInfo}/>}
                         <p className={styles.error}>{companyError}</p>
@@ -181,7 +184,7 @@ const AddCompanyForm = (props) => {
                 </div>        
                 : // If there is a code then show code
                 <div className={styles.popup_inner}>
-                    <h2>The meeting code is: {code}</h2>
+                    <h2>Meeting code: {code} <br/>Code expiration: {expiration} ET</h2>
                 </div>}
         </div>
     )

@@ -34,8 +34,8 @@ function MyApp({ Component, pageProps }) {
       checkBlocked(pageName, userCopy);
 
       subscribed.current = false;
-    }, [user, currentPage]);
-  });
+    });
+  }, [user, currentPage]);
 
   // check if user is unauthorized
   const checkBlocked = (pageName, user) => {

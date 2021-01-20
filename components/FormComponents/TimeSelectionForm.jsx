@@ -67,7 +67,7 @@ const TimeSelectionForm = (props) => {
 
     return (
         <div>
-            <label className={styles.label}>Set Time</label>
+            <label className={styles.label}>Set Time (ET)</label>
             <div>
                 <input type="text" onChange={checkHours} className={styles.hours}></input>
                 <label> : </label>
@@ -75,7 +75,7 @@ const TimeSelectionForm = (props) => {
                 <select className={styles.set} onChange={setTimeOfDay}>
                     <option>AM</option>
                     <option>PM</option>
-                </select>
+                </select> 
                 <p className={styles.error}>{hoursError}</p>
                 <p className={styles.error}>{minutesError}</p>
 
