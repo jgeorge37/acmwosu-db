@@ -35,6 +35,17 @@ async function enterExternalScholarship(name_dot_num, id, type, description) {
   return "Successfully updated external scholarship requirement for " + name_dot_num;
 }
 
+// POST /api/ghc/create
+async function createGHC(id) {
+  try {
+    await pgQuery(`
+      INSERT ghc (student_id) VALUES (${id})`);
+  } catch(err) {
+    throw("Failed to create GHC row for student_id: " + id + "\nerror: " + err);
+  }
+  return "Successfully created GHC row for student_id: " + id;
+}
+
 export default async (req, res) => {
     const {
       query: { pid },
@@ -46,7 +57,7 @@ export default async (req, res) => {
 
     try {
         if (req.method === 'GET') {
-            if (pid === 'check-external-scholarship') { 
+            if (pid === 'check-external-scholarship') {
               if (!req.query || (!req.query.email)) {
                   throw("Missing account email in query.");
               }
