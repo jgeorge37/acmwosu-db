@@ -149,7 +149,9 @@ const SubmitButton = (props) => {
         if(res.ok) {
           setMessage("Success");
         } else {
-          setMessage("Failure");  // this could be the result of an invalid event code
+          setMessage("Error")
+          const result = await res.json();
+          setMessage("Error" + (result.error ? `: ${result.error}` : ""));
         }
       } else {
         setMessage("Enter a valid first name and last name dot number.");
@@ -172,7 +174,7 @@ const SubmitButton = (props) => {
   }
 
   return (
-    <div>
+    <div className={styles.attendanceButton}>
       {<div><label className={styles.error}>
         {message}
       </label></div>}
