@@ -25,6 +25,7 @@ const AttendanceForm = () => {
     const [lastName, setLastName] = useState("");
     const [year, setYear] = useState(yearOptions[0]);
     const [listServ, setListServe] = useState(listServOptions[0]);
+    const [success, setSuccess] = useState(false);
 
     
     return (
@@ -34,44 +35,51 @@ const AttendanceForm = () => {
             </Head>
             <div className={styles.card}>
                 <h1>Attendance Form</h1>
-                <p>Thank you for attending an ACM-W event! Please fill out this form to record your attendance!</p>
-                <h2>Event Information</h2>
-                <TextInput
-                    id="Event Code"
-                    input type="text"
-                    label="Event Code"
-                    predicted="007"
-                    onChange={setEventCode}/>
-                <TextInput
-                    id="First Name"
-                    input type="text"
-                    label="First Name"
-                    predicted="Brutus"
-                    onChange={setFirstName}/>
-                <TextInput
-                    id="Last Name"
-                    input type="text"
-                    label="Last Name.#"
-                    predicted="Buckeye.1"
-                    onChange={setLastName}/>
-                <div>
-                    <h2>What year are you in?</h2>
-                    <SelectInput options={yearOptions} onChange={setYear}/>
-                </div>
-                <div>
-                    <h2>Would you like to be included in our list-serv?</h2>
-                    <SelectInput options={listServOptions} onChange={setListServe}/>
-                </div>
-                <span>
-                    <SubmitButton
-                        label="Submit"
-                        eventCode={eventCode}
-                        firstName={firstName}
-                        lastName={lastName}
-                        year={year}
-                    />
-                </span>
-            </div>
+                {
+                  success ?
+                  <h2>Attendance submitted successfully.</h2> :
+                  <>
+                  <p>Thank you for attending an ACM-W event! Please fill out this form to record your attendance!</p>
+                  <h2>Event Information</h2>
+                  <TextInput
+                      id="Event Code"
+                      input type="text"
+                      label="Event Code"
+                      predicted="007"
+                      onChange={setEventCode}/>
+                  <TextInput
+                      id="First Name"
+                      input type="text"
+                      label="First Name"
+                      predicted="Brutus"
+                      onChange={setFirstName}/>
+                  <TextInput
+                      id="Last Name"
+                      input type="text"
+                      label="Last Name.#"
+                      predicted="Buckeye.1"
+                      onChange={setLastName}/>
+                  <div>
+                      <h2>What year are you in?</h2>
+                      <SelectInput options={yearOptions} onChange={setYear}/>
+                  </div>
+                  <div>
+                      <h2>Would you like to be included in our list-serv?</h2>
+                      <SelectInput options={listServOptions} onChange={setListServe}/>
+                  </div>
+                  <span>
+                      <SubmitButton
+                          label="Submit"
+                          eventCode={eventCode}
+                          firstName={firstName}
+                          lastName={lastName}
+                          year={year}
+                          setSuccess={setSuccess}
+                      />
+                  </span>
+                  </>
+                }
+            </div> 
         </div>
     )
 }
@@ -147,7 +155,7 @@ const SubmitButton = (props) => {
       if(validateName(props.firstName) && validateLastNameDotNum(props.lastName)) {
         const res = await recordAttendance();
         if(res.ok) {
-          setMessage("Success");
+          props.setSuccess(true);
         } else {
           setMessage("Error")
           const result = await res.json();
