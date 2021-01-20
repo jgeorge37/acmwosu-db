@@ -71,6 +71,23 @@ async function createStudent(fname, lname, name_dot_num, personal_email, school_
   return data.rows
 }
 
+// POST /api/student/delete
+// delete a student given student_id
+async function delete_(name_dot_num) {
+    const data = await pgQuery(`SELECT id FROM student WHERE name_dot_num='${name_dot_num}';`);
+    if(data.rowCount === 0) throw(`Student ${name_dot_num} not found.`);
+    const id = data.rows[0].student_id;
+
+    // delete attendance records
+    await pgQuery(`DELETE FROM meeting_student WHERE student_id=${id};`);
+    // delete account
+    await pgQuery(`DELETE FROM account WHERE student_id=${id};`);
+    // delete ghc row
+    await pgQuery(`DELETE FROM ghc WHERE student_id=${id};`);
+
+    return name_dot_num + " was ejected.";
+}
+
 export default async (req, res) => {
     const {
       query: { pid },
@@ -104,12 +121,26 @@ export default async (req, res) => {
         } else if (req.method === 'POST') { // requires exec permission
           [auth_token, user_email] = await checkAuth(req, res, true);
           const body = typeof(req.body) === 'object' ? req.body : JSON.parse(req.body);
-          if (pid === 'create') {
-            if (!body || !body.fname || !body.lname || !body.name_dot_num) {
-              throw("Missing parameters: body must include fname, lname, and name_dot_num")
-            }
-            result = await createStudent(body.fname, body.lname, body.name_dot_num, body.personal_email, body.school_level, body.packet_sent_date);
-          }
+          switch (pid) {
+            case 'create':
+              if (!body.fname) throw("Missing create parameter: must include fname")
+              if (!body.lname) throw("Missing create parameter: must include lname")
+              if (!body.name_dot_num) throw("Missing create parameter: must include name_dot_num")
+              result = await createStudent(
+                body.fname,
+                body.lname,
+                body.name_dot_num,
+                body.personal_email,
+                body.school_level,
+                body.packet_sent_date
+              );
+              break;
+            case 'delete':
+              if (!body.name_dot_num) throw("Missing delete parameter: must include name_dot_num")
+              result = await delete_(body.student_id)
+              break;
+            default:
+              throw("Invalid pid");
         } else {
             throw("Invalid request type for student");
         }

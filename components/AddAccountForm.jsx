@@ -47,6 +47,8 @@ const AddAccountForm = (props) => {
         } else {
           // temporary fix for bug with account type
             create().then(location.reload);
+            setfNameError("")
+            setlNameDotNumError("")
             //setShowNotif(true)
         }
     }
@@ -92,7 +94,7 @@ const AddAccountForm = (props) => {
       const results = res.json();
       if (results.rows.length == 0) {
         // account does not exist, make one
-        const requestOptionsAccount = { 
+        const requestOptionsAccount = {
           method: 'POST',
           body: JSON.stringify( // makes copies to prevent synthetic event error
             { email: osuEmail.toLowerCase(),
