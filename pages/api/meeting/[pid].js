@@ -60,16 +60,26 @@ async function meetingAttendance(meetingId) {
 // POST /api/meeting/create
 // Create a meeting: meeting_name, meeting_date, semester (AUXX or SPXX), and company_id associated (null if no company)
 async function create(meeting_name, meeting_date, semester, company_id) {
-    // For code expiration, you can get the meeting_date and add two hours to it
-    const code = ("" + Math.random()).substring(2, 7);
+    const localTime = new Date(meeting_date);  // UTC equivalent of the input in local time, i.e. 6pm central = 7pm eastern = 12am UTC
+    const easternTime = new Date(localTime.toLocaleString("en-US", {timeZone: "America/New_York"}));
+    const timeDiff = easternTime.getTime() - localTime.getTime();  // ie 7pm - 6pm
+    // ie convert 7pm local time to 7pm eastern time
+    const finalTime = new Date(localTime.getTime() - timeDiff); 
+
+    // set expiration to 11:59pm ET of day of meeting
+    const expireTime = new Date(finalTime.getTime());
+    expireTime.setHours(23 - timeDiff/(3600000));
+    expireTime.setMinutes(59);
+
+    let code = ("" + Math.random()).substring(2, 7);
 
     // re-generate code if already in table - highly unlikely to happen even once, so runtime in reality is not bad.
     while((await pgQuery(`SELECT * FROM meeting WHERE code = '${code}';`)).rows.length > 0) {
-        token = ("" + Math.random()).substring(2, 7);
+        code = ("" + Math.random()).substring(2, 7);
     }
 
-    const data = await pgQuery(`INSERT INTO meeting (meeting_name, meeting_date, code, semester) 
-    VALUES('${meeting_name}', '${meeting_date}', '${code}', '${semester}');`)
+    const data = await pgQuery(`INSERT INTO meeting (meeting_name, meeting_date, code, semester, code_expiration) 
+    VALUES('${meeting_name}', '${finalTime.toUTCString()}', '${code}', '${semester}', '${expireTime.toUTCString()}');`)
 
     if (company_id) {
 
@@ -77,7 +87,7 @@ async function create(meeting_name, meeting_date, semester, company_id) {
         const meetingIdData = await pgQuery(`
             SELECT id 
             FROM meeting
-            WHERE meeting_name = '${meeting_name}'`);
+            WHERE code = '${code}'`);
 
         const meetingId = meetingIdData.rows[0]["id"];
 
@@ -92,7 +102,7 @@ async function create(meeting_name, meeting_date, semester, company_id) {
     }
 
     data.code = code;
-    return data;  
+    return data; 
 }
 
 // POST /api/meeting/delete
@@ -178,6 +188,7 @@ export default async (req, res) => {
         res.statusCode = 200;
     } catch(err) {
         if(!res.statusCode || res.statusCode === 200 ) res.statusCode = 500;
+        console.log(err)
         result.error = err;
     } finally {
         if(auth_token) res.setHeader('Set-Cookie', serialize('auth_token', user_email+":"+auth_token, { httpOnly: true, path: '/' }));

@@ -171,6 +171,7 @@ const AddCompanyForm = (props) => {
                         <p className={styles.error}>{dateError}</p>
                         <TimeSelectionForm recordTime={recordTime}/>
                         <p className={styles.error}>{timeError}</p>
+                        <p>Meeting code will expire at 11:59pm on the day of the meeting.</p>
                         <SelectInput options={companyOptions} label={"Is this a company meeting?"} onChange={recordCompanyMeeting}/>
                         {companyMeeting && <CompanySearchInput onChange={recordCompanyInfo}/>}
                         <p className={styles.error}>{companyError}</p>
