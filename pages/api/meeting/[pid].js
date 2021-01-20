@@ -43,7 +43,7 @@ async function accountAttendance(email) {
 // GET /api/meeting/meeting-list
 // Return names, dates, and ids of all meetings
 async function meetingList() {
-    const data = await pgQuery(`SELECT meeting_name, meeting_date, id FROM meeting`);
+    const data = await pgQuery(`SELECT meeting_name, meeting_date, id FROM meeting ORDER BY meeting_date DESC`);
     return data.rows;
 }
 
