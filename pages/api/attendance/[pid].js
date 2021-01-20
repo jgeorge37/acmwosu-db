@@ -39,11 +39,15 @@ async function record (event_code, f_name, l_name_dot_num, year_level) {
         WHERE name_dot_num = '${l_name_dot_num.toLowerCase()}';
     `);
 
-    const data = await pgQuery(`
-        INSERT INTO meeting_student (meeting_id, student_id) VALUES (${meetingId}, ${curr_student_id.rows[0].id})
-    ;`);
-
-    return data;
+    try {
+        const data = await pgQuery(`
+            INSERT INTO meeting_student (meeting_id, student_id) VALUES (${meetingId}, ${curr_student_id.rows[0].id})
+        ;`);
+        return data;
+    } catch(err) {
+        if(err.code === '23505') throw ("Attendance already recorded for this meeting");
+        throw (err);
+    }
 }
 
 export default async (req, res) => {
