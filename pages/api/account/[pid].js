@@ -92,7 +92,7 @@ async function create (email, student_id, is_exec) {
 // POST /api/account/delete
 // delete an account given email
 async function delete_(email) {
-    await pgQuery(`DELETE FROM account WHERE email=${email};`);
+    await pgQuery(`DELETE FROM account WHERE email='${email}';`);
     return "Successfully deleted account with email: " + email;
 }
 
