@@ -141,6 +141,7 @@ export default async (req, res) => {
               break;
             default:
               throw("Invalid pid");
+          }
         } else {
             throw("Invalid request type for student");
         }
