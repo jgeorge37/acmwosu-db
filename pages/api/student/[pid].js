@@ -84,6 +84,8 @@ async function delete_(name_dot_num) {
     await pgQuery(`DELETE FROM account WHERE student_id=${id};`);
     // delete ghc row
     await pgQuery(`DELETE FROM ghc WHERE student_id=${id};`);
+    // delete student
+    await pgQuery(`DELETE FROM student WHERE name_dot_num='${name_dot_num}';`);
 
     return name_dot_num + " was ejected.";
 }
