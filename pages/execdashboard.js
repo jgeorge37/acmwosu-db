@@ -72,6 +72,7 @@ const ExecDashboard = () => {
         } 
         setConfirmDeletion(false)
         setSelectedMeetingId(null)
+        setAttendees([])
         setRefresh(null) // This is to force a refresh
         setRefresh(1)
     }
