@@ -18,7 +18,14 @@ async function createStudent(fname, lname, name_dot_num, personal_email, school_
 // Record a specific student attendance
 // event_code: code for meeting, f_name: first name of student, 
 // l_name_dot_num: last name and dot number of student, year_level: school level of student
-async function record (event_code, f_name, l_name_dot_num, year_level) {
+// list_serv: boolean - student wants to be added to the newsletter
+async function record (event_code, f_name, l_name_dot_num, year_level, list_serv) {
+    // don't do anything if the attendance code is not valid
+    // no timezone conversion since UTC = UTC
+    let meetingId = await pgQuery(`SELECT id FROM meeting WHERE code='${event_code}' AND current_timestamp <= code_expiration`); 
+    if(meetingId.rowCount === 0) throw (`Meeting code ${event_code} invalid or expired.`);
+    meetingId = meetingId.rows[0].id;
+
     let curr_student_id = await pgQuery(`SELECT id FROM student WHERE name_dot_num = '${l_name_dot_num.toLowerCase()}'`);
     //if the student doesn't exist 
     if(!curr_student_id.rowCount){
@@ -26,20 +33,23 @@ async function record (event_code, f_name, l_name_dot_num, year_level) {
         curr_student_id = await createStudent(f_name, l_name, l_name_dot_num.toLowerCase(), "", year_level, "");
     }
 
-    //school_level
+    // update data if it changed
     await pgQuery(`
         UPDATE student SET
-            school_level = '${year_level}'
+        fname = '${f_name}',
+        school_level = '${year_level}'
         WHERE name_dot_num = '${l_name_dot_num.toLowerCase()}';
     `);
 
-    const data = await pgQuery(`
-        INSERT INTO meeting_student (meeting_id, student_id)
-        SELECT
-        m.id, '${curr_student_id.rows[0].id}' FROM meeting m WHERE m.code = '${event_code}'
-    ;`);
-
-    return data;
+    try {
+        const data = await pgQuery(`
+            INSERT INTO meeting_student (meeting_id, student_id, add_to_newsletter) VALUES (${meetingId}, ${curr_student_id.rows[0].id}, ${list_serv})
+        ;`);
+        return data;
+    } catch(err) {
+        if(err.code === '23505') throw ("Attendance already recorded for this meeting");
+        throw (err);
+    }
 }
 
 export default async (req, res) => {
@@ -58,7 +68,8 @@ export default async (req, res) => {
                     if (!body.f_name) throw ("Must provide a first name!");
                     if (!body.l_name_dot_num) throw ("Must provide a last name dot number!");
                     if (!body.year_level) throw ("Must provide a school level!");
-                    result = await record(body.event_code, body.f_name, body.l_name_dot_num, body.year_level);
+                    if (typeof body.list_serv !== 'boolean') throw ("Must provide list serv boolean");
+                    result = await record(body.event_code, body.f_name, body.l_name_dot_num, body.year_level, body.list_serv);
                     break;
                 // probs need to add more error checks in future
                 default:

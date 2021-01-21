@@ -7,7 +7,7 @@ const SelectInput = (props) => {
         var selectedOption = props.options ? props.options[0] : {}
         if(props.options) {
             props.options.forEach((option) => {
-                if(option.label === selectedValue || option.value == selectedValue ) {
+                if(option.label === selectedValue || option.value == selectedValue || (option.value).toString() === selectedValue) {
                     selectedOption = option
                 }
             });
@@ -20,7 +20,7 @@ const SelectInput = (props) => {
             <label className={styles.label}>{props.label}</label>
             <select className={styles.field} onChange={changeCurrent}>
                 {props.options.map((option, index) => {
-                    return <option key={index} value={option.value ? option.value : option.label}>{option.label}</option>
+                    return <option key={index} value={option.value || option.value === false ? option.value : option.label}>{option.label}</option>
                 })}
             </select>
         </>
