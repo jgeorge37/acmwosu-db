@@ -76,14 +76,14 @@ async function createStudent(fname, lname, name_dot_num, personal_email, school_
 async function delete_(name_dot_num) {
     const data = await pgQuery(`SELECT id FROM student WHERE name_dot_num='${name_dot_num}';`);
     if(data.rowCount === 0) throw(`Student ${name_dot_num} not found.`);
-    const id = data.rows[0].student_id;
+    const name_dot_num = data.rows[0].name_dot_num;
 
     // delete attendance records
-    await pgQuery(`DELETE FROM meeting_student WHERE student_id=${id};`);
+    await pgQuery(`DELETE FROM meeting_student WHERE name_dot_num='${name_dot_num}';`);
     // delete account
-    await pgQuery(`DELETE FROM account WHERE student_id=${id};`);
+    await pgQuery(`DELETE FROM account WHERE name_dot_num='${name_dot_num}';`);
     // delete ghc row
-    await pgQuery(`DELETE FROM ghc WHERE student_id=${id};`);
+    await pgQuery(`DELETE FROM ghc WHERE name_dot_num='${name_dot_num}';`);
 
     return name_dot_num + " was ejected.";
 }
