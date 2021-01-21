@@ -1,19 +1,20 @@
 import React, {useState, useRef, useEffect} from 'react'
 import styles from '../../styles/components/FormComponents.module.css'
 import SelectInput from './SelectInput'
+import {validateName} from '../../utility/utility'
 
 const getCompanyInfo = async (input) => {
     const url = '/api/company/byString?input=' + input
     const res = await fetch(url, {
-        method: 'GET', 
-        mode: 'cors', 
-        cache: 'no-cache', 
-        credentials: 'same-origin', 
+        method: 'GET',
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials: 'same-origin',
         headers: {
         'Content-Type': 'application/json'
         },
-        redirect: 'follow', 
-        referrerPolicy: 'no-referrer', 
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
     })
     const result = await res.json();
     return result;
@@ -26,7 +27,7 @@ const CompanySearchInput = (props) => {
     const [isText, setIsText] = useState(false) // Has the user entered text
 
     const filterFunction = (event) => {
-        if (event.target.value) {
+        if (validateName(event.target.value)) {
             setIsText(true)
             subscribed.current = true;
             getCompanyInfo(event.target.value).then((data) => {
@@ -38,7 +39,7 @@ const CompanySearchInput = (props) => {
                 }
 
                 if(!subscribed.current) return;
-                
+
                 setCompanyList(tempList)
                 if (tempList.length > 0) {
                     if(props.onChange) props.onChange(tempList[0])
