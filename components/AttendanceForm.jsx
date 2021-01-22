@@ -1,6 +1,6 @@
 import SelectInput from '../components/FormComponents/SelectInput'
 import styles from '../styles/SignIn.module.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {validateName, validateLastNameDotNum} from '../utility/utility';
 import Head from 'next/head'
 
@@ -21,13 +21,22 @@ const AttendanceForm = () => {
     ];
 
     const [eventCode, setEventCode] = useState("");
+    const [autoCode, setAutoCode] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [year, setYear] = useState(yearOptions[0]);
     const [listServ, setListServ] = useState(listServOptions[0]);
     const [success, setSuccess] = useState(false);
 
-    
+    useEffect(() => {
+      const search = window.location.search;
+      if(search && search.indexOf("?code=") === 0) {
+        const ac = search.split("?code=")[1];
+        setAutoCode(ac);
+        setEventCode(ac);
+      }
+    }, []);
+
     return (
         <div className={styles.container}>
             <Head>
@@ -46,7 +55,14 @@ const AttendanceForm = () => {
                       input type="text"
                       label="Event Code"
                       predicted="007"
+                      value={!!autoCode ? autoCode : eventCode}
+                      disabled={!!autoCode}
                       onChange={setEventCode}/>
+                  {
+                    autoCode && <i style={{color: 'orchid'}}>
+                      Event code auto-filled from URL - click <u><a href='/attendance'>here</a></u> for a blank form.
+                    </i>
+                  }
                   <TextInput
                       id="First Name"
                       input type="text"
@@ -96,6 +112,10 @@ const TextInput = (props) => {
     const [predicted, setPredicted] = useState(props.predicted);
     const [type, setType] = useState(props.type);
 
+    useEffect(() => {
+      if(!!props.value) setValue(props.value)
+    }, [props.value])
+
     const changeValue = (event) => {
       setValue(event.target.value);
       props.onChange(event.target.value);
@@ -138,6 +158,7 @@ const TextInput = (props) => {
         onKeyPress={event => handleKeyPress(event)}
         onFocus={() => setActive(true)}
         onBlur={() => setActive(false)}
+        disabled={props.disabled}
       />
       <label htmlFor={id}>
         {label}
@@ -168,7 +189,6 @@ const SubmitButton = (props) => {
   } 
 
   const recordAttendance = async () => {
-    console.log(props.listServ)
     const requestAttendanceRecord = {
       method: 'POST',
       body: JSON.stringify(
