@@ -6,10 +6,13 @@ import TextField from './TextField'
 import {validateName, validateLastNameDotNum} from '../../utility/utility';
 import React from 'react'
 
+// props: selectStudent({fname: , name_dot_num: , student_id})
+//        ghcFlag set to true/false (search only by ghc recipients)
 const StudentSearch = (props) => {
     const subscribed = useRef(false);
     const isDotNum = useRef(false);
 
+    const searchHeading = (props.ghcFlag ? "GHC Student Search" : "Student Search")
     const fName = useRef("");
     const lName = useRef("");
     const [fNameError, setfNameError] = useState("")
@@ -24,7 +27,10 @@ const StudentSearch = (props) => {
     const getStudentInfo = async () => {
         subscribed.current = true;
         var query = createQuery()
-        const url = '/api/student/search?' + query
+        var url = '/api/student/search?' + query
+        if (props.ghcFlag) {
+            url = '/api/student/ghc?' + query
+        }
         const res = await fetch(url, {method: 'GET'})
         res.json().then((data) => {
             const tempList = []
@@ -114,7 +120,7 @@ const StudentSearch = (props) => {
 
     return (
         <div>
-            <h3>Student Search</h3>
+            <h3>{searchHeading}</h3>
             <TextField label='First Name' onChange={fNameSearch} error={fNameError}/>
             <TextField label='Last Name (.# Optional)' onChange={lNameSearch} error={lNameError}/>
             {searchOptions.length > 0 && <SelectInput label='Choose Student' options={searchOptions} onChange={handleSelectStudent}/>}
