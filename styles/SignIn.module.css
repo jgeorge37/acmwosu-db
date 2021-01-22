@@ -39,7 +39,7 @@
 
 .card h1 {
   margin-top: 1rem;
-  margin-bottom: 3rem;
+  margin-bottom: 0rem;
   line-height: 1.15;
   font-family: 'Montserrat', sans-serif;
   font-size: 3rem;
@@ -193,6 +193,10 @@ label.error {
   margin-top: 15px;
 }
 
+#sponLogos {
+  margin-bottom: 1rem;
+}
+
 @media (max-width: 600px) {
   .card {
     width: 100%;
@@ -203,5 +207,9 @@ label.error {
   .main {
     width: 100%;
     padding: 0rem;
+  }
+  #sponLogos {
+    width: 270px;
+    height: 220px;
   }
 }

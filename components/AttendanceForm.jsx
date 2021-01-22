@@ -48,6 +48,7 @@ const AttendanceForm = () => {
                   success ?
                   <h2>Attendance submitted successfully.</h2> :
                   <>
+                  <img src="/sponsor_logos.PNG" alt="Sponsor logos" id={styles.sponLogos}/>
                   <p>Thank you for attending an ACM-W event! Please fill out this form to record your attendance!</p>
                   <h2>Event Information</h2>
                   <TextInput

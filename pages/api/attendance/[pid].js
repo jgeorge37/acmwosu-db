@@ -42,14 +42,13 @@ async function record (event_code, f_name, l_name_dot_num, year_level, list_serv
     `);
 
     try {
-        const data = await pgQuery(`
+        await pgQuery(`
             INSERT INTO meeting_student (meeting_id, student_id, add_to_newsletter) VALUES (${meetingId}, ${curr_student_id.rows[0].id}, ${list_serv})
         ;`);
-        return data;
     } catch(err) {
-        if(err.code === '23505') throw ("Attendance already recorded for this meeting");
-        throw (err);
+        if(err.code !== '23505') throw (err);  // silence duplication attendance error 
     }
+    return {message: "success"}
 }
 
 export default async (req, res) => {
