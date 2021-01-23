@@ -11,7 +11,7 @@ async function verify (email, password) {
         const tok = await generateAuth(data.rows[0].email);
         auth_tok = tok;
     }
-    return [auth_tok, email, data.rows]; 
+    return [auth_tok, email, data.rows];
 }
 
 // POST /api/account/logout
@@ -85,8 +85,15 @@ async function exists(email) {
 async function create (email, student_id, is_exec) {
     const randomPassword = Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2);
     const data = await pgQuery(`INSERT INTO account (email, password, student_id, is_exec)
-        VALUES ('${email}', crypt('${randomPassword}', gen_salt('md5')), '${student_id}', ${is_exec});`); 
+        VALUES ('${email}', crypt('${randomPassword}', gen_salt('md5')), '${student_id}', ${is_exec});`);
     return data;
+}
+
+// POST /api/account/delete
+// delete an account given email
+async function delete_(email) {
+    await pgQuery(`DELETE FROM account WHERE email='${email}';`);
+    return "Successfully deleted account with email: " + email;
 }
 
 // GET /api/account/list
@@ -132,6 +139,11 @@ export default async (req, res) => {
                     if(!body.student_id) throw ("Missing student_id in request body");
                     const is_exec = (typeof body.is_exec === 'undefined' || body.is_exec === null) ? false : body.is_exec;
                     result = await create(body.email, body.student_id, is_exec);
+                    break;
+                case 'delete':
+                    [auth_token, user_email] = await checkAuth(req, res, true);
+                    if(!body.email) throw ("Missing email");
+                    result = await delete_(body.email);
                     break;
                 case 'generate-token':
                     if(!body.email) throw ("Missing email address in request body.");
