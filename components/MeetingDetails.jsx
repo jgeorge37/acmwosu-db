@@ -2,6 +2,7 @@ import React, {useState, useRef, useEffect} from 'react'
 import SelectMeeting from './SelectMeeting';
 import styles from '../styles/components/MeetingDetails.module.css'
 import SubmitNotification from '../components/FormComponents/SubmitNotification'
+import SubmitButton from '../components/FormComponents/SubmitButton'
 
 const MeetingDetails = (props) => {
   const subscribed = useRef(false)
@@ -40,30 +41,26 @@ const MeetingDetails = (props) => {
         if (subscribed.current) setShowNotif(true)
         subscribed.current = false;
     } 
-    setConfirmDeletion(false)
-    setMeeting(null)
     setAttendees([])
+    setMeeting(null)
     setRefresh(null) // This is to force a refresh
     setRefresh(1)
   }
-
   // runs when meeting is updated
   useEffect(() => {
     getAttendees(meeting)
+    setConfirmDeletion(false)
   }, [meeting])
 
-  const meetingDelete = <>
-    <SubmitNotification showNotif={showNotif} setShowNotif={setShowNotif}/> 
-    {refresh && <SelectMeeting selectMeeting={getAttendees}/>}
-    {meeting && <SubmitButton label="Delete Meeting" handleChange={() => setConfirmDeletion(true)}/>}
+  const meetingDelete = <div>
+    {meeting && !confirmDeletion && <SubmitButton label="Delete Meeting" handleChange={() => setConfirmDeletion(true)}/>}
     {confirmDeletion && 
-    <Fragment>
-        <h3>Are you sure you want to delete this meeting?</h3>
+    <>
+        <b>Are you sure you want to delete this meeting?</b><br/>
         <SubmitButton label="No" handleChange={() => setConfirmDeletion(false)}/>
         <SubmitButton label="Yes" handleChange={() => deleteMeeting(meeting)}/>
-    </Fragment>
-    } 
-  </>
+    </>}
+    </div>
 
   const attendanceTable = <table className={styles.md_table}>
     <tbody>
@@ -95,14 +92,17 @@ const MeetingDetails = (props) => {
 
   return (
     <>
-      <SelectMeeting selectMeeting={setMeeting}/>
+      <SubmitNotification showNotif={showNotif} setShowNotif={setShowNotif}/> 
+      {refresh && <SelectMeeting selectMeeting={setMeeting}/>}
+      
       <div className={styles.md_container}>
-        {meetingDelete}
         <div className={styles.md_info}>
           {info}
           {attendanceStats}
+          {meetingDelete}
         </div>
         {attendees.length > 0 && attendanceTable}
+        
       </div>
       
     </>

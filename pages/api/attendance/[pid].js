@@ -32,6 +32,8 @@ async function record (event_code, f_name, l_name_dot_num, year_level, list_serv
         let l_name = l_name_dot_num.split(/\./)[0];
         curr_student_id = await createStudent(f_name, l_name, l_name_dot_num.toLowerCase(), "", year_level, "");
     }
+    // get that id out of that object!!!
+    curr_student_id = curr_student_id.rows[0].id;
 
     // update data if it changed
     await pgQuery(`
@@ -43,10 +45,16 @@ async function record (event_code, f_name, l_name_dot_num, year_level, list_serv
 
     try {
         await pgQuery(`
-            INSERT INTO meeting_student (meeting_id, student_id, add_to_newsletter) VALUES (${meetingId}, ${curr_student_id.rows[0].id}, ${list_serv})
+            INSERT INTO meeting_student (meeting_id, student_id, add_to_newsletter) VALUES (${meetingId}, ${curr_student_id}, ${list_serv})
         ;`);
     } catch(err) {
         if(err.code !== '23505') throw (err);  // silence duplication attendance error 
+        // update add_to_newsletter
+        await pgQuery(`
+            UPDATE meeting_student 
+            SET add_to_newsletter = '${list_serv}' 
+            WHERE meeting_id = ${meetingId} AND student_id = ${curr_student_id};
+        `);
     }
     return {message: "success"}
 }

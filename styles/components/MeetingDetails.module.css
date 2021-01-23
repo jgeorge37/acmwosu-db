@@ -9,12 +9,12 @@
 
 .md_info {
   float: left;
-  margin: 1rem 2rem 1rem 0.5rem;
-  height: 11rem;
+  margin: 0rem 2rem 2rem 0.5rem;
+  height: 12rem;
 }
 
 .md_stats {
-  margin-top: 1.5rem;;
+  margin-top: 0.5rem;;
 }
 
 .md_stats span {
@@ -25,10 +25,9 @@
 
 .md_table {
   padding: 10px;
-  margin: 1rem 0.5rem;
   text-align: center;
-  border: 1px solid rgb(166, 122, 216);
-  border-radius: 5px;
+  border: 2px solid rgb(166, 122, 216);
+  border-radius: 8px;
 }
 
 .md_table th {
