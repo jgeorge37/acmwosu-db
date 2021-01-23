@@ -77,7 +77,8 @@ const ScholarshipReqForm = (props) => {
                         setfNameError={setfNameError}
                         lNameError={lNameError}
                         setlNameError={setlNameError}
-                        selectStudent={student => selectStudent(student)} />
+                        selectStudent={student => selectStudent(student)} 
+                        ghcFlag={true}/>
                 <SelectInput options={options.map((m) => ({label: m}))} label="Req Type" onChange={(type) => {reqType.current = type["label"]}}/>
                 <TextField label="Req Description" onChange={(event) => {reqDesc.current = event.target.value}} />
                 <SubmitButton label="Apply" handleChange={onSubmit} />
