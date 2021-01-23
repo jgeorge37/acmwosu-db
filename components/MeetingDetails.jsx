@@ -1,11 +1,15 @@
 import React, {useState, useRef, useEffect} from 'react'
 import SelectMeeting from './SelectMeeting';
 import styles from '../styles/components/MeetingDetails.module.css'
+import SubmitNotification from '../components/FormComponents/SubmitNotification'
 
 const MeetingDetails = (props) => {
   const subscribed = useRef(false)
   const [attendees, setAttendees] = useState([])
   const [meeting, setMeeting] = useState(null)
+  const [confirmDeletion, setConfirmDeletion] = useState(false)
+  const [showNotif, setShowNotif] = useState(false)
+  const [refresh, setRefresh] = useState(1)
 
   useEffect(() => {return () => {subscribed.current = false}}, []);
 
@@ -21,10 +25,45 @@ const MeetingDetails = (props) => {
     }
   }
 
+  const deleteMeeting = async (meeting) => {
+    if (meeting) {
+        subscribed.current = true;
+        const requestDeleteMeeting = {
+            method: 'POST',
+            body: JSON.stringify(
+              { 
+                  meeting_id: meeting.value
+              }
+            )
+        };
+        const response = await fetch('/api/meeting/delete', requestDeleteMeeting)
+        if (subscribed.current) setShowNotif(true)
+        subscribed.current = false;
+    } 
+    setConfirmDeletion(false)
+    setMeeting(null)
+    setAttendees([])
+    setRefresh(null) // This is to force a refresh
+    setRefresh(1)
+  }
+
   // runs when meeting is updated
   useEffect(() => {
     getAttendees(meeting)
   }, [meeting])
+
+  const meetingDelete = <>
+    <SubmitNotification showNotif={showNotif} setShowNotif={setShowNotif}/> 
+    {refresh && <SelectMeeting selectMeeting={getAttendees}/>}
+    {meeting && <SubmitButton label="Delete Meeting" handleChange={() => setConfirmDeletion(true)}/>}
+    {confirmDeletion && 
+    <Fragment>
+        <h3>Are you sure you want to delete this meeting?</h3>
+        <SubmitButton label="No" handleChange={() => setConfirmDeletion(false)}/>
+        <SubmitButton label="Yes" handleChange={() => deleteMeeting(meeting)}/>
+    </Fragment>
+    } 
+  </>
 
   const attendanceTable = <table className={styles.md_table}>
     <tbody>
@@ -58,6 +97,7 @@ const MeetingDetails = (props) => {
     <>
       <SelectMeeting selectMeeting={setMeeting}/>
       <div className={styles.md_container}>
+        {meetingDelete}
         <div className={styles.md_info}>
           {info}
           {attendanceStats}
