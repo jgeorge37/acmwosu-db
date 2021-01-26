@@ -24,7 +24,9 @@ const SelectMeeting = (props) => {
                 const date = new Date(data[i]["meeting_date"])
                 tempList.push({
                     label: data[i]["meeting_name"] + " - " + (date.getMonth()+ 1) + "/" + date.getDate() + "/" + date.getFullYear(),
-                    value: data[i]["id"]
+                    value: data[i]["id"],
+                    code: data[i]["code"],
+                    expiration: data[i]["code_expiration"]
                 })
             }
             if(!subscribed.current) return;

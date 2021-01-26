@@ -7,7 +7,8 @@ const SelectInput = (props) => {
         var selectedOption = props.options ? props.options[0] : {}
         if(props.options) {
             props.options.forEach((option) => {
-                if(option.label === selectedValue || option.value == selectedValue || (option.value).toString() === selectedValue) {
+                if(option.label === selectedValue || option.value == selectedValue || 
+                    (typeof option.value !== 'undefined' && (option.value).toString() === selectedValue)) {
                     selectedOption = option
                 }
             });

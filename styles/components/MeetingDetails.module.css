@@ -1,0 +1,35 @@
+.md_container {
+  background-color: white;
+  color: black;
+  border-radius: 8px;
+  padding: 0.5rem;
+  margin: 1rem 0rem;
+  float: left;
+}
+
+.md_info {
+  float: left;
+  margin: 0rem 2rem 2rem 0.5rem;
+  height: 12rem;
+}
+
+.md_stats {
+  margin-top: 0.5rem;;
+}
+
+.md_stats span {
+  color: rgb(166, 122, 216);
+  font-size: 24pt;
+  font-weight: 700;
+}
+
+.md_table {
+  padding: 10px;
+  text-align: center;
+  border: 2px solid rgb(166, 122, 216);
+  border-radius: 8px;
+}
+
+.md_table th {
+  padding: 0px 8px;
+}

@@ -66,16 +66,3 @@
   background-color: purple;
   padding: 0em 0.5em 0.5em 0.5em;
 }
-
-.table {
-  border: 2px solid #373738;
-  padding: 10px;
-  margin: 10px 0px;
-  background-color: white;
-  color: #373738;
-  text-align: center;
-}
-
-.table th {
-  padding: 0px 8px;
-}

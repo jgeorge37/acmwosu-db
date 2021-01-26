@@ -43,7 +43,20 @@ async function accountAttendance(email) {
 // GET /api/meeting/meeting-list
 // Return names, dates, and ids of all meetings
 async function meetingList() {
-    const data = await pgQuery(`SELECT meeting_name, meeting_date, id FROM meeting ORDER BY meeting_date DESC`);
+    const data = await pgQuery(`SELECT 
+    meeting_name, meeting_date, id, code, code_expiration
+    FROM meeting ORDER BY meeting_date DESC`);
+    if(data.rows) {
+        data.rows.forEach((row) => {
+            if(row.code_expiration !== null) {
+                let temp = row.code_expiration.toUTCString().split("-")[0];
+                temp = new Date(temp);
+                const offset = temp.getTimezoneOffset(); // offset in minutes
+                const finalUTC = new Date(temp.getTime() - offset * 60 * 1000)
+                row.code_expiration = finalUTC.toLocaleString("en-US", {timeZone: 'America/New_York'});
+            }
+        })
+    }
     return data.rows;
 }
 
