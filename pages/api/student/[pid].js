@@ -56,6 +56,36 @@ async function searchStudents (query) {
     return data.rows;
 }
 
+// GET /api/student/ghc
+// Given an object, with properties named for the student columns (name_dot_num, fname, and/or lname) find matches
+// This is an AND situation, not OR, so when given multiple fields, the function will only return students who %match% (where input is a substring of actual) all criteria
+async function ghcStudents(query) {
+  const data = await pgQuery(`
+    SELECT
+    student.id, student.fname, student.lname, student.name_dot_num
+    FROM student
+    INNER JOIN ghc
+    ON ghc.student_id = student.id
+    WHERE
+    ${!!query.name_dot_num ?
+        "LOWER(student.name_dot_num) LIKE LOWER('%" + query.name_dot_num + "%')" : ""
+    }
+    ${!!query.name_dot_num && (!!query.lname || !!query.fname) ?
+        " AND " : ""
+    }
+    ${!!query.lname ?
+        "LOWER(student.lname) LIKE LOWER('%" + query.lname + "%')" : ""
+    }
+    ${!!query.lname && !!query.fname ?
+        " AND " : ""
+    }
+    ${!!query.fname ?
+        "LOWER(student.fname) LIKE LOWER('%" + query.fname + "%')" : ""
+    } 
+  `);
+  return data.rows;
+}
+
 // POST /api/student/create
 // Creates a new student. all params after name_dot_num are optional
 // Returns the id of the new student
@@ -98,6 +128,12 @@ export default async (req, res) => {
                 throw("Missing search criteria: query must include meeting_id");
               }
               result = await getMeetingAttendees(req.query.meeting_id);
+            } else if (pid === 'ghc') { // requires exec permission
+              [auth_token, user_email] = await checkAuth(req, res, true);
+              if (!req.query || (!req.query.name_dot_num && !req.query.lname && !req.query.fname)) {
+                throw("Missing search criteria: query must include name_dot_num, lname, and/or fname.");
+              }
+              result = await ghcStudents(req.query);
             } else {
                 throw("Invalid pid");
             }
