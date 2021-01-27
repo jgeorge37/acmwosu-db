@@ -184,7 +184,11 @@ const AddCompanyForm = (props) => {
                 </div>        
                 : // If there is a code then show code
                 <div className={styles.popup_inner}>
-                    <h2>Meeting code: {code} <br/>Code expiration: {expiration} ET</h2>
+                    <h3>
+                        Link: {window.location.origin}/attendance?code={code} <br/>
+                        Code: {code} <br/>
+                        Expiration: {expiration} ET
+                    </h3>
                 </div>}
         </div>
     )

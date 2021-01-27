@@ -2,9 +2,7 @@ import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import React from 'react'
 
-export default function Home() {
-  const user = localStorage.getItem('user');
-
+const Home =  (props) => {
   return (
     <div className={styles.container}>
       <Head>
@@ -27,14 +25,14 @@ export default function Home() {
             <p>Record your attendance at one of our meetings</p>
           </a>
           {/*
-          <a href={user ? "/scholarshipprogress" : "/signin?to=ghc"} className={styles.card}>
+          <a href={props.user && props.user.is_exec !== null ? "/scholarshipprogress" : "/signin?to=ghc"} className={styles.card}>
             <h3>GHC scholarship progress &rarr;</h3>
             <p>For GHC scholarship recipients: view your progress on the scholarship requirements</p>
           </a>
           */}
 
-          { !(user && !JSON.parse(user).is_exec) &&  // do not show to gh-only users since they can't access this anyway
-            <a href={user && JSON.parse(user).is_exec ? "/execdashboard" : "/signin?to=exec"} className={styles.card}>
+          { !(props.user && props.user.is_exec === false) &&  // do not show to gh-only users since they can't access this anyway
+            <a href={props.user && props.user.is_exec ? "/execdashboard" : "/signin?to=exec"} className={styles.card}>
               <h3>Executive console &rarr;</h3>
               <p>For ACM-W executive board members: access executive features</p>
           </a>
@@ -50,3 +48,4 @@ export default function Home() {
     </div>
   )
 }
+export default Home
