@@ -55,6 +55,7 @@ async function getVolunteerHours(email) {
   } else {
     throw "Unable to find student account!"
   }
+}
 
 // POST /api/ghc/create
 async function createGHC(id) {
