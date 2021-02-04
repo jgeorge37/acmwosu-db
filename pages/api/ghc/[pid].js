@@ -55,6 +55,15 @@ async function getVolunteerHours(email) {
   } else {
     throw "Unable to find student account!"
   }
+
+// POST /api/ghc/create
+async function createGHC(id) {
+  try {
+    await pgQuery(`INSERT ghc (student_id) VALUES (${id})`);
+  } catch(err) {
+    throw("Failed to create GHC row for student_id: " + id + "\nerror: " + err);
+  }
+  return "Successfully created GHC row for student_id: " + id;
 }
 
 export default async (req, res) => {
@@ -68,7 +77,7 @@ export default async (req, res) => {
 
     try {
         if (req.method === 'GET') {
-            if (pid === 'check-external-scholarship') { 
+            if (pid === 'check-external-scholarship') {
               if (!req.query || (!req.query.email)) {
                   throw("Missing account email in query.");
               }

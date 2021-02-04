@@ -11,6 +11,7 @@ import ManageAccounts from '../components/ManageAccounts'
 import MeetingDetails from '../components/MeetingDetails'
 import ScholarshipReqForm from '../components/ScholarshipReqForm'
 import AddMeetingForm from '../components/AddMeetingForm'
+import SubmitNotification from '../components/FormComponents/SubmitNotification'
 
 const ExecDashboard = () => {
     const [rightPanel, setRightPanel] = useState("")
