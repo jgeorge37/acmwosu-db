@@ -18,6 +18,8 @@ const GHCVolunteerForm = (props) => {
     const [eventError, setEventError] = useState("")
     const [showNotif, setShowNotif] = useState(false);
 
+    useEffect(() => {return () => {subscribed.current = false}}, [])
+
     const addVolunteerHours = async () => {
         subscribed.current = true;
         const requestOptions = {
