@@ -71,8 +71,8 @@ async function meetingAttendance(meetingId) {
 }
 
 // POST /api/meeting/create
-// Create a meeting: meeting_name, meeting_date, semester (AUXX or SPXX), and company_id associated (null if no company)
-async function create(meeting_name, meeting_date, semester, company_id) {
+// Create a meeting: meeting_name, meeting_date, semester (AUXX or SPXX), and company_ids[] associated
+async function create(meeting_name, meeting_date, semester, company_ids) {
     const localTime = new Date(meeting_date);  // UTC equivalent of the input in local time, i.e. 6pm central = 7pm eastern = 12am UTC
     const easternTime = new Date(localTime.toLocaleString("en-US", {timeZone: "America/New_York"}));
     const timeDiff = easternTime.getTime() - localTime.getTime();  // ie 7pm - 6pm
@@ -94,7 +94,7 @@ async function create(meeting_name, meeting_date, semester, company_id) {
     const data = await pgQuery(`INSERT INTO meeting (meeting_name, meeting_date, code, semester, code_expiration) 
     VALUES('${meeting_name}', '${finalTime.toUTCString()}', '${code}', '${semester}', '${expireTime.toUTCString()}');`)
 
-    if (company_id) {
+    if (company_ids.length > 0) {
 
         // Get recently created meeting id
         const meetingIdData = await pgQuery(`
@@ -104,14 +104,16 @@ async function create(meeting_name, meeting_date, semester, company_id) {
 
         const meetingId = meetingIdData.rows[0]["id"];
 
-        // add to meeting_company table
-        if ((await pgQuery(`SELECT * FROM company WHERE id = '${company_id}';`)).rows.length > 0) {
-            await pgQuery(`INSERT INTO meeting_company (meeting_id, company_id)
-            VALUES('${meetingId}', '${company_id}');`);
-        } else {
-            // This shouldn't happen b/c company search should be used but just in case
-            throw ("No company was found under that name!");
-        }
+        company_ids.map(async (id) => {
+                    // add to meeting_company table
+            if ((await pgQuery(`SELECT * FROM company WHERE id = '${id}';`)).rows.length > 0) {
+                await pgQuery(`INSERT INTO meeting_company (meeting_id, company_id)
+                VALUES('${meetingId}', '${id}');`);
+            } else {
+                // This shouldn't happen b/c company search should be used but just in case
+                throw ("No company was found under that name!");
+            }
+        })
     }
 
     data.code = code;
@@ -186,7 +188,8 @@ export default async (req, res) => {
                     if (!body.meeting_name) throw ("Must provide a meeting name!");
                     if (!body.meeting_date) throw ("Must provide meeting date!");
                     if (!body.semester) throw ("Must provide semester!");
-                    result = await create(body.meeting_name, body.meeting_date, body.semester, body.company_id);
+                    if (!body.company_ids) throw ("Must provide an empty or full list of company ids!");
+                    result = await create(body.meeting_name, body.meeting_date, body.semester, body.company_ids);
                     break;
                 case 'delete': // requires exec permission
                     [auth_token, user_email] = await checkAuth(req, res, true);
