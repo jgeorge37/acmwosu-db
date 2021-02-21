@@ -11,6 +11,17 @@ async function checkExternalScholarship(email) {
   return result.rows[0].external_sch;
 }
 
+// POST /api/ghc/record-volunteer-hours
+async function recordVolunteerHours(student_id, hours, source) {
+  try {
+    await pgQuery(`UPDATE ghc 
+    SET volunteer_hours = array_append(volunteer_hours, '${hours}'), volunteer_sources = array_append(volunteer_sources, '${source}') 
+    WHERE student_id = '${student_id}'`);
+  } catch (err) {
+    throw("Could not update volunteer hours for student id: " + student_id + "! "  + err)
+  }  
+}
+
 // POST /api/ghc/enter-external-scholarship
 async function enterExternalScholarship(name_dot_num, id, type, description) {
   let prefix;
@@ -109,6 +120,12 @@ export default async (req, res) => {
             if (!body.req_type) throw("Missing req_type");
             if (!body.req_desc) throw("Missing req_desc");
             result = await enterExternalScholarship(body.name_dot_num, body.student_id, body.req_type, body.req_desc);
+          } else if (pid === 'record-volunteer-hours') { // requires exec permission
+            [auth_token, user_email] = await checkAuth(req, res, true);
+            if (!body.student_id) throw("Missing student_id");
+            if (!body.hours) throw("Missing hours");
+            if (!body.source) throw("Missing source/event name");
+            await recordVolunteerHours(body.student_id, body.hours, body.source);
           } else {
               throw("Invalid pid")
           }
