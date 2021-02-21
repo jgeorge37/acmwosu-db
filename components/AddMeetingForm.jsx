@@ -31,6 +31,8 @@ const AddCompanyForm = (props) => {
         name: null,
         id: null
     })
+    const companyList = useRef([]);
+    const companyIds = useRef(new Set())
 
     const [meetingError, setMeetingError] = useState("")
     const [semesterError, setSemesterError] = useState("")
@@ -40,6 +42,7 @@ const AddCompanyForm = (props) => {
     const [code, setCode] = useState("")
     const [expiration, setExpiration] = useState("")
     const [showNotif, setShowNotif] = useState(false)
+    const [addedCompanies, setAddedCompanies] = useState(null);
 
     useEffect(() => {return () => {subscribed.current = false}}, [])
 
@@ -47,6 +50,7 @@ const AddCompanyForm = (props) => {
         subscribed.current = true;
         const dateAndTime = new Date(date.current.month + " " + date.current.day + ", " + date.current.year + " " +
         time.current.hours + ":" + time.current.minutes + ":00 " + time.current.timeOfDay)
+        const companyIds = companyList.current.map((company) => company.id);
         const requestOptionsMeeting = {
             method: 'POST',
             body: JSON.stringify(
@@ -54,7 +58,7 @@ const AddCompanyForm = (props) => {
                   meeting_name: meetingName.current,
                   meeting_date: dateAndTime,
                   semester: semester.current,
-                  company_id: company.current.id
+                  company_ids: companyIds
               }
             )
         };
@@ -69,7 +73,7 @@ const AddCompanyForm = (props) => {
     const handleChange = () => {
         resetAllErrors()
         if (meetingName.current && semester.current && date.current.day && time.current.hours) {
-            if (companyMeeting && !company.current.name) {
+            if (companyMeeting && !(companyList.current.length > 0)) {
                 // Company meeting was selected but no companies were found
                 setCompanyError("Must select a valid company or have the meeting not be associated with a company.")
             } else {
@@ -146,6 +150,9 @@ const AddCompanyForm = (props) => {
     const recordCompanyMeeting = (option) => {
         setCompanyMeeting(option.label == "Yes")
         if (option.label == "No") {
+            companyList.current = [];
+            companyIds.current = new Set();
+            setAddedCompanies(null);
             company.current = {
                 name: null,
                 id: null
@@ -157,6 +164,18 @@ const AddCompanyForm = (props) => {
         company.current = {
             name: companyInfo.label,
             id: companyInfo.value
+        }
+    }
+
+    const addAnotherCompany = () => {
+        if (company.current.id && !companyIds.current.has(company.current.id)) {            
+            companyList.current.push(company.current);
+            companyIds.current.add(company.current.id);
+            setAddedCompanies(companyList.current.map((company) => <li key={company.id}>{company.name}</li>));
+        } else if (!company.current.id) {
+            setCompanyError("Must select a company!")
+        } else if (companyIds.current.has(company.current.id)) {
+            setCompanyError("Company has already been added!");
         }
     }
 
@@ -176,6 +195,9 @@ const AddCompanyForm = (props) => {
                         <p>Meeting code will expire at 11:59pm on the day of the meeting.</p>
                         <SelectInput options={companyOptions} label={"Is this a company meeting?"} onChange={recordCompanyMeeting}/>
                         {companyMeeting && <CompanySearchInput onChange={recordCompanyInfo}/>}
+                        {companyMeeting && <SubmitButton label="Add Company" handleChange={addAnotherCompany}/>}
+                        {companyMeeting && <h3>Added Companies</h3>}
+                        {addedCompanies}
                         <p className={styles.error}>{companyError}</p>
                     </div>
                     <div>
