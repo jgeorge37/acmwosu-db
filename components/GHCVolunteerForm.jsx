@@ -3,42 +3,52 @@ import TextField from './FormComponents/TextField'
 import SelectInput from './FormComponents/SelectInput'
 import SubmitNotification from './FormComponents/SubmitNotification'
 import styles from '../styles/components/Form.module.css'
-import {useState} from 'react'
+import {useState, useRef} from 'react'
 import {validateNumVolHours} from '../utility/utility'
 import React from 'react'
+import StudentSearch from './FormComponents/StudentSearch'
 
 const GHCVolunteerForm = (props) => {
 
-    // eventually connect this to actual GHC scholarship awardees from database
-    // Can implement a search similar to "company search component" but for members
-    const GHCNames = [
-        {label: "Milly Mason"},
-        {label: "Jing George"},
-        {label: "Angela Li"},
-        {label: "Morgan Zahner"},
-        {label: "Sara Miskus"},
-        {label: "Amy Huang"}
-    ];
-
-    const [GHCName, setGHCName] = useState("")
-    const [volunteerEventName, setVolunteerEventName] = useState("")
-    const [numHours, setNumHours] = useState(0)
+    const subscribed = useRef(false)
+    const ghcStudent = useState(null)
+    const volunteerEventName = useRef("")
+    const numHours = useRef(0)
     const [hourError, setHourError] = useState("")
     const [eventError, setEventError] = useState("")
     const [showNotif, setShowNotif] = useState(false);
 
+    useEffect(() => {return () => {subscribed.current = false}}, [])
+
+    const addVolunteerHours = async () => {
+        subscribed.current = true;
+        const requestOptions = {
+            method: 'POST',
+            body: JSON.stringify(
+              { 
+                  student_id: ghcStudent.current.student_id,
+                  hours: numHours.current,
+                  source: volunteerEventName.current,
+              }
+            )
+        };
+        await fetch('/api/ghc/record-volunteer-hours', requestOptions)
+        if (subscribed.current) setShowNotif(true)
+        subscribed.current = false;
+    }
+
     const onSubmit = () => {
-        if (volunteerEventName == "" && numHours == 0) {
+        if (volunteerEventName.current == "" && numHours.current == 0) {
             setEventError("Event name must not be blank!")
             setHourError("Must provide a number greater than 0!")
-        } else if (volunteerEventName == "") {
+        } else if (volunteerEventName.current == "") {
             setEventError("Event name must not be blank!")
             setHourError("")
-        } else if (numHours == 0) {
+        } else if (numHours.current == 0) {
             setEventError("")
             setHourError("Must provide a number greater than 0!")
         } else {
-            // do api call to POST data
+            addVolunteerHours()
             setShowNotif(true);
         }
     }
@@ -46,7 +56,7 @@ const GHCVolunteerForm = (props) => {
     const validateHours = (value) => {
         if (validateNumVolHours(value)) {
             setHourError("")
-            setNumHours(value)
+            numHours.current = value;
             console.log(value)
         } else {
             setHourError("Must be a number between 1-99")
@@ -59,10 +69,12 @@ const GHCVolunteerForm = (props) => {
             <form className={styles.form}>
                 <h2>Volunteer Hour Update Form</h2>
                 <div>                        
-                    <SelectInput label={"Update volunteer hours for: "} options={GHCNames} onChange={(option) => setGHCName(option.label)}/>
+                <StudentSearch
+                        selectStudent={student => {ghcStudent.current = student}} 
+                        ghcFlag={true}/>
                 </div>
                 <div>
-                    <TextField label="Volunteer Event Name" error={eventError} onChange={(event) => setVolunteerEventName(event.target.value)}/>
+                    <TextField label="Volunteer Event Name" error={eventError} onChange={(event) => {volunteerEventName.current = event.target.value}}/>
                     <TextField label="Number of Hours" error={hourError} onChange={(event) => validateHours(event.target.value)}/>
                 </div>                    
             </form>
