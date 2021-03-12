@@ -19,11 +19,18 @@ async function createStudent(fname, lname, name_dot_num, personal_email, school_
 // event_code: code for meeting, f_name: first name of student, 
 // l_name_dot_num: last name and dot number of student, year_level: school level of student
 // list_serv: boolean - student wants to be added to the newsletter
-async function record (event_code, f_name, l_name_dot_num, year_level, list_serv) {
-    // don't do anything if the attendance code is not valid
-    // no timezone conversion since UTC = UTC
-    let meetingId = await pgQuery(`SELECT id FROM meeting WHERE code='${event_code}' AND current_timestamp <= code_expiration`); 
-    if(meetingId.rowCount === 0) throw (`Meeting code ${event_code} invalid or expired.`);
+async function record (event_code, f_name, l_name_dot_num, year_level, list_serv, disable_expr) {
+    let meetingId = "";
+    
+    if(disable_expr) {
+        meetingId = await pgQuery(`SELECT id FROM meeting WHERE code='${event_code}'`); 
+        if(meetingId.rowCount === 0) throw (`Meeting code ${event_code} invalid`);
+    } else {
+        // don't do anything if the attendance code is not valid
+        // no timezone conversion since UTC = UTC
+        meetingId = await pgQuery(`SELECT id FROM meeting WHERE code='${event_code}' AND current_timestamp <= code_expiration`); 
+        if(meetingId.rowCount === 0) throw (`Meeting code ${event_code} invalid or expired.`);
+    }
     meetingId = meetingId.rows[0].id;
 
     let curr_student_id = await pgQuery(`SELECT id FROM student WHERE name_dot_num = '${l_name_dot_num.toLowerCase()}'`);
@@ -76,7 +83,7 @@ export default async (req, res) => {
                     if (!body.l_name_dot_num) throw ("Must provide a last name dot number!");
                     if (!body.year_level) throw ("Must provide a school level!");
                     if (typeof body.list_serv !== 'boolean') throw ("Must provide list serv boolean");
-                    result = await record(body.event_code, body.f_name, body.l_name_dot_num, body.year_level, body.list_serv);
+                    result = await record(body.event_code, body.f_name, body.l_name_dot_num, body.year_level, body.list_serv, body.disable_expr);
                     break;
                 // probs need to add more error checks in future
                 default:
