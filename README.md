@@ -53,3 +53,11 @@ M_DB_USER={Your local Postgres username, most likely "postgres"}
 M_DB_DATABASE={The name of the database you wish to use from your local instance}
 ~~~~
 3. From the root directory, run the command ```npm run migrate```. This will run migrations on only your local Postgres instance.
+
+## Previous attendance upload
+* Should not have to be used after uploading AU20 attendance, but if needed, there is a python script to create meetings and record attendance from a csv. 
+* An example csv is in the scripts folder. 
+* To use the script, set the base URL to the application URL you are targeting, get your auth token as described in the API testing section, change the semester if needed, and set the path to your csv. 
+* Locally, go to the scripts directory then do ```python --version```, if no version is found you need to install python - google that
+* Do ```python attendance_upload.py``` - you will probably get errors about missing packages. Do ```pip install PACKAGE_NAME_THAT_IS_MISSING``` (may need to add ```--user``` arg if on Windows (ew)). 
+* If it works correctly it will print messages about the meetings it has created.
