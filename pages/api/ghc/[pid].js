@@ -51,7 +51,7 @@ async function getVolunteerHours(email) {
 
   const volunteerData = await pgQuery(`
     SELECT g.volunteer_hours, g.volunteer_sources 
-    FROM ghc g INNER JOIN account a on g.student_id = a.id
+    FROM ghc g INNER JOIN account a on g.student_id = a.student_id
     WHERE a.email = '${email}';
   `)
 
