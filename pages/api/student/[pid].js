@@ -115,9 +115,7 @@ async function list(fall, spring, limit, offset) {
 
       FROM student s 
       LEFT JOIN meeting_student ms ON s.id = ms.student_id
-      INNER JOIN meeting m ON ms.meeting_id = m.id
-
-      WHERE m.semester IN ('${fall}', '${spring}')
+      LEFT JOIN meeting m ON ms.meeting_id = m.id
 
       GROUP BY(s.id, s.fname, s.name_dot_num)
       ORDER BY LOWER(s.name_dot_num) ASC
@@ -127,7 +125,7 @@ async function list(fall, spring, limit, offset) {
 
   if(students.rowCount != 0) data.studentRows = students.rows;
   // Get total number of accounts
-  data.totalCount = (await pgQuery(`SELECT COUNT(*) FROM student;`)).rows[0].count;
+  data.totalCount = (await pgQuery(`SELECT COUNT(id) FROM student;`)).rows[0].count;
   return data;
 }
 
