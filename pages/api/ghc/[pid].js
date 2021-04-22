@@ -35,6 +35,25 @@ async function enterExternalScholarship(name_dot_num, id, type, description) {
   return "Successfully updated external scholarship requirement for " + name_dot_num;
 }
 
+// GET /api/ghc/volunteer-hours
+async function getVolunteerHours(email) {
+
+  const volunteerData = await pgQuery(`
+    SELECT g.volunteer_hours, g.volunteer_sources 
+    FROM ghc g INNER JOIN account a on g.student_id = a.student_id
+    WHERE a.email = '${email}';
+  `)
+
+  if (!volunteerData.rows[0]) throw ('No GHC volunteers hours are recorded!')
+
+  const volunteerHours = volunteerData.rows[0]["volunteer_hours"];
+  var totalVolunteerHours = 0;
+  if (volunteerHours) volunteerHours.forEach((hours) => {totalVolunteerHours += hours});
+  volunteerData.rows[0].totalHours = totalVolunteerHours;
+  return volunteerData.rows[0];
+
+}
+
 export default async (req, res) => {
     const {
       query: { pid },
@@ -57,6 +76,17 @@ export default async (req, res) => {
                 [auth_token, user_email] = await checkAuth(req, res, true);
               }
               result = await checkExternalScholarship(req.query.email);
+            } else if (pid == 'volunteer-hours') { 
+                if (!req.query || !req.query.email) {
+                  throw("Missing account email in query.");
+                }
+                // requires account permission IF querying for SELF
+                [auth_token, user_email] = await checkAuth(req, res, false);
+                if(user_email !== req.query.email) {
+                  // query is not for signed in user - requires exec permission
+                  [auth_token, user_email] = await checkAuth(req, res, true);
+                }
+                result = await getVolunteerHours(req.query.email);
             } else {
                 throw("Invalid pid");
             }
