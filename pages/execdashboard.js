@@ -8,6 +8,7 @@ import AddAccountForm from '../components/AddAccountForm'
 import TimeSelectionForm from '../components/FormComponents/TimeSelectionForm'
 import DateSelectionForm from '../components/FormComponents/DateSelectionForm'
 import ManageAccounts from '../components/ManageAccounts'
+import ManageStudents from '../components/ManageStudents'
 import MeetingDetails from '../components/MeetingDetails'
 import ScholarshipReqForm from '../components/ScholarshipReqForm'
 import AddMeetingForm from '../components/AddMeetingForm'
@@ -40,6 +41,7 @@ const ExecDashboard = () => {
     const menuLabels = [
         {label: "Create account", val: "accountCreate", check: () => { return rightPanel === "" || rightPanel === "accountCreate"}},
         {label: "Manage accounts", val: "manageAccounts"},
+        {label: "Manage students", val: "manageStudents"},
         {label: "Input GHC volunteer hours", val: "volunteer"},
         {label: "Input scholarship completion", val: "scholarship"},
         {label: "Meetings", val: "meetings"},
@@ -71,6 +73,7 @@ const ExecDashboard = () => {
                 <div className={styles.right}>
                     { (rightPanel === "" || rightPanel === "accountCreate") && <AddAccountForm/> }
                     { rightPanel === "manageAccounts" && <ManageAccounts/>}
+                    { rightPanel === "manageStudents" && <ManageStudents/>}
                     { rightPanel === "volunteer" &&  <GHCVolunteerForm/>}
                     { rightPanel === "scholarship" &&  <ScholarshipReqForm/>}
                     { rightPanel === "meetings" && 

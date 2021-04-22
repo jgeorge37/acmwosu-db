@@ -101,6 +101,36 @@ async function createStudent(fname, lname, name_dot_num, personal_email, school_
   return data.rows
 }
 
+// GET /api/student/list
+// List students (fname, name_dot_num) and attendance information
+// Paginated - uses args for limit and offset
+async function list(fall, spring, limit, offset) {
+  const data = {studentRows: [], totalCount: null};
+  // Get data for 10 accounts
+  const students = await pgQuery(`
+      SELECT 
+      s.id, s.fname, s.name_dot_num, 
+      SUM(CASE WHEN m.semester='${fall}' THEN 1 ELSE 0 END) AS "${fall}",
+      SUM(CASE WHEN m.semester='${spring}' THEN 1 ELSE 0 END) AS "${spring}"
+
+      FROM student s 
+      LEFT JOIN meeting_student ms ON s.id = ms.student_id
+      INNER JOIN meeting m ON ms.meeting_id = m.id
+
+      WHERE m.semester IN ('${fall}', '${spring}')
+
+      GROUP BY(s.id, s.fname, s.name_dot_num)
+      ORDER BY LOWER(s.name_dot_num) ASC
+      LIMIT ${limit}
+      OFFSET ${offset}
+  ;`);
+
+  if(students.rowCount != 0) data.studentRows = students.rows;
+  // Get total number of accounts
+  data.totalCount = (await pgQuery(`SELECT COUNT(*) FROM student;`)).rows[0].count;
+  return data;
+}
+
 export default async (req, res) => {
     const {
       query: { pid },
@@ -134,6 +164,11 @@ export default async (req, res) => {
                 throw("Missing search criteria: query must include name_dot_num, lname, and/or fname.");
               }
               result = await ghcStudents(req.query);
+            } else if (pid === 'list') { // requires exec permission
+              [auth_token, user_email] = await checkAuth(req, res, true);
+              if(!req.query.offset || !req.query.limit) throw("Missing limit and/or offset in query");
+              if(!req.query.spring || !req.query.fall) throw("Query requires fall and spring semester (AUxx, SPxx)");
+              result = await list(req.query.fall, req.query.spring, req.query.limit, req.query.offset);
             } else {
                 throw("Invalid pid");
             }
