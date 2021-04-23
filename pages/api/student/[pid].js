@@ -129,6 +129,21 @@ async function list(fall, spring, limit, offset) {
   return data;
 }
 
+// DELETE /api/byId with id param
+// delete student entry and related data from GHC, meeting_student, account
+async function deleteById(id) {
+  // Delete attendance records
+  await pgQuery(`DELETE FROM meeting_student WHERE student_id=${id};`);
+  // Delete GHC entry
+  await pgQuery(`DELETE FROM ghc WHERE student_id=${id};`);
+  // Delete account
+  await pgQuery(`DELETE FROM account WHERE student_id=${id};`);
+  // Delete student row
+  await pgQuery(`DELETE FROM student WHERE id=${id};`);
+
+  return {message: "deleted student " + id};
+}
+
 export default async (req, res) => {
     const {
       query: { pid },
@@ -164,7 +179,7 @@ export default async (req, res) => {
               result = await ghcStudents(req.query);
             } else if (pid === 'list') { // requires exec permission
               [auth_token, user_email] = await checkAuth(req, res, true);
-              if(!req.query.offset || !req.query.limit) throw("Missing limit and/or offset in query");
+              if(!req.query || !req.query.offset || !req.query.limit) throw("Missing limit and/or offset in query");
               if(!req.query.spring || !req.query.fall) throw("Query requires fall and spring semester (AUxx, SPxx)");
               result = await list(req.query.fall, req.query.spring, req.query.limit, req.query.offset);
             } else {
@@ -178,12 +193,23 @@ export default async (req, res) => {
               throw("Missing parameters: body must include fname, lname, and name_dot_num")
             }
             result = await createStudent(body.fname, body.lname, body.name_dot_num, body.personal_email, body.school_level, body.packet_sent_date);
+          } else {
+            throw("Invalid pid");
+          }
+        } else if (req.method === 'DELETE') { // requires exec permission
+          [auth_token, user_email] = await checkAuth(req, res, true);
+          if (pid === 'byId') {
+            if (!req.query || !req.query.id) throw("Missing id of student to delete in query params");
+            result = await deleteById(req.query.id);
+          } else {
+            throw("Invalid pid");
           }
         } else {
             throw("Invalid request type for student");
         }
         res.statusCode = 200;
     } catch(err) {
+      console.log(err);
       if(!res.statusCode || res.statusCode === 200 ) res.statusCode = 500;
       result.error = err;
     } finally {

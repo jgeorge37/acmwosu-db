@@ -43,3 +43,20 @@
   border-collapse: collapse;
   height: 3rem;
 }
+
+.listContainer .listRow .actionButton {
+  background-color: rgba(0,0,0,0);
+  border: none;
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem 0.3rem;
+}
+
+.listContainer .listRow .actionButton:hover {
+  cursor: pointer;
+  background-color: #B1B1B1;
+}
+
+.listContainer .listRow .deleteButton {
+  color: white;
+  background-color: #E87474;
+}
