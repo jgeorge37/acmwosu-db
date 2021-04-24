@@ -1,6 +1,8 @@
-import styles from '../styles/components/ManageAccounts.module.css';
-import {currentAcademicYear} from '../utility/utility';
+import styles from '../../styles/components/ManageRows.module.css';
+import {currentAcademicYear} from '../../utility/utility';
+import ConfirmModal from '../FormComponents/ConfirmModal';
 import {useEffect, useRef, useState} from 'react';
+import DeleteButton from './DeleteButton';
 import React from 'react'
 
 const LIMIT = 10;
@@ -12,6 +14,11 @@ const StudentRow = (props) => {
       <td>{props.nameDotNum}</td>
       <td>{props.fall}</td>
       <td>{props.spring}</td>
+      <td><DeleteButton 
+        name={props.fname + " " + props.nameDotNum} 
+        id={props.id}
+        refreshFxn={props.refreshFxn}
+      /></td>
     </tr>
   )
 }
@@ -56,6 +63,7 @@ const ManageStudents = (props) => {
   return (
     <div>
       <h2>Manage students</h2>
+      <p>List shows all students in database - attendance shown for current academic year.</p>
       <div className={styles.listContainer}>
         <table>
           <thead><tr>
@@ -63,6 +71,7 @@ const ManageStudents = (props) => {
             <th>Name dot number</th>
             <th>{fall}</th>
             <th>{spring}</th>
+            <th>Actions</th>
           </tr></thead>
           <tbody>
           {students.map((acc) => 
@@ -72,6 +81,8 @@ const ManageStudents = (props) => {
               fall={acc[fall]}
               spring={acc[spring]}
               key={acc.id}
+              id={acc.id}
+              refreshFxn={getStudents}
             />
           )}
           </tbody>
