@@ -9,19 +9,42 @@ async function companiesByString (input) {
     return data.rows;
 }
 
+// email required
+async function createContact(email, fname, lname, mailing, companyId) {
+    if(!email) throw ("createContact requires an email address");
+    let columns = 'email';
+    let values = `'${email}'`;
+    if(fname) {
+        columns += ', fname';
+        values += ', ' + `'${fname}'`
+    }
+    if(lname) {
+        columns += ', lname';
+        values += ', ' + `'${lname}'`
+    }
+    if(mailing) {
+        columns += ', mailing_addr';
+        values += ', ' + `'${mailing}'`
+    }
+    if(companyId) {
+        columns += ', company_id';
+        values += ', ' + `'${companyId}'`
+    }
+    await pgQuery(`INSERT INTO contact (${columns}) VALUES (${values});`);
+    return {message: "Inserted " + values};
+}
+
 // POST /api/company/create
 // Create a company, and optionally an associated contact
 async function create (name, email, fname, lname, mailing) {
-    let data = await pgQuery(`INSERT INTO company (cname) VALUES ('${name}');`);
+    await pgQuery(`INSERT INTO company (cname) VALUES ('${name}');`);
     // email is required to add contact
-    // TODO: call add contact function to be implemented in ADA-44
-    /*
     if(email) {
-
+        let companyId = await pgQuery(`SELECT id FROM company WHERE cname='${name}';`);
+        companyId = companyId.rows[0].company_id;
+        await createContact(email, fname, lname, mailing, companyId);
     }
-    */
-    
-    return data;
+    return {message: "Created company " + name};
 }
 
 export default async (req, res) => {
@@ -50,6 +73,11 @@ export default async (req, res) => {
                     if(!body.company_name) throw("Missing company name in request body");
                     result = await create(body.company_name, body.email, body.fname, body.lname, body.mailing_address);
                     break;
+                case 'create-contact': // requires exec permission
+                    [auth_token, user_email] = await checkAuth(req, res, true);
+                    if(!body.email) throw("Missing email in request body");
+                    result = await createContact(body.email, body.fname, body.lname, body.mailing_address, body.company_id);
+                    break;
                 default:
                     throw("Invalid pid");
             }
@@ -65,3 +93,4 @@ export default async (req, res) => {
         res.json(result);
     }
   }
+ 
