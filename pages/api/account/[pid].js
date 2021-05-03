@@ -2,6 +2,11 @@ import pgQuery from '../../../postgres/pg-query.js';
 import {generateAuth, checkAuth} from '../auth/[pid]';
 import {serialize} from 'cookie';
 
+async function getByStudentId(student_id) {
+    const data = await pgQuery(`SELECT email, is_exec FROM account WHERE student_id = ${student_id};`);
+    return data;
+}
+
 // POST /api/account/verify
 // Check for matching email and password
 async function verify (email, password) {
@@ -195,3 +200,5 @@ export default async (req, res) => {
         res.json(result);
     }
   }
+
+  export {getByStudentId};

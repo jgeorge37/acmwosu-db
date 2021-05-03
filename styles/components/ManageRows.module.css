@@ -48,7 +48,9 @@
   background-color: rgba(0,0,0,0);
   border: none;
   border-radius: 4px;
-  padding: 0.25rem 0.5rem 0.3rem;
+  padding: 0.2rem 0.45rem 0.25rem;
+  margin: 0rem 0.12rem;
+  font-size: 12pt;
 }
 
 .listContainer .listRow .actionButton:hover {
@@ -58,5 +60,10 @@
 
 .listContainer .listRow .deleteButton {
   color: white;
-  background-color: #E87474;
+  background-color: #DD5959;
+}
+
+.listContainer .listRow .infoButton {
+  color: white;
+  background-color: #5FB54C;
 }

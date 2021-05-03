@@ -1,8 +1,8 @@
 import styles from '../../styles/components/ManageRows.module.css';
 import {currentAcademicYear} from '../../utility/utility';
-import ConfirmModal from '../FormComponents/ConfirmModal';
 import {useEffect, useRef, useState} from 'react';
 import DeleteButton from './DeleteButton';
+import InfoButton from './InfoButton';
 import React from 'react'
 
 const LIMIT = 10;
@@ -14,11 +14,17 @@ const StudentRow = (props) => {
       <td>{props.nameDotNum}</td>
       <td>{props.fall}</td>
       <td>{props.spring}</td>
-      <td><DeleteButton 
-        name={props.fname + " " + props.nameDotNum} 
-        id={props.id}
-        refreshFxn={props.refreshFxn}
-      /></td>
+      <td>
+        <InfoButton
+          name={props.fname + " " + props.nameDotNum}
+          id={props.id}
+        />
+        <DeleteButton 
+          name={props.fname + " " + props.nameDotNum} 
+          id={props.id}
+          refreshFxn={props.refreshFxn}
+        />
+      </td>
     </tr>
   )
 }
