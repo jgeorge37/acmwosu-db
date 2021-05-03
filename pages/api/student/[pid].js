@@ -1,7 +1,8 @@
 import pgQuery from '../../../postgres/pg-query.js';
-import {currentAcademicYear} from '../../../utility/utility';
+import {currentAcademicYear, schoolLevelIntToString} from '../../../utility/utility';
 import {checkAuth} from '../auth/[pid]';
 import {serialize} from 'cookie';
+import moment from 'moment-timezone';
 
 // GET /api/student/meeting-attendees
 async function getMeetingAttendees(meeting_id) {
@@ -144,6 +145,38 @@ async function deleteById(id) {
   return {message: "deleted student " + id};
 }
 
+// GET /api/details
+// get details about student given id
+async function getDetails(id) {
+  // Student table info - personal_email, school_level
+  let data = await pgQuery(`SELECT personal_email, school_level FROM student WHERE id=${id};`);
+  if (data.rowCount === 0) throw ("Student with id " + id + " not found");
+  const studentRow = data.rows[0];
+  studentRow['school_level'] = schoolLevelIntToString(studentRow['school_level']);
+  data = data.rows[0];
+
+  // Attendance information
+  const meetings = await pgQuery(`
+    SELECT m.meeting_name, m.meeting_date, m.semester 
+    FROM meeting m INNER JOIN meeting_student ms ON ms.meeting_id = m.id
+    WHERE ms.student_id = ${id}
+    ORDER BY m.meeting_date
+  ;`);
+  if (meetings.rowCount !== 0) {
+    data['meetings'] = meetings.rows;
+    data['meetings'].forEach((meeting) => {
+      const timezone1 = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const format1 = 'YYYY-MM-DD HH:mm:ss';
+      const backToUtc = moment(meeting.meeting_date).tz(timezone1).format(format1).slice(0);
+      const timezone2 = 'America/New_York';
+      const format2 = 'MM/DD/YYYY';
+      const eastern = moment.utc(backToUtc).tz(timezone2).format(format2);
+      meeting.meeting_date = eastern;
+    })
+  }
+  return data;
+}
+
 export default async (req, res) => {
     const {
       query: { pid },
@@ -182,6 +215,10 @@ export default async (req, res) => {
               if(!req.query || !req.query.offset || !req.query.limit) throw("Missing limit and/or offset in query");
               if(!req.query.spring || !req.query.fall) throw("Query requires fall and spring semester (AUxx, SPxx)");
               result = await list(req.query.fall, req.query.spring, req.query.limit, req.query.offset);
+            } else if (pid === 'details') { // requires exec permission
+              [auth_token, user_email] = await checkAuth(req, res, true);
+              if(!req.query || !req.query.id) throw("Missing student id in query");
+              result = await getDetails(req.query.id);
             } else {
                 throw("Invalid pid");
             }

@@ -1,6 +1,6 @@
 import React from 'react';
 import {useState, useRef, useEffect} from 'react';
-import ConfirmModal from '../FormComponents/ConfirmModal';
+import ConfirmModal from '../Modals/ConfirmModal';
 import styles from '../../styles/components/ManageRows.module.css';
 
 const DeleteButton = (props) => {

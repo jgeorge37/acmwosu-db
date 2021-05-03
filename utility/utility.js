@@ -17,6 +17,17 @@ function currentAcademicYear() {
   return [fall, spring];
 }
 
+function schoolLevelIntToString(schoolLevel) {
+  if(schoolLevel == 1) return "First year";
+  if(schoolLevel == 2) return "Second year";
+  if(schoolLevel == 3) return "Third year";
+  if(schoolLevel == 4) return "Fourth year";
+  if(schoolLevel == 5) return "Fifth+ year";
+  if(schoolLevel == 6) return "Masters or PhD";
+  if(schoolLevel == 7) return "Alum";
+  return schoolLevel;
+}
+
 function validatePassword(input) {
   //at least one number, one uppercase letter, one lowercase letter, one special character
   const regex = new RegExp(/^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$/);
@@ -79,4 +90,15 @@ function validateTime(input, unit) {
   return regex.test(input);
 }
 
-export {currentAcademicYear, validatePassword, validateEmail, validateGeneralEmail, validateLetters, validateLastNameDotNum, validateNumVolHours, validateTime, validateName}
+export {
+  currentAcademicYear, 
+  schoolLevelIntToString, 
+  validatePassword, 
+  validateEmail, 
+  validateGeneralEmail, 
+  validateLetters, 
+  validateLastNameDotNum, 
+  validateNumVolHours, 
+  validateTime, 
+  validateName
+}
