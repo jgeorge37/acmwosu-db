@@ -17,6 +17,12 @@
     cursor: pointer;
   }
 
+  .button:disabled {
+    background-color: gray;
+    color: #373738;
+    cursor: auto;
+  }
+
   .field {
     height: 40px;
     border-radius: 4px;

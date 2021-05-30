@@ -9,7 +9,7 @@ const SubmitNotification = (props) => {
     if(props.showNotif) {
       const timer = setTimeout(() => {
         props.setShowNotif(false);
-      }, 10000);
+      }, 30000);
       return () => clearTimeout(timer);
     }
   }, [props.showNotif]);

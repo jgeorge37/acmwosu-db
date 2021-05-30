@@ -3,7 +3,7 @@ import React from 'react'
 
 const SubmitButton = (props) => {
     return (
-        <button className={styles.button} onClick={props.handleChange}>{props.label}</button>
+        <button className={styles.button} disabled={props.disabled} onClick={props.handleChange}>{props.label}</button>
     )
 }   
 
