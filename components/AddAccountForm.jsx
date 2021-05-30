@@ -15,8 +15,8 @@ const AddAccountForm = (props) => {
     const [lnamedotnum, setLnamedotnum] = useState("")
     const [osuEmail, setOsuEmail] = useState("@osu.edu")
     const [studentID, setStudentID] = useState("")
-    const [accountType, setAccountType] = useState(accountTypes[0].label)
-    const [searchFound, setSearchFound] = useState(false)
+    const [accountType, setAccountType] = useState(accountTypes[0])
+    const [usingSearch, setUsingSearch] = useState(true)
 
     const [fNameError, setfNameError] = useState("");
     const [lNameDotNumError, setlNameDotNumError] = useState("");
@@ -45,9 +45,11 @@ const AddAccountForm = (props) => {
               setlNameDotNumError("")
             }
         } else {
-          // temporary fix for bug with account type
-            create().then(location.reload);
-            //setShowNotif(true)
+            create().then(() => {
+              setlNameDotNumError("");
+              setfNameError("");
+              setAccountExistsError("");
+            })
         }
     }
 
@@ -89,15 +91,15 @@ const AddAccountForm = (props) => {
       // first check that there is not an existing account
       const url = '/api/account/exists?email=' + osuEmail.toLowerCase();
       const res = await fetch(url, {method: 'GET'});
-      const results = res.json();
-      if (results.rows.length == 0) {
+      const results = await res.json();
+      if (results.rowCount === 0) {
         // account does not exist, make one
         const requestOptionsAccount = { 
           method: 'POST',
           body: JSON.stringify( // makes copies to prevent synthetic event error
             { email: osuEmail.toLowerCase(),
               student_id: id,
-              is_exec: (accountType === "Exec") + "" }
+              is_exec: (accountType.label === "Exec") + "" }
           )
         };
         await fetch('/api/account/create', requestOptionsAccount);
@@ -113,13 +115,11 @@ const AddAccountForm = (props) => {
     const selectStudent = (student) => {
         if (student) {
           let {fname, name_dot_num, student_id} = student;
-          setSearchFound(true)
           setFname(fname)
           setLnamedotnum(name_dot_num)
           setStudentID(student_id)
-          setOsuEmail(name_dot_num.toLowerCase() + "@osu.edu")
+          if (name_dot_num) setOsuEmail(name_dot_num.toLowerCase() + "@osu.edu")
         } else {
-          setSearchFound(false)
           setFname("")
           setLnamedotnum("")
           setStudentID("")
@@ -138,24 +138,55 @@ const AddAccountForm = (props) => {
             <SubmitNotification showNotif={showNotif} setShowNotif={setShowNotif}/>
             <form className={styles.form}>
                 <h2>Create Account</h2>
-                <div>
-                    <div className={styles.box}>
-                      <StudentSearch
-                        fNameError={fNameError}
-                        setfNameError={setfNameError}
-                        lNameDotNumError={lNameDotNumError}
-                        setlNameDotNumError={setlNameDotNumError}
-                        selectStudent={student => selectStudent(student)}
-                      />
-                    </div>
-                    <TextField label="First Name" value={fname} error={fNameError} onChange={(event) => setFname(event.target.value)} disabled={searchFound} />
-                    <TextField label="Last Name.#" value={lnamedotnum} error={lNameDotNumError} onChange={(event) => handleLastNameChange(event)} disabled={searchFound} />
-                    <TextField label="OSU Email Address" value={osuEmail} disabled={true} />
-                    <SelectInput label='Account Type' options={accountTypes} onChange={setAccountType}/>
+                Fill out this form to create an account for an exec board member or a GHC scholarship recipient. 
+                The account will be created with a randomized password, unknown to anyone, so the new account owner 
+                must set a password by going to the sign-in page and requesting a password reset email to use the account.
+
+                {/* Section 1 - name and name dot number */}
+                <h3>1. Student info</h3>
+                <div className={styles.indent}>
+                  {/* Indicate if using student search or manual creation */}
+                  <div onChange={(event) => setUsingSearch(event.target.value === "true")}>
+                    <input type="radio" name="useSearch" value="true" defaultChecked="checked"/> 
+                      Create account from student found in Student Search (try this first) <br/>
+                    <input type="radio" name="useSearch" value="false"/> 
+                      Student not found in Search - manually enter details for account
+                  </div>
+                  {/* Show student search or regular text fields depending on above selection */}
+                  <div>
+                  {usingSearch ? 
+                    ( <StudentSearch
+                      fNameError={fNameError}
+                      setfNameError={setfNameError}
+                      lNameDotNumError={lNameDotNumError}
+                      setlNameDotNumError={setlNameDotNumError}
+                      selectStudent={student => selectStudent(student)}
+                    /> )
+                  :
+                    ( <> <h3>Manual Entry</h3>
+                    <TextField label="First Name" value={fname} error={fNameError} onChange={(event) => setFname(event.target.value)}/>
+                    <TextField label="Last Name.#" value={lnamedotnum} error={lNameDotNumError} onChange={(event) => handleLastNameChange(event)}/>
+                    </> ) 
+                  }
+                  </div>
                 </div>
+
+                {/* Section 2 - GHC-only or Exec account */}
+                <h3>2. Permissions (GHC-only or Exec)</h3>
+                <div className={styles.indent}><SelectInput label='Account Type' options={accountTypes} onChange={setAccountType}/></div>
+
+                {/* Section 3 - Review, submit */}
+                <h3>3. Review</h3>
+                <div className={styles.indent}>
+                  Creating 
+                  <b> {accountType && accountType.label ? accountType.label : '___'}</b> account for 
+                  <b> {fname ? fname : '____'} {lnamedotnum ? lnamedotnum : "______"}</b> with email address 
+                  <b> {osuEmail}</b>.
+                </div>
+                    
             </form>
             <div className={styles.buttons}>
-                <SubmitButton label="Apply" handleChange={onSubmit} />
+                <SubmitButton label="Submit" handleChange={onSubmit} disabled={!osuEmail || !fname || !lnamedotnum} />
                 <h3 className={styles.error}>{accountExistsError}</h3>
             </div>
         </div>
