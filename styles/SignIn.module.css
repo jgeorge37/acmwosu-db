@@ -195,6 +195,7 @@ label.error {
 
 #sponLogos {
   margin-bottom: 1rem;
+  max-width: 60%;
 }
 
 @media (max-width: 600px) {
