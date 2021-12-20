@@ -60,7 +60,7 @@ const AttendanceFormV2 = (props) => {
       }
       .sponsor-logos {
         width: auto;
-        max-width: 400px;
+        max-width: 80%;
         height: auto;
         max-height: 400px;
         margin: auto;
