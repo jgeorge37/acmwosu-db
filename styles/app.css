@@ -21,8 +21,9 @@ a {
 	animation: gradient 10s ease infinite;
   color: white;
 }
-.component {
+.component-div {
   min-height: 100vh;
+  padding: 1rem;
 }
 
 @keyframes gradient {

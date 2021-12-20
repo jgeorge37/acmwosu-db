@@ -11,7 +11,7 @@ function App({ Component, pageProps }) {
         <link rel="icon" href="/logorainbow.png" />
       </Head>
       <div className="app-container">
-        <div className="component">
+        <div className="component-div">
           <Component {...pageProps} />
         </div>
       </div>
