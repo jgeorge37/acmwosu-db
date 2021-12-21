@@ -21,7 +21,7 @@ APP_URL=http://localhost:3000
 # Airtable API key
 AIRTABLE_API_KEY={the API key found in Airtable account}
 
-# Airtable base ID for the current attendance base
+# Airtable base ID for the DEV attendance base
 AIRTABLE_BASE_ID={the base ID}
 
 ~~~~
