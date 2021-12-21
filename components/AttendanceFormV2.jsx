@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {validateName, validateLastNameDotNum} from '../utility/utility';
+import { getMeetingIdByCode, recordAttendance } from '../utility/api_util';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
@@ -12,10 +13,26 @@ const AttendanceFormV2 = (props) => {
   const listServ = useRef(1);
   const [failureMessage, setFailureMessage] = useState("");
   const [success, setSuccess] = useState(false);
+  const subscribed = useRef(false);
+
+  // prevent async update if unmounted
+  useEffect(() => {return () => {subscribed.current = false}}, []);
+
+  const processAttendance = async() => {
+    const meetingId = await getMeetingIdByCode(eventCode.current);
+    console.log(meetingId);
+    const studentObj = {
+      last_name_dot_num: lastNameDotNum.current,
+      first_name: firstName.current,
+      school_level: year.current,
+      add_to_newsletter: listServ.current
+    }
+    await recordAttendance(meetingId, studentObj);
+  }
 
   const onSubmit = (event) => {
     event.preventDefault();
-
+    
     if (!validateName(firstName.current)) {
       setFailureMessage("Invalid first name.");
     } else if (!validateLastNameDotNum(lastNameDotNum.current)) {
@@ -24,7 +41,12 @@ const AttendanceFormV2 = (props) => {
       setFailureMessage("Event code cannot be empty.")
     } else {
       setFailureMessage("");
-      console.log("valid submission");
+      subscribed.current = true;
+      processAttendance().then(
+        () => {if (subscribed.current) setSuccess(true);}
+      ).catch((err) => {
+        setFailureMessage("Error: " + err.message);
+      }).finally(() => {});
     }
   }
 
@@ -79,9 +101,9 @@ const AttendanceFormV2 = (props) => {
           <Form.Group className="mb-3" controlId="formYear">
             <Form.Label>Would you like to be added to the mailing list for our weekly newsletter?</Form.Label>
             <Form.Select onChange={(e) => handleChange(e, listServ)}>
-              <option value={1}>I'm already on it</option>
-              <option value={2}>Yes, please</option>
-              <option value={3}>Nope, thank you</option>
+              <option value={0}>I'm already on it</option>
+              <option value={1}>Yes, please</option>
+              <option value={2}>Nope, thank you</option>
             </Form.Select>
           </Form.Group>
 

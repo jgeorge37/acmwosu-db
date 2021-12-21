@@ -1,35 +1,42 @@
-import Airtable from 'airtable';
-import dotenv from 'dotenv';
+import { airtableBase, createRecord, getNewsletterOptions, getRecords, updateRecord } from './util';
 
-dotenv.config();
+const base = airtableBase();
 
-
-Airtable.configure({
-    endpointUrl: 'https://api.airtable.com',
-    apiKey: process.env.AIRTABLE_API_KEY
-});
-const base = Airtable.base(process.env.AIRTABLE_BASE_ID);
-
-
-async function createRecord(table, fields) {
-  const createdRecord = await table.create(fields);
-  return createdRecord;
+async function getCurrentMeeting(res, code) {
+  const records = await getRecords(base('Meetings'), {
+    filterByFormula: `code = '${code}'`,
+    view: "current_meetings"
+  })
+  if (records.length === 0) {
+    res.statusCode = 400;
+    throw new Error(`Code ${code} expired or event not found.`);
+  }
+  return {id: records[0].id};
 }
 
-async function updateRecord(table, id, fields) {
-  const updatedRecord = await table.update(id, fields);
-  return updatedRecord
-}
+async function attendance(meetingId, studentFields) {
+  const table = base('Students');
+  // standardize values
+  studentFields['add_to_newsletter'] = getNewsletterOptions()[studentFields['add_to_newsletter']];
+  studentFields['last_name_dot_num'] = studentFields['last_name_dot_num'].toLowerCase();
+  studentFields['school_level'] = parseInt(studentFields['school_level']);
 
-async function getRecordById(table, id) {
-  const record = await table.find(id);
-  return record;
-}
-
-// returns first 100 records matching selectArgs
-async function getRecords(table, selectArgs) {
-  const selectedRecords = await table.select(selectArgs).firstPage();
-  return selectedRecords;
+  // check if student exists
+  const student_records = await getRecords(table, {
+    filterByFormula: `last_name_dot_num = '${studentFields['last_name_dot_num']}'`
+  })
+  if (student_records.length === 0) {
+    studentFields['meetings'] = [meetingId];
+    await createRecord(table, studentFields);
+  } else {
+    const studentId = student_records[0].id;
+    studentFields['meetings'] = student_records[0].fields.meetings;
+    if (!studentFields['meetings'].includes(meetingId)) {
+      studentFields['meetings'].push(meetingId);
+    }
+    await updateRecord(table, studentId, studentFields);
+  }
+  return {message: "success"}
 }
 
 
@@ -42,18 +49,29 @@ export default async (req, res) => {
 
   try {
       if (req.method === 'POST') {
-          if (pid === 'run') { 
-              //result = await runMegaUpload();
-          } else {
-              throw("Invalid pid");
+        const body = typeof(req.body) === 'object' ? req.body : JSON.parse(req.body);
+        if (pid === 'attendance') { 
+          if (!body.meeting_record_id || !body.student) {
+            throw("Missing meeting_record_id and student in request body.");
           }
+          result = await attendance(body.meeting_record_id, body.student);
+        } else {
+          throw("Invalid pid");
+        }
+      } else if (req.method === 'GET') {
+        if (pid === 'current-meeting') {
+          if (!req.query || (!req.query.code)) {
+            throw("Missing code in query.");
+          }
+          result = await getCurrentMeeting(res, req.query.code);
+        }
       } else {
-          throw("Invalid request type for airtable");
+        throw("Invalid request type for airtable");
       }
       res.statusCode = 200;
   } catch(err) {
      if(!res.statusCode || res.statusCode === 200 ) res.statusCode = 500;
-      result.error = err;
+      result.error = err.message;
       console.log(err)
   } finally {
     res.json(result);
