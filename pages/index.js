@@ -24,26 +24,15 @@ const Home =  (props) => {
             <h3>Event attendance form &rarr;</h3>
             <p>Record your attendance at one of our meetings</p>
           </a>
-          {/*
-          <a href={props.user && props.user.is_exec !== null ? "/scholarshipprogress" : "/signin?to=ghc"} className={styles.card}>
-            <h3>GHC scholarship progress &rarr;</h3>
-            <p>For GHC scholarship recipients: view your progress on the scholarship requirements</p>
-          </a>
-          */}
-
-          { !(props.user && props.user.is_exec === false) &&  // do not show to gh-only users since they can't access this anyway
-            <a href={props.user && props.user.is_exec ? "/execdashboard" : "/signin?to=exec"} className={styles.card}>
+          <a href={"https://airtable.com/"} className={styles.card}>
               <h3>Executive console &rarr;</h3>
               <p>For ACM-W executive board members: access executive features</p>
           </a>
-          }
-          
         </div>
       </main>
 
       <footer className={styles.footer}>
-        <p>Created by members of the ACM-W OSU 2020-2021 Executive Board with React, Node.js, and PostgreSQL - 
-          view our code <a target="_blank" href="https://github.com/jgeorge37/acmwosu-db">here</a>!</p>
+        <p>Created by members of the ACM-W OSU 2020-2021 Executive Board with Next.js and Airtable.</p>
       </footer>
     </div>
   )
