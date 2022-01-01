@@ -15,7 +15,7 @@ const Home = (props) => {
         </h1>
 
         <div className={styles.grid}>
-          <a href="/attendance" className={styles.card}>
+          <a href="/attendance" className={styles.card} id={styles.specialCard}>
             <h3>Event attendance form &rarr;</h3>
             <p>Record your attendance at one of our meetings</p>
           </a>
