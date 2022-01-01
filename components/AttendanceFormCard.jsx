@@ -10,7 +10,7 @@ const AttendanceFormCard = (props) => {
   const firstName = useRef("");
   const lastNameDotNum = useRef("");
   const year = useRef(1);
-  const listServ = useRef(1);
+  const listServ = useRef(0);
   const [failureMessage, setFailureMessage] = useState("");
   const subscribed = useRef(false);
 
