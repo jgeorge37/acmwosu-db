@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {validateName, validateLastNameDotNum} from '../utility/utility';
+import {validateName, validateLastNameDotNum} from '../utility/validate_util';
 import { getMeetingIdByCode, recordAttendance } from '../utility/api_util';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
