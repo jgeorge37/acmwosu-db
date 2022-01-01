@@ -1,20 +1,15 @@
 {
     "author": "Jing George",
     "name": "acmwosu-db",
-    "description": "Interface for Exec Board members to perform CRUD operations on contact database.",
     "version": "0.0.1",
     "dependencies": {
-        "@sendgrid/mail": "^7.2.4",
+        "@babel/plugin-transform-react-jsx": "^7.16.7",
         "airtable": "^0.11.1",
         "bootstrap": "^5.1.3",
-        "cookie": "^0.4.1",
         "dotenv": "^8.2.0",
-        "moment-timezone": "^0.5.33",
-        "next": "9.5.4",
-        "pg": "^8.3.0",
-        "postgres-migrations": "^4.0.3",
+        "next": "^12.0.7",
         "react": "^17.0.2",
-        "react-bootstrap": "^2.0.4",
+        "react-bootstrap": "^2.1.0",
         "react-dom": "16.13.1"
     },
     "private": true,
@@ -23,8 +18,7 @@
         "build": "next build",
         "test": "jest",
         "start": "next start",
-        "heroku-start": "next start -p $PORT",
-        "migrate": "node migrations/migrate.js"
+        "heroku-start": "next start -p $PORT"
     },
     "repository": {
         "type": "git",
