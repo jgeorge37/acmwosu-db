@@ -23,7 +23,7 @@ a {
   min-height: 100vh;
 }
 .component-div {
-  padding: 0 1rem;
+  padding: 10px;
 }
 
 @keyframes gradient {

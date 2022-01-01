@@ -18,12 +18,15 @@ const AttendanceFormV2 = (props) => {
     <style jsx="true">{`
       .att-wrapper h1 {
         text-align: center;
-        margin: 15px 0;
         font-size: 2.5em;
+        margin-bottom: 15px;
       }
       .att-wrapper p {
         text-align: center;
         font-size: 25px;
+      }
+      .att-wrapper {
+        margin-bottom: 15px;
       }
       .success-alert {
         max-width: 600px;
